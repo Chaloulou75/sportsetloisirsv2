@@ -1,7 +1,7 @@
 <script setup>
 import ResultLayout from "@/Layouts/ResultLayout.vue";
 import { Head, Link, useForm, router } from "@inertiajs/vue3";
-import { ref, defineAsyncComponent, watch, onMounted } from "vue";
+import { ref, defineAsyncComponent, watch, onMounted, toRaw } from "vue";
 import { debounce } from "lodash";
 import CritereForm from "@/Components/Criteres/CritereForm.vue";
 import ResultsHeader from "@/Components/ResultsHeader.vue";
@@ -137,7 +137,7 @@ const debouncedFilter = debounce((newFormCriteres) => {
             },
         }
     );
-}, 300);
+}, 350);
 
 watch(
     () => formCriteres,
@@ -146,6 +146,53 @@ watch(
     },
     { deep: true }
 );
+
+const isEqual = (obj1, obj2) => JSON.stringify(obj1) === JSON.stringify(obj2);
+
+watch(
+    () => formCriteres.criteresBase,
+    (newCritValue) => {
+        // Get the raw (non-reactive) version of the new value
+        const rawNewValue = toRaw(newCritValue);
+        // Compare with the previous value
+        if (!isEqual(rawNewValue, previousCriteresBase)) {
+            Object.keys(rawNewValue).forEach((critereId) => {
+                if (
+                    !isEqual(
+                        rawNewValue[critereId],
+                        previousCriteresBase[critereId]
+                    )
+                ) {
+                    resetSousCriteres(critereId, rawNewValue[critereId]);
+                }
+            });
+        }
+        // Update the previous value for the next comparison
+        previousCriteresBase = { ...rawNewValue };
+    },
+    { deep: true }
+);
+
+// Initialize previousCriteresBase
+let previousCriteresBase = { ...toRaw(formCriteres.criteresBase) };
+
+const resetSousCriteres = (critereId, newValeur) => {
+    const critere = props.criteres.find((c) => c.id.toString() === critereId);
+
+    if (critere && critere.valeurs) {
+        critere.valeurs.forEach((valeur) => {
+            if (valeur.sous_criteres) {
+                valeur.sous_criteres.forEach((sousCritere) => {
+                    if (
+                        formCriteres.sousCriteres[sousCritere.id] !== undefined
+                    ) {
+                        formCriteres.sousCriteres[sousCritere.id] = null;
+                    }
+                });
+            }
+        });
+    }
+};
 
 const resetFormCriteres = () => {
     formCriteres.reset();

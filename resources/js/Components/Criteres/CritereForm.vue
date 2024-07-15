@@ -30,14 +30,6 @@ const filteredCriteresByChamp = computed(() => {
 const criteresModel = defineModel("criteresBase");
 const sousCriteresModel = defineModel("sousCriteres");
 const emit = defineEmits(["reset-criteres"]);
-// , "reset-sous-criteres"
-// watch(
-//     () => criteresModel,
-//     (newCriteresModel) => {
-//         emit("reset-sous-criteres", newCriteresModel);
-//     },
-//     { deep: true }
-// );
 
 const handleResetFormCriteres = () => {
     emit("reset-criteres");
@@ -166,14 +158,15 @@ const handleResetFormCriteres = () => {
                 v-model="criteresModel[critere.id]"
                 :name="critere.nom"
             />
-            <!-- Mois -->
 
+            <!-- Mois -->
             <OpenMonthsForm
                 v-if="critere.type_champ_form === 'mois'"
                 class="w-full max-w-sm"
                 v-model="criteresModel[critere.id]"
                 :name="critere.nom"
             />
+
             <!-- sous criteres -->
             <template v-if="critere.valeurs">
                 <div v-for="valeur in critere.valeurs" :key="valeur.id">
@@ -295,13 +288,14 @@ const handleResetFormCriteres = () => {
             </template>
         </div>
         <button
-            class="flex w-full justify-center md:w-auto"
+            class="flex w-full items-center justify-center place-self-center rounded-lg bg-blue-500 px-4 py-2 text-sm font-medium text-white shadow-md transition duration-300 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 md:w-auto"
             type="button"
             @click.prevent="handleResetFormCriteres"
         >
             <ArrowPathIcon
-                class="h-6 w-6 text-gray-500 transition duration-200 hover:-rotate-90 hover:text-gray-700 md:h-8 md:w-8"
+                class="h-6 w-6 text-white transition duration-200 hover:-rotate-90 md:h-8 md:w-8"
             />
+            <span class="ml-2">Réinitialiser les critères</span>
         </button>
     </form>
 </template>

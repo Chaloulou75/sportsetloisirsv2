@@ -6,6 +6,7 @@ import BreezeDropdownLink from "@/Components/DropdownLink.vue";
 import AutocompleteDisciplineNav from "@/Components/Navigation/AutocompleteDisciplineNav.vue";
 import AutocompleteCityNav from "@/Components/Navigation/AutocompleteCityNav.vue";
 import { Link, usePage, router } from "@inertiajs/vue3";
+import Badge from "primevue/badge";
 import {
     HeartIcon,
     MagnifyingGlassIcon,
@@ -194,7 +195,7 @@ const submitForm = async () => {
                         />
                         <span
                             v-if="productCountInSession"
-                            class="absolute right-0 top-0 -mr-1 -mt-1 rounded-full bg-red-500 px-1 text-xs text-white"
+                            class="absolute right-0 top-0 -mr-1 -mt-1 rounded-full bg-blue-500 px-1 text-xs text-white"
                         >
                             {{ productCountInSession }}
                         </span>
@@ -208,7 +209,7 @@ const submitForm = async () => {
                                         type="button"
                                         class="relative inline-flex items-center px-1 py-2 text-white hover:text-indigo-500 focus:text-indigo-500"
                                     >
-                                        <UserIcon class="h-8 w-8" />
+                                        <UserIcon class="relative h-8 w-8" />
                                         <span
                                             v-if="
                                                 user &&
@@ -218,6 +219,7 @@ const submitForm = async () => {
                                             class="absolute right-0 top-0 z-20 mr-2.5 mt-1 rounded-full bg-green-500 p-1"
                                         >
                                         </span>
+
                                         <span
                                             v-if="
                                                 user &&
@@ -265,16 +267,14 @@ const submitForm = async () => {
                                     class="relative inline-flex w-full items-center justify-between"
                                 >
                                     Mes réservations
-                                    <span
+                                    <Badge
                                         v-if="
                                             user &&
                                             user.unread_notifications_count > 0
                                         "
-                                        class="inline-flex items-center rounded-full bg-green-500 px-1.5 py-0.5 text-xs font-medium text-white"
-                                        >{{
-                                            user.unread_notifications_count
-                                        }}</span
-                                    >
+                                        severity="success"
+                                        :value="user.unread_notifications_count"
+                                    />
                                 </BreezeDropdownLink>
                                 <BreezeDropdownLink
                                     :href="route('profile.edit')"
@@ -294,11 +294,11 @@ const submitForm = async () => {
                                     "
                                 >
                                     Gestion de ma structure
-                                    <span
+                                    <Badge
                                         v-if="structureNotifCount > 0"
-                                        class="inline-flex items-center rounded-full bg-green-500 px-1.5 py-0.5 text-xs font-medium text-white"
-                                        >{{ structureNotifCount }}</span
-                                    >
+                                        severity="success"
+                                        :value="structureNotifCount"
+                                    />
                                 </BreezeDropdownLink>
                                 <BreezeDropdownLink
                                     preserve-scroll
@@ -314,11 +314,11 @@ const submitForm = async () => {
                                     :href="route('admin.index')"
                                 >
                                     Gestion du site
-                                    <span
+                                    <Badge
                                         v-if="adminNotificationsCount > 0"
-                                        class="inline-flex items-center rounded-full bg-green-500 px-1.5 py-0.5 text-xs font-medium text-white"
-                                        >{{ adminNotificationsCount }}</span
-                                    >
+                                        severity="success"
+                                        :value="adminNotificationsCount"
+                                    />
                                 </BreezeDropdownLink>
                                 <BreezeDropdownLink
                                     preserve-scroll
@@ -385,12 +385,11 @@ const submitForm = async () => {
                         class="relative items-center justify-center rounded bg-transparent px-2 py-2 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                     >
                         <ShoppingCartIcon class="h-6 w-6" />
-                        <span
-                            v-if="productCountInSession"
-                            class="absolute right-0 top-0 rounded-full bg-red-500 px-1 text-xs text-white"
-                        >
-                            {{ productCountInSession }}
-                        </span>
+                        <Badge
+                            v-if="productCountInSession > 0"
+                            severity="success"
+                            :value="productCountInSession"
+                        />
                     </Link>
                     <button
                         @click="
@@ -400,17 +399,34 @@ const submitForm = async () => {
                         class="relative items-center justify-center rounded bg-transparent px-2 py-2 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                     >
                         <UserIcon class="h-6 w-6" />
-                        <span
-                            v-if="user && user.unread_notifications_count === 0"
-                            class="absolute right-0.5 top-0 rounded-full bg-green-500 px-1.5 text-xs text-white"
-                        >
-                        </span>
-                        <span
-                            v-if="user && user.unread_notifications_count > 0"
-                            class="absolute right-0.5 top-0 rounded-full bg-green-500 px-1.5 text-xs text-white"
-                        >
-                            {{ user.unread_notifications_count }}
-                        </span>
+                        <Badge
+                            v-if="
+                                user &&
+                                user.unread_notifications_count +
+                                    adminNotificationsCount +
+                                    structureNotifCount ===
+                                    0
+                            "
+                            severity="success"
+                            class="absolute -right-1.5 -top-1.5"
+                        />
+
+                        <Badge
+                            v-if="
+                                user &&
+                                user.unread_notifications_count +
+                                    adminNotificationsCount +
+                                    structureNotifCount >
+                                    0
+                            "
+                            severity="success"
+                            class="absolute -right-1.5 -top-1.5"
+                            :value="
+                                user.unread_notifications_count +
+                                adminNotificationsCount +
+                                structureNotifCount
+                            "
+                        />
                     </button>
                 </div>
             </div>
@@ -437,9 +453,14 @@ const submitForm = async () => {
                     v-if="user && user.customer"
                     :href="route('customers.show', { customer: user.customer })"
                     preserve-scroll
-                    class="block w-full border-l-4 border-transparent py-2 pl-3 pr-4 text-left text-base font-medium text-white transition duration-150 ease-in-out hover:border-gray-300 hover:bg-gray-300 hover:text-gray-50 focus:border-gray-600 focus:bg-gray-600 focus:text-gray-50 focus:outline-none"
+                    class="inline-flex w-full items-center justify-between border-l-4 border-transparent py-2 pl-3 pr-4 text-left text-base font-medium text-white transition duration-150 ease-in-out hover:border-gray-300 hover:bg-gray-300 hover:text-gray-50 focus:border-gray-600 focus:bg-gray-600 focus:text-gray-50 focus:outline-none"
                 >
                     Mes réservations
+                    <Badge
+                        v-if="user && user.unread_notifications_count > 0"
+                        severity="success"
+                        :value="user.unread_notifications_count"
+                    />
                 </Link>
                 <Link
                     preserve-scroll
@@ -471,11 +492,11 @@ const submitForm = async () => {
                     :active="route().current('structures.gestion.index')"
                 >
                     Gestion de ma structure
-                    <span
+                    <Badge
                         v-if="structureNotifCount > 0"
-                        class="flex items-center justify-center rounded-full bg-green-500 px-2 py-1 text-xs text-white"
-                        >{{ structureNotifCount }}</span
-                    >
+                        severity="success"
+                        :value="structureNotifCount"
+                    />
                 </Link>
                 <Link
                     preserve-scroll
@@ -484,11 +505,11 @@ const submitForm = async () => {
                     :href="route('admin.index')"
                 >
                     Gestion du site
-                    <span
+                    <Badge
                         v-if="adminNotificationsCount > 0"
-                        class="flex items-center justify-center rounded-full bg-green-500 px-2 py-1 text-xs text-white"
-                        >{{ adminNotificationsCount }}</span
-                    >
+                        severity="success"
+                        :value="adminNotificationsCount"
+                    />
                 </Link>
             </div>
 

@@ -475,6 +475,7 @@ watch(
                                                                     officialSousCritere.type_champ_form ===
                                                                     "range multiple"
                                                                 ) {
+                                                                    // extract numbers
                                                                     const matches =
                                                                         prodSousCritValeur.match(
                                                                             /(\d+)/g

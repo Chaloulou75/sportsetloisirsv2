@@ -4,6 +4,7 @@ import {
     HandThumbUpIcon,
     EyeIcon,
 } from "@heroicons/vue/24/outline";
+import Tag from "primevue/tag";
 import { Link } from "@inertiajs/vue3";
 import dayjs from "dayjs";
 import "dayjs/locale/fr";
@@ -38,23 +39,22 @@ const props = defineProps({
                 <header class="mt-2">
                     <div
                         v-if="post.disciplines"
-                        class="flex flex-wrap items-center"
+                        class="flex flex-wrap items-center gap-2"
                     >
-                        <div
+                        <Tag
                             v-for="discipline in post.disciplines"
                             :key="discipline.id"
-                            class="m-px flex items-center border bg-white p-1 text-xs"
-                        >
-                            {{ discipline.name }}
-                        </div>
+                            severity="info"
+                            :value="discipline.name"
+                            rounded
+                        ></Tag>
                         <template v-if="post.tags">
-                            <div
+                            <Tag
                                 v-for="tag in post.tags"
                                 :key="tag.id"
-                                class="m-px flex items-center border bg-white p-1 text-xs"
-                            >
-                                {{ tag.name }}
-                            </div>
+                                :value="tag.name"
+                                rounded
+                            ></Tag>
                         </template>
                     </div>
                     <div class="mt-4">
