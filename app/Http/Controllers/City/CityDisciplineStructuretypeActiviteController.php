@@ -27,13 +27,15 @@ use App\Http\Resources\LienDisciplineCategorieCritereResource;
 
 class CityDisciplineStructuretypeActiviteController extends Controller
 {
-    public function show(City $city, ListDiscipline $discipline, StructureType $structuretype, StructureActivite $activite, string $slug, ?string $produit = null): Response
+    public function show(Request $request, City $city, ListDiscipline $discipline, StructureType $structuretype, StructureActivite $activite, string $slug, ?string $produit = null): Response
     {
+        $filters = $request->only(['crit', 'ssCrit']);
+        $page = $request->input('page', 1);
+
 
         if ($produit !== null) {
             $selectedProduit = StructureProduitResource::make(StructureProduit::withRelations()->find($produit));
         }
-
 
         $familles = Cache::remember('familles', 600, function () {
             return Famille::withProducts()->get();
@@ -86,7 +88,7 @@ class CityDisciplineStructuretypeActiviteController extends Controller
             'instructeurs'
         ])->find($activite->id);
 
-        $produits = $activite->produits()->withRelations()->get();
+        $produits = $activite->produits()->withRelations()->filter($filters)->paginate(4);
 
         $criteres = LienDisciplineCategorieCritere::withValeurs()
                 ->where('discipline_id', $requestDiscipline->id)
@@ -106,6 +108,17 @@ class CityDisciplineStructuretypeActiviteController extends Controller
             ->take(3)
             ->get();
 
+        $currentRoute = [
+            'name' => 'villes.disciplines.structuretypes.activites.show',
+            'params' => [
+                'city' => $city,
+                'discipline' => $discipline,
+                'structuretype' => $structuretype,
+                'activite' => $activite->id,
+                'slug' => $activite->slug_title,
+            ]
+        ];
+
         return Inertia::render('Structures/Activites/Show', [
             'produits' => fn () => StructureProduitResource::collection($produits),
             'familles' => fn () => FamilleResource::collection($familles),
@@ -123,6 +136,8 @@ class CityDisciplineStructuretypeActiviteController extends Controller
             'firstCategories' => fn () => LienDisciplineCategorieResource::collection($firstCategories),
             'categoriesNotInFirst' => fn () => LienDisciplineCategorieResource::collection($categoriesNotInFirst),
             'allStructureTypes' => fn () => StructuretypeResource::collection($allStructureTypes),
+            'filters' => $filters ?? null,
+            'currentRoute' => $currentRoute,
         ]);
     }
 }

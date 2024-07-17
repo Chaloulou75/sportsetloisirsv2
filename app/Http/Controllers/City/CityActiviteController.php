@@ -22,13 +22,14 @@ use App\Http\Resources\StructureActiviteResource;
 
 class CityActiviteController extends Controller
 {
-    public function show(City $city, StructureActivite $activite, string $slug, ?string $produit = null): Response
+    public function show(Request $request, City $city, StructureActivite $activite, string $slug, ?string $produit = null): Response
     {
+        $filters = $request->only(['crit', 'ssCrit']);
+        $page = $request->input('page', 1);
 
         if ($produit !== null) {
             $selectedProduit = StructureProduitResource::make(StructureProduit::withRelations()->find($produit));
         }
-
 
         $familles = Cache::remember('familles', 600, function () {
             return Famille::withProducts()->get();
@@ -54,7 +55,7 @@ class CityActiviteController extends Controller
             'instructeurs'
         ])->find($activite->id);
 
-        $produits = $activite->produits()->withRelations()->get();
+        $produits = $activite->produits()->withRelations()->filter($filters)->paginate(4);
 
         $criteres = LienDisciplineCategorieCritere::withValeurs()
                 ->where('discipline_id', $activite->discipline_id)
@@ -74,6 +75,15 @@ class CityActiviteController extends Controller
             ->take(3)
             ->get();
 
+        $currentRoute = [
+            'name' => 'villes.activites.show',
+            'params' => [
+                'city' => $city,
+                'activite' => $activite->id,
+                'slug' => $activite->slug_title,
+            ]
+        ];
+
         return Inertia::render('Structures/Activites/Show', [
             'familles' => fn () => FamilleResource::collection($familles),
             'listDisciplines' => fn () => ListDisciplineResource::collection($listDisciplines),
@@ -85,6 +95,8 @@ class CityActiviteController extends Controller
             'activiteSimilaires' => fn () => StructureActiviteResource::collection($activiteSimilaires),
             'selectedProduit' => fn () => $selectedProduit ?? null,
             'produits' => fn () => StructureProduitResource::collection($produits),
+            'filters' => $filters ?? null,
+            'currentRoute' => $currentRoute,
         ]);
     }
 }
