@@ -30,7 +30,7 @@ Route::get('/dept-{departement}/dis-{discipline}/str-{structure}', [DepartementD
 
 Route::get('/dept-{departement}/dis-{discipline}/activites-{activite}-{slug}/{produit?}', [DepartementDisciplineActiviteController::class, 'show'])->name('departements.disciplines.activites.show');
 
-Route::get('/dept-{departement}/dis-{discipline}/cat-{category:slug}', [DepartementDisciplineCategorieController::class, 'show'])->name('departements.disciplines.categories.show');
+Route::match(['get', 'post'], '/dept-{departement}/dis-{discipline}/cat-{category:slug}', [DepartementDisciplineCategorieController::class, 'show'])->name('departements.disciplines.categories.show');
 // /departements/disciplines/categories/
 
 Route::get('/dept-{departement}/dis-{discipline}/cat-{category:slug}/str-{structure}', [DepartementDisciplineCategorieStructureController::class, 'show'])->name('departements.disciplines.categories.structures.show');

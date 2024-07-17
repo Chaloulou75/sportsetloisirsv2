@@ -42,5 +42,4 @@ class StructureAddress extends Pivot
             'id'
         );
     }
-
 }

@@ -335,16 +335,24 @@ onMounted(() => {
                     </button>
                 </div>
 
-                <CritereForm
-                    v-if="criteres"
-                    :criteres="criteres"
-                    :filters="filters"
-                    :show-criteres="showCriteres"
-                    :show-criteres-lg="showCriteresLg"
-                    v-model:criteres-base="formCriteres.criteresBase"
-                    v-model:sous-criteres="formCriteres.sousCriteres"
-                    @reset-criteres="resetFormCriteres"
-                />
+                <form
+                    class="relative mx-auto w-full flex-col items-center justify-center gap-6 overflow-x-auto rounded bg-gray-50 px-2 py-2 backdrop-blur-md md:flex-row md:items-start md:justify-between md:px-6 md:pt-4"
+                    :class="{
+                        flex: showCriteres,
+                        hidden: !showCriteres,
+                        'md:flex': showCriteresLg,
+                        'md:hidden': !showCriteresLg,
+                    }"
+                >
+                    <CritereForm
+                        v-if="criteres"
+                        :criteres="criteres"
+                        :filters="filters"
+                        v-model:criteres-base="formCriteres.criteresBase"
+                        v-model:sous-criteres="formCriteres.sousCriteres"
+                        @reset-criteres="resetFormCriteres"
+                    />
+                </form>
             </div>
             <template v-if="filteredProduits.length > 0">
                 <div class="mx-auto py-6 md:py-12">

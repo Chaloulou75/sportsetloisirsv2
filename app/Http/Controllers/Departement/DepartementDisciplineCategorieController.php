@@ -11,6 +11,7 @@ use App\Models\Departement;
 use Illuminate\Http\Request;
 use App\Models\Structuretype;
 use App\Models\ListDiscipline;
+use App\Models\StructureProduit;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CityResource;
 use App\Http\Resources\PostResource;
@@ -19,20 +20,23 @@ use App\Http\Resources\FamilleResource;
 use App\Models\LienDisciplineCategorie;
 use App\Http\Resources\StructureResource;
 use App\Http\Resources\DepartementResource;
-use App\Http\Resources\LienDisciplineCategorieCritereResource;
-use App\Models\LienDisciplineCategorieCritere;
-use App\Http\Resources\LienDisciplineCategorieResource;
-use App\Http\Resources\ListDisciplineResource;
-use App\Http\Resources\StructureProduitResource;
 use App\Http\Resources\StructuretypeResource;
+use App\Http\Resources\ListDisciplineResource;
+use App\Models\LienDisciplineCategorieCritere;
+use App\Http\Resources\StructureProduitResource;
+use App\Http\Resources\LienDisciplineCategorieResource;
+use App\Http\Resources\LienDisciplineCategorieCritereResource;
 
 class DepartementDisciplineCategorieController extends Controller
 {
     /**
      * Display the specified resource.
      */
-    public function show(Departement $departement, ListDiscipline $discipline, $category): Response
+    public function show(Request $request, Departement $departement, ListDiscipline $discipline, $category): Response
     {
+        $filters = $request->only(['crit', 'ssCrit']);
+        $page = $request->input('page', 1);
+
         $familles = Cache::remember('familles', 600, function () {
             return Famille::withProducts()->get();
         });
@@ -79,9 +83,24 @@ class DepartementDisciplineCategorieController extends Controller
                         ->select(['id', 'name', 'slug'])
                         ->get();
 
-        $produits = $departement->cities->flatMap(function ($city) use ($discipline, $category) {
-            return $city->produits()->withRelations()->where('discipline_id', $discipline->id)->where('categorie_id', $category->id)->get();
-        })->paginate(12);
+        // $produits = $departement->cities->flatMap(function ($city) use ($discipline, $category, $filters) {
+        //     return $city
+        //     ->produits()
+        //     ->withRelations()
+        //     ->where('discipline_id', $discipline->id)
+        //     ->where('categorie_id', $category->id)
+        //     ->filter($filters)->get();
+        // })->paginate(4, null, $page, 'prodpage');
+
+        $produits = StructureProduit::query()
+                ->join('structure_adresse', 'structures_produits.lieu_id', '=', 'structure_adresse.id')
+                ->join('villes_france', 'structure_adresse.city_id', '=', 'villes_france.id')
+                ->where('villes_france.departement', $departement->numero)
+                ->where('structures_produits.discipline_id', $discipline->id)
+                ->where('structures_produits.categorie_id', $category->id)
+                ->withRelations()
+                ->filter($filters)
+                ->paginate(4, ['*'], 'prodpage', $page);
 
 
         $structures = $departement->structures()->with([
@@ -90,13 +109,16 @@ class DepartementDisciplineCategorieController extends Controller
             },
             'structuretype',
             'activites' => function ($query) use ($discipline, $category) {
-                $query->where('discipline_id', $discipline->id)->where('categorie_id', $category->id);
+                $query->where('discipline_id', $discipline->id)
+                    ->where('categorie_id', $category->id);
             },
             'activites.discipline',
             'activites.categorie',
-        ])->paginate(12);
+        ])->paginate(4, ['*'], 'strpage')
+        ->withQueryString();
 
-        $citiesAround = $departement->cities()->whereHas('produits')
+        $citiesAround = $departement->cities()
+                            ->whereHas('produits')
                             ->select('id', 'slug', 'ville', 'code_postal')
                             ->limit(10)
                             ->get();
@@ -121,6 +143,7 @@ class DepartementDisciplineCategorieController extends Controller
             'allCities' => fn () => CityResource::collection($allCities),
             'posts' => fn () => PostResource::collection($posts),
             'citiesAround' => fn () => CityResource::collection($citiesAround),
+            'filters' => $filters,
         ]);
 
     }

@@ -1,23 +1,12 @@
 <script setup>
 import ResultLayout from "@/Layouts/ResultLayout.vue";
-import { Head, Link, useForm } from "@inertiajs/vue3";
-import { ref, watch, onMounted, defineAsyncComponent } from "vue";
-import { useFilterProducts } from "@/composables/useFilterProducts";
+import { Head, Link, useForm, router } from "@inertiajs/vue3";
+import { ref, watch, onMounted, defineAsyncComponent, toRaw } from "vue";
+import { debounce } from "lodash";
+import CritereForm from "@/Components/Criteres/CritereForm.vue";
 import ResultsHeader from "@/Components/ResultsHeader.vue";
 import CategoriesResultNavigation from "@/Components/Categories/CategoriesResultNavigation.vue";
 import LeafletMap from "@/Components/Maps/LeafletMap.vue";
-import SelectForm from "@/Components/Forms/SelectForm.vue";
-import CheckboxForm from "@/Components/Forms/CheckboxForm.vue";
-import RadioForm from "@/Components/Forms/RadioForm.vue";
-import RangeInputForm from "@/Components/Forms/RangeInputForm.vue";
-import RangeMultiple from "@/Components/Forms/RangeMultiple.vue";
-import TextInput from "@/Components/Forms/TextInput.vue";
-import InputLabel from "@/Components/Forms/InputLabel.vue";
-import OpenDaysForm from "@/Components/Forms/DayTime/OpenDaysForm.vue";
-import SingleDateForm from "@/Components/Forms/DayTime/SingleDateForm.vue";
-import SingleTimeForm from "@/Components/Forms/DayTime/SingleTimeForm.vue";
-import OpenTimesForm from "@/Components/Forms/DayTime/OpenTimesForm.vue";
-import OpenMonthsForm from "@/Components/Forms/DayTime/OpenMonthsForm.vue";
 import { isClient } from "@vueuse/shared";
 import { useShare } from "@vueuse/core";
 import autoAnimate from "@formkit/auto-animate";
@@ -53,6 +42,8 @@ const props = defineProps({
     allStructureTypes: Object,
     structuretypeElected: Object,
     produits: Object,
+    filters: Object,
+    currentRoute: Object,
 });
 
 const ProduitFormuleCard = defineAsyncComponent(() =>
@@ -65,6 +56,10 @@ const ModalReservationForm = defineAsyncComponent(() =>
 
 const ActiviteCard = defineAsyncComponent(() =>
     import("@/Components/Structures/ActiviteCard.vue")
+);
+
+const Pagination = defineAsyncComponent(() =>
+    import("@/Components/Pagination.vue")
 );
 
 const showReservationModal = ref(false);
@@ -87,39 +82,104 @@ async function startShare() {
 }
 
 const listToAnimate = ref();
-const filteredProduits = ref(props.produits);
-const selectedCriteres = ref([]);
-const selectedSousCriteres = ref([]);
+const filteredProduits = ref(props.produits.data);
 
 const formCriteres = useForm({
-    criteresBase: {},
-    sousCriteres: {},
+    criteresBase: props.filters?.crit ?? {},
+    sousCriteres: props.filters?.ssCrit ?? {},
+    page: props.produits.meta.current_page,
 });
 
-const { filterProducts } = useFilterProducts(
-    props,
-    filteredProduits,
-    selectedCriteres,
-    selectedSousCriteres
+const debouncedFilter = debounce((newFormCriteres) => {
+    router.post(
+        route(props.currentRoute.name, props.currentRoute.params),
+        {
+            crit: newFormCriteres.criteresBase,
+            ssCrit: newFormCriteres.sousCriteres,
+            page: newFormCriteres.page,
+        },
+        {
+            preserveState: true,
+            preserveScroll: true,
+            only: ["produits", "filters"],
+            onSuccess: () => {
+                filteredProduits.value = props.produits.data;
+            },
+        }
+    );
+}, 350);
+
+watch(
+    () => formCriteres,
+    (newFormCriteres) => {
+        debouncedFilter(newFormCriteres);
+    },
+    { deep: true }
 );
+
+const isEqual = (obj1, obj2) => JSON.stringify(obj1) === JSON.stringify(obj2);
 
 watch(
     () => formCriteres.criteresBase,
-    (newCriteres) => {
-        selectedCriteres.value = Object.entries(newCriteres);
-        filterProducts();
+    (newCritValue) => {
+        // Get the raw (non-reactive) version of the new value
+        const rawNewValue = toRaw(newCritValue);
+        // Compare with the previous value
+        if (!isEqual(rawNewValue, previousCriteresBase)) {
+            Object.keys(rawNewValue).forEach((critereId) => {
+                if (
+                    !isEqual(
+                        rawNewValue[critereId],
+                        previousCriteresBase[critereId]
+                    )
+                ) {
+                    resetSousCriteres(critereId, rawNewValue[critereId]);
+                }
+            });
+        }
+        // Update the previous value for the next comparison
+        previousCriteresBase = { ...rawNewValue };
     },
     { deep: true }
 );
 
-watch(
-    () => formCriteres.sousCriteres,
-    (newSousCriteres) => {
-        selectedSousCriteres.value = Object.entries(newSousCriteres);
-        filterProducts();
-    },
-    { deep: true }
-);
+// Initialize previousCriteresBase
+let previousCriteresBase = { ...toRaw(formCriteres.criteresBase) };
+
+const resetSousCriteres = (critereId, newValeur) => {
+    const critere = props.criteres.find((c) => c.id.toString() === critereId);
+
+    if (critere && critere.valeurs) {
+        critere.valeurs.forEach((valeur) => {
+            if (valeur.sous_criteres) {
+                valeur.sous_criteres.forEach((sousCritere) => {
+                    if (
+                        formCriteres.sousCriteres[sousCritere.id] !== undefined
+                    ) {
+                        formCriteres.sousCriteres[sousCritere.id] = null;
+                    }
+                });
+            }
+        });
+    }
+};
+
+const resetFormCriteres = () => {
+    formCriteres.reset();
+    formCriteres.page = 1;
+    debouncedFilter(formCriteres);
+};
+
+const handlePageChange = (newPage) => {
+    if (newPage === "previous") {
+        formCriteres.page = Math.max(1, formCriteres.page - 1);
+    } else if (newPage === "next") {
+        formCriteres.page = formCriteres.page + 1;
+    } else {
+        formCriteres.page = newPage;
+    }
+    debouncedFilter(formCriteres);
+};
 
 watch(
     () => props.selectedProduit,
@@ -671,13 +731,6 @@ watch(
     { deep: true, immediate: true }
 );
 
-const resetFormCriteres = () => {
-    formCriteres.criteresBase = {};
-    formCriteres.sousCriteres = {};
-    selectedCriteres.value = [];
-    filterProducts();
-};
-
 const reservationForm = useForm({
     produit: props.selectedProduit?.id ?? null,
     formule: null,
@@ -689,7 +742,6 @@ onMounted(() => {
     if (listToAnimate.value) {
         autoAnimate(listToAnimate.value);
     }
-    filterProducts();
 });
 </script>
 
@@ -888,13 +940,16 @@ onMounted(() => {
                                 critères:
                             </h3>
                             <button
-                                class="flex w-full justify-center md:w-auto"
+                                class="group flex w-full items-center justify-center place-self-center rounded-lg bg-blue-500 px-4 py-2 text-sm font-medium text-white shadow-md transition duration-300 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 md:w-auto"
                                 type="button"
-                                @click="resetFormCriteres"
+                                @click.prevent="resetFormCriteres"
                             >
                                 <ArrowPathIcon
-                                    class="h-6 w-6 text-gray-500 transition duration-200 hover:-rotate-90 hover:text-gray-700 md:h-8 md:w-8"
+                                    class="h-6 w-6 text-white transition duration-200 group-hover:-rotate-90 md:h-8 md:w-8"
                                 />
+                                <span class="ml-2"
+                                    >Réinitialiser les critères</span
+                                >
                             </button>
                         </div>
 
@@ -902,447 +957,22 @@ onMounted(() => {
                             v-if="criteres.length > 0"
                             class="mx-auto grid w-full grid-cols-1 gap-4 bg-gray-50 p-2 shadow md:grid-cols-3"
                         >
-                            <div
-                                v-for="critere in criteres"
-                                :key="critere.id"
-                                class="col-span-1"
-                            >
-                                <!-- select -->
-                                <SelectForm
-                                    class="max-w-sm"
-                                    v-if="critere.type_champ_form === 'select'"
-                                    :name="critere.nom"
-                                    v-model="
-                                        formCriteres.criteresBase[critere.id]
-                                    "
-                                    :options="critere.valeurs"
-                                />
-                                <!-- checkbox -->
-                                <CheckboxForm
-                                    class="max-w-sm"
-                                    v-if="
-                                        critere.type_champ_form === 'checkbox'
-                                    "
-                                    :name="critere.nom"
-                                    v-model="
-                                        formCriteres.criteresBase[critere.id]
-                                    "
-                                    :options="critere.valeurs"
-                                />
-                                <!-- radio -->
-                                <RadioForm
-                                    v-if="critere.type_champ_form === 'radio'"
-                                    v-model="
-                                        formCriteres.criteresBase[critere.id]
-                                    "
-                                    :name="critere.nom"
-                                    :options="critere.valeurs"
-                                />
-
-                                <!-- input text -->
-                                <div v-if="critere.type_champ_form === 'text'">
-                                    <label
-                                        :for="critere.nom"
-                                        class="mb-1 block text-sm font-medium normal-case text-gray-700"
-                                    >
-                                        {{ critere.nom }}
-                                    </label>
-                                    <div class="flex-1">
-                                        <TextInput
-                                            type="text"
-                                            v-model="
-                                                formCriteres.criteresBase[
-                                                    critere.id
-                                                ]
-                                            "
-                                            :name="critere.nom"
-                                            :id="critere.nom"
-                                        />
-                                    </div>
-                                </div>
-                                <!-- input Number -->
-                                <div
-                                    v-if="critere.type_champ_form === 'number'"
-                                >
-                                    <label
-                                        :for="critere.nom"
-                                        class="mb-1 block text-sm font-medium normal-case text-gray-700"
-                                    >
-                                        {{ critere.nom }}
-                                    </label>
-                                    <div class="flex-1">
-                                        <TextInput
-                                            type="number"
-                                            min="0"
-                                            v-model="
-                                                formCriteres.criteresBase[
-                                                    critere.id
-                                                ]
-                                            "
-                                            :name="critere.nom"
-                                            :id="critere.nom"
-                                        />
-                                    </div>
-                                </div>
-                                <!-- Range  -->
-                                <RangeInputForm
-                                    v-if="critere.type_champ_form === 'range'"
-                                    class="w-full max-w-sm"
-                                    v-model="
-                                        formCriteres.criteresBase[critere.id]
-                                    "
-                                    :name="critere.nom"
-                                    :unite="critere.unite"
-                                    :min="critere.min"
-                                    :max="critere.max"
-                                />
-                                <!-- Range multiple -->
-                                <RangeMultiple
-                                    v-if="
-                                        critere.type_champ_form ===
-                                        'range multiple'
-                                    "
-                                    class="w-full max-w-sm"
-                                    v-model="
-                                        formCriteres.criteresBase[critere.id]
-                                    "
-                                    :name="critere.nom"
-                                    :unite="critere.unite"
-                                    :min="critere.min"
-                                    :max="critere.max"
-                                />
-                                <!-- Heure seule -->
-                                <SingleTimeForm
-                                    v-if="critere.type_champ_form === 'time'"
-                                    class="w-full max-w-sm"
-                                    v-model="
-                                        formCriteres.criteresBase[critere.id]
-                                    "
-                                    :name="critere.nom"
-                                />
-                                <!-- Heures x2 ouverture / fermeture -->
-                                <OpenTimesForm
-                                    v-if="critere.type_champ_form === 'times'"
-                                    class="w-full max-w-sm"
-                                    v-model="
-                                        formCriteres.criteresBase[critere.id]
-                                    "
-                                    :name="critere.nom"
-                                />
-                                <!-- Date seule -->
-                                <SingleDateForm
-                                    v-if="critere.type_champ_form === 'date'"
-                                    class="w-full max-w-sm"
-                                    v-model="
-                                        formCriteres.criteresBase[critere.id]
-                                    "
-                                    :name="critere.nom"
-                                />
-
-                                <!-- Dates x 2 -->
-                                <OpenDaysForm
-                                    v-if="critere.type_champ_form === 'dates'"
-                                    class="w-full max-w-sm"
-                                    v-model="
-                                        formCriteres.criteresBase[critere.id]
-                                    "
-                                    :name="critere.nom"
-                                />
-                                <!-- Mois -->
-
-                                <OpenMonthsForm
-                                    v-if="critere.type_champ_form === 'mois'"
-                                    class="w-full max-w-sm"
-                                    v-model="
-                                        formCriteres.criteresBase[critere.id]
-                                    "
-                                    :name="critere.nom"
-                                />
-                                <!-- sous criteres -->
-                                <template v-if="critere.valeurs">
-                                    <div
-                                        v-for="valeur in critere.valeurs"
-                                        :key="valeur.id"
-                                    >
-                                        <div
-                                            v-for="souscritere in valeur.sous_criteres"
-                                            :key="souscritere.id"
-                                            class="ml-1 mt-2"
-                                        >
-                                            <!-- select -->
-                                            <SelectForm
-                                                class="max-w-sm"
-                                                v-if="
-                                                    formCriteres.criteresBase[
-                                                        critere.id
-                                                    ] === valeur &&
-                                                    souscritere.type_champ_form ===
-                                                        'select' &&
-                                                    souscritere.dis_cat_crit_val_id ===
-                                                        valeur.id
-                                                "
-                                                :name="souscritere.nom"
-                                                v-model="
-                                                    formCriteres.sousCriteres[
-                                                        souscritere.id
-                                                    ]
-                                                "
-                                                :options="
-                                                    souscritere.sous_criteres_valeurs
-                                                "
-                                            />
-                                            <CheckboxForm
-                                                class="max-w-sm"
-                                                v-if="
-                                                    formCriteres.criteresBase[
-                                                        critere.id
-                                                    ] === valeur &&
-                                                    souscritere.type_champ_form ===
-                                                        'checkbox' &&
-                                                    souscritere.dis_cat_crit_val_id ===
-                                                        valeur.id
-                                                "
-                                                :name="souscritere.nom"
-                                                v-model="
-                                                    formCriteres.sousCriteres[
-                                                        souscritere.id
-                                                    ]
-                                                "
-                                                :options="
-                                                    souscritere.sous_criteres_valeurs
-                                                "
-                                            />
-                                            <!-- radio -->
-                                            <RadioForm
-                                                v-if="
-                                                    formCriteres.criteresBase[
-                                                        critere.id
-                                                    ] === valeur &&
-                                                    souscritere.type_champ_form ===
-                                                        'radio' &&
-                                                    souscritere.dis_cat_crit_val_id ===
-                                                        valeur.id
-                                                "
-                                                v-model="
-                                                    formCriteres.sousCriteres[
-                                                        souscritere.id
-                                                    ]
-                                                "
-                                                :name="souscritere.nom"
-                                                :options="
-                                                    souscritere.sous_criteres_valeurs
-                                                "
-                                            />
-                                            <!-- number -->
-                                            <div
-                                                v-if="
-                                                    formCriteres.criteresBase[
-                                                        critere.id
-                                                    ] === valeur &&
-                                                    souscritere.type_champ_form ===
-                                                        'number' &&
-                                                    souscritere.dis_cat_crit_val_id ===
-                                                        valeur.id
-                                                "
-                                                class="flex items-center space-x-4"
-                                            >
-                                                <InputLabel
-                                                    class="py-2"
-                                                    :for="souscritere.nom"
-                                                    :value="souscritere.nom"
-                                                />
-                                                <TextInput
-                                                    class="w-full"
-                                                    type="number"
-                                                    min="0"
-                                                    :id="souscritere.nom"
-                                                    :name="souscritere.nom"
-                                                    v-model="
-                                                        formCriteres
-                                                            .sousCriteres[
-                                                            souscritere.id
-                                                        ]
-                                                    "
-                                                />
-                                            </div>
-                                            <!-- text -->
-                                            <div
-                                                v-if="
-                                                    formCriteres.criteresBase[
-                                                        critere.id
-                                                    ] === valeur &&
-                                                    souscritere.type_champ_form ===
-                                                        'text' &&
-                                                    souscritere.dis_cat_crit_val_id ===
-                                                        valeur.id
-                                                "
-                                                class="mt-2 flex items-center space-x-4"
-                                            >
-                                                <InputLabel
-                                                    class="py-2"
-                                                    :for="souscritere.nom"
-                                                    :value="souscritere.nom"
-                                                />
-                                                <TextInput
-                                                    class="w-full"
-                                                    type="text"
-                                                    :id="souscritere.nom"
-                                                    :name="souscritere.nom"
-                                                    v-model="
-                                                        formCriteres
-                                                            .sousCriteres[
-                                                            souscritere.id
-                                                        ]
-                                                    "
-                                                />
-                                            </div>
-                                            <!-- range -->
-                                            <RangeInputForm
-                                                v-if="
-                                                    formCriteres.criteresBase[
-                                                        critere.id
-                                                    ] === valeur &&
-                                                    souscritere.type_champ_form ===
-                                                        'range' &&
-                                                    souscritere.dis_cat_crit_val_id ===
-                                                        valeur.id
-                                                "
-                                                class="w-full max-w-sm"
-                                                v-model="
-                                                    formCriteres.sousCriteres[
-                                                        souscritere.id
-                                                    ]
-                                                "
-                                                :name="souscritere.nom"
-                                                :min="souscritere.min"
-                                                :max="souscritere.max"
-                                                :unite="souscritere.unite"
-                                            />
-                                            <RangeMultiple
-                                                v-if="
-                                                    formCriteres.criteresBase[
-                                                        critere.id
-                                                    ] === valeur &&
-                                                    souscritere.type_champ_form ===
-                                                        'range multiple' &&
-                                                    souscritere.dis_cat_crit_val_id ===
-                                                        valeur.id
-                                                "
-                                                class="w-full max-w-sm"
-                                                v-model="
-                                                    formCriteres.sousCriteres[
-                                                        souscritere.id
-                                                    ]
-                                                "
-                                                :name="souscritere.nom"
-                                                :min="souscritere.min"
-                                                :max="souscritere.max"
-                                                :unite="souscritere.unite"
-                                            />
-                                            <!-- Heure seule -->
-                                            <SingleTimeForm
-                                                v-if="
-                                                    formCriteres.criteresBase[
-                                                        critere.id
-                                                    ] === valeur &&
-                                                    souscritere.type_champ_form ===
-                                                        'time' &&
-                                                    souscritere.dis_cat_crit_val_id ===
-                                                        valeur.id
-                                                "
-                                                class="w-full max-w-sm"
-                                                v-model="
-                                                    formCriteres.sousCriteres[
-                                                        souscritere.id
-                                                    ]
-                                                "
-                                                :name="souscritere.nom"
-                                            />
-                                            <!-- Heures x2 ouverture / fermeture -->
-                                            <OpenTimesForm
-                                                v-if="
-                                                    formCriteres.criteresBase[
-                                                        critere.id
-                                                    ] === valeur &&
-                                                    souscritere.type_champ_form ===
-                                                        'times' &&
-                                                    souscritere.dis_cat_crit_val_id ===
-                                                        valeur.id
-                                                "
-                                                class="w-full max-w-sm"
-                                                v-model="
-                                                    formCriteres.sousCriteres[
-                                                        souscritere.id
-                                                    ]
-                                                "
-                                                :name="souscritere.nom"
-                                            />
-                                            <!-- Date seule -->
-                                            <SingleDateForm
-                                                v-if="
-                                                    formCriteres.criteresBase[
-                                                        critere.id
-                                                    ] === valeur &&
-                                                    souscritere.type_champ_form ===
-                                                        'date' &&
-                                                    souscritere.dis_cat_crit_val_id ===
-                                                        valeur.id
-                                                "
-                                                class="w-full max-w-sm"
-                                                v-model="
-                                                    formCriteres.sousCriteres[
-                                                        souscritere.id
-                                                    ]
-                                                "
-                                                :name="souscritere.nom"
-                                            />
-
-                                            <!-- Dates x 2 -->
-                                            <OpenDaysForm
-                                                v-if="
-                                                    formCriteres.criteresBase[
-                                                        critere.id
-                                                    ] === valeur &&
-                                                    souscritere.type_champ_form ===
-                                                        'dates' &&
-                                                    souscritere.dis_cat_crit_val_id ===
-                                                        valeur.id
-                                                "
-                                                class="w-full max-w-sm"
-                                                v-model="
-                                                    formCriteres.sousCriteres[
-                                                        souscritere.id
-                                                    ]
-                                                "
-                                                :name="souscritere.nom"
-                                            />
-                                            <!-- Mois -->
-
-                                            <OpenMonthsForm
-                                                v-if="
-                                                    formCriteres.criteresBase[
-                                                        critere.id
-                                                    ] === valeur &&
-                                                    souscritere.type_champ_form ===
-                                                        'mois' &&
-                                                    souscritere.dis_cat_crit_val_id ===
-                                                        valeur.id
-                                                "
-                                                class="w-full max-w-sm"
-                                                v-model="
-                                                    formCriteres.sousCriteres[
-                                                        souscritere.id
-                                                    ]
-                                                "
-                                                :name="souscritere.nom"
-                                            />
-                                        </div>
-                                    </div>
-                                </template>
-                            </div>
+                            <CritereForm
+                                v-if="criteres"
+                                :criteres="criteres"
+                                :filters="filters"
+                                v-model:criteres-base="
+                                    formCriteres.criteresBase
+                                "
+                                v-model:sous-criteres="
+                                    formCriteres.sousCriteres
+                                "
+                                @reset-criteres="resetFormCriteres"
+                            />
                         </div>
 
                         <div
+                            v-if="filteredProduits.length > 0"
                             ref="listToAnimate"
                             class="grid h-auto grid-cols-1 place-content-stretch place-items-stretch gap-4 md:gap-8"
                         >
@@ -1357,16 +987,26 @@ onMounted(() => {
                                 "
                                 :produit="produit"
                             />
+                            <div class="my-10 flex justify-end">
+                                <Pagination
+                                    :links="produits.meta.links"
+                                    :only="['produits', 'filters']"
+                                    @page-changed="handlePageChange"
+                                />
+                            </div>
+                        </div>
+                        <div v-else>
+                            <p>Pas d'activité avec ces critères</p>
                         </div>
 
                         <div
+                            v-if="
+                                reservationForm.produit &&
+                                reservationForm.formule
+                            "
                             class="flex w-full items-center justify-center md:justify-end"
                         >
                             <button
-                                v-if="
-                                    reservationForm.produit &&
-                                    reservationForm.formule
-                                "
                                 @click.prevent="openReservationModal"
                                 type="button"
                                 class="inline-flex w-full items-center justify-center rounded-lg bg-blue-600 px-6 py-3 text-sm text-white duration-300 hover:-translate-y-1 hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50 md:w-auto"

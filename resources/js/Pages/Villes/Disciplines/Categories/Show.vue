@@ -1,8 +1,8 @@
 <script setup>
 import ResultLayout from "@/Layouts/ResultLayout.vue";
-import { Head, Link, useForm } from "@inertiajs/vue3";
-import { ref, computed, defineAsyncComponent, watch, onMounted } from "vue";
-import { useFilterProducts } from "@/composables/useFilterProducts";
+import { Head, Link, useForm, router } from "@inertiajs/vue3";
+import { ref, defineAsyncComponent, watch, onMounted, toRaw } from "vue";
+import { debounce } from "lodash";
 import CritereForm from "@/Components/Criteres/CritereForm.vue";
 import ResultsHeader from "@/Components/ResultsHeader.vue";
 import CategoriesResultNavigation from "@/Components/Categories/CategoriesResultNavigation.vue";
@@ -36,6 +36,7 @@ const props = defineProps({
     listDisciplines: Object,
     allCities: Object,
     posts: Object,
+    filters: Object,
 });
 
 const ProduitCard = defineAsyncComponent(() =>
@@ -112,12 +113,6 @@ const toggleCriteresLg = () => {
     showCriteresLg.value = !showCriteresLg.value;
 };
 
-const formCriteres = useForm({
-    criteresBase: {},
-    sousCriteres: {},
-});
-const selectedCriteres = ref([]);
-const selectedSousCriteres = ref([]);
 const filteredProduits = ref(props.produits.data);
 const filteredStructures = ref(props.structures.data);
 
@@ -129,43 +124,110 @@ const onfilteredStructuresUpdate = (filteredStr) => {
     filteredStructures.value = filteredStr;
 };
 
-const { filterProducts } = useFilterProducts(
-    props,
-    filteredProduits,
-    selectedCriteres,
-    selectedSousCriteres
+const formCriteres = useForm({
+    criteresBase: props.filters?.crit ?? {},
+    sousCriteres: props.filters?.ssCrit ?? {},
+    page: props.produits.meta.current_page,
+});
+const debouncedFilter = debounce((newFormCriteres) => {
+    router.post(
+        route("villes.disciplines.categories.show", {
+            city: props.city,
+            discipline: props.discipline.slug,
+            category: props.category.slug,
+        }),
+        {
+            crit: newFormCriteres.criteresBase,
+            ssCrit: newFormCriteres.sousCriteres,
+            page: newFormCriteres.page,
+        },
+        {
+            preserveState: true,
+            preserveScroll: true,
+            only: ["produits", "filters"],
+            onSuccess: () => {
+                filteredProduits.value = props.produits.data;
+            },
+        }
+    );
+}, 350);
+
+watch(
+    () => formCriteres,
+    (newFormCriteres) => {
+        debouncedFilter(newFormCriteres);
+    },
+    { deep: true }
 );
+
+const isEqual = (obj1, obj2) => JSON.stringify(obj1) === JSON.stringify(obj2);
 
 watch(
     () => formCriteres.criteresBase,
-    (newCriteres) => {
-        selectedCriteres.value = Object.entries(newCriteres);
-        filterProducts();
+    (newCritValue) => {
+        // Get the raw (non-reactive) version of the new value
+        const rawNewValue = toRaw(newCritValue);
+        // Compare with the previous value
+        if (!isEqual(rawNewValue, previousCriteresBase)) {
+            Object.keys(rawNewValue).forEach((critereId) => {
+                if (
+                    !isEqual(
+                        rawNewValue[critereId],
+                        previousCriteresBase[critereId]
+                    )
+                ) {
+                    resetSousCriteres(critereId, rawNewValue[critereId]);
+                }
+            });
+        }
+        // Update the previous value for the next comparison
+        previousCriteresBase = { ...rawNewValue };
     },
     { deep: true }
 );
 
-watch(
-    () => formCriteres.sousCriteres,
-    (newSousCriteres) => {
-        selectedSousCriteres.value = Object.entries(newSousCriteres);
-        filterProducts();
-    },
-    { deep: true }
-);
+// Initialize previousCriteresBase
+let previousCriteresBase = { ...toRaw(formCriteres.criteresBase) };
+
+const resetSousCriteres = (critereId, newValeur) => {
+    const critere = props.criteres.find((c) => c.id.toString() === critereId);
+
+    if (critere && critere.valeurs) {
+        critere.valeurs.forEach((valeur) => {
+            if (valeur.sous_criteres) {
+                valeur.sous_criteres.forEach((sousCritere) => {
+                    if (
+                        formCriteres.sousCriteres[sousCritere.id] !== undefined
+                    ) {
+                        formCriteres.sousCriteres[sousCritere.id] = null;
+                    }
+                });
+            }
+        });
+    }
+};
 
 const resetFormCriteres = () => {
-    formCriteres.criteresBase = {};
-    formCriteres.sousCriteres = {};
-    selectedCriteres.value = [];
-    filterProducts();
+    formCriteres.reset();
+    formCriteres.page = 1;
+    debouncedFilter(formCriteres);
+};
+
+const handlePageChange = (newPage) => {
+    if (newPage === "previous") {
+        formCriteres.page = Math.max(1, formCriteres.page - 1);
+    } else if (newPage === "next") {
+        formCriteres.page = formCriteres.page + 1;
+    } else {
+        formCriteres.page = newPage;
+    }
+    debouncedFilter(formCriteres);
 };
 const listToAnimate = ref();
 onMounted(() => {
     if (listToAnimate.value) {
         autoAnimate(listToAnimate.value);
     }
-    filterProducts();
 });
 </script>
 
@@ -194,7 +256,6 @@ onMounted(() => {
         :city="city"
         :categories="categories"
         :current-category="category"
-        :is-criteres-visible="isCriteresVisible"
     >
         <template #header>
             <ResultsHeader :discipline="discipline">
@@ -318,18 +379,27 @@ onMounted(() => {
                         <AdjustmentsHorizontalIcon v-else class="h-6 w-6" />
                     </button>
                 </div>
-                <CritereForm
-                    v-if="criteres"
-                    :criteres="criteres"
-                    :show-criteres="showCriteres"
-                    :show-criteres-lg="showCriteresLg"
-                    v-model:criteres-base="formCriteres.criteresBase"
-                    v-model:sous-criteres="formCriteres.sousCriteres"
-                    @reset-criteres="resetFormCriteres"
-                />
+                <form
+                    class="relative mx-auto w-full flex-col items-center justify-center gap-6 overflow-x-auto rounded bg-gray-50 px-2 py-2 backdrop-blur-md md:flex-row md:items-start md:justify-between md:px-6 md:pt-4"
+                    :class="{
+                        flex: showCriteres,
+                        hidden: !showCriteres,
+                        'md:flex': showCriteresLg,
+                        'md:hidden': !showCriteresLg,
+                    }"
+                >
+                    <CritereForm
+                        v-if="criteres"
+                        :criteres="criteres"
+                        :filters="filters"
+                        v-model:criteres-base="formCriteres.criteresBase"
+                        v-model:sous-criteres="formCriteres.sousCriteres"
+                        @reset-criteres="resetFormCriteres"
+                    />
+                </form>
             </div>
 
-            <template v-if="produits.data.length > 0">
+            <template v-if="filteredProduits.length > 0">
                 <div class="mx-auto py-6 md:py-12">
                     <TransitionRoot
                         as="div"
@@ -401,7 +471,8 @@ onMounted(() => {
                                 <div class="flex justify-end p-10">
                                     <Pagination
                                         :links="produits.meta.links"
-                                        :only="['produits']"
+                                        :only="['produits', 'filters']"
+                                        @page-changed="handlePageChange"
                                     />
                                 </div>
 

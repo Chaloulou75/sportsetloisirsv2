@@ -115,21 +115,33 @@ const formatCurrency = (value) => {
                                         class="text-center text-sm"
                                     >
                                         {{ critere.valeur }}
-                                        <span
+                                        <template
                                             v-if="
                                                 critere.sous_criteres &&
                                                 critere.sous_criteres.length > 0
                                             "
-                                            class="text-xs"
                                         >
-                                            <span
-                                                v-for="sousCriteres in critere.sous_criteres"
-                                                :key="sousCriteres.id"
-                                                class="text-sm"
+                                            <ul
+                                                v-for="sousCrit in critere.sous_criteres"
+                                                :key="sousCrit.id"
+                                                class="text-center text-xs"
                                             >
-                                                ({{ sousCriteres.valeur }})
-                                            </span>
-                                        </span>
+                                                <li
+                                                    class="font-semibold text-gray-500"
+                                                >
+                                                    {{
+                                                        sousCrit.sous_critere
+                                                            .nom
+                                                    }}:
+                                                    <span
+                                                        class="font-thin text-gray-700"
+                                                        >{{
+                                                            sousCrit.valeur
+                                                        }}</span
+                                                    >
+                                                </li>
+                                            </ul>
+                                        </template>
                                     </div>
                                 </div>
                             </template>

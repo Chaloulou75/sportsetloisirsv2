@@ -58,7 +58,7 @@ Route::get('/{city}/dis-{discipline}/activites-{activite}-{slug}/{produit?}', [C
     ]
 ])->name('villes.disciplines.activites.show');
 
-Route::get('/{city}/dis-{discipline}/cat-{category:slug}', [CityDisciplineCategorieController::class, 'show'])->name('villes.disciplines.categories.show');
+Route::match(['get', 'post'], '/{city}/dis-{discipline}/cat-{category:slug}', [CityDisciplineCategorieController::class, 'show'])->name('villes.disciplines.categories.show');
 // /villes/disciplines/categories/
 
 Route::get('/{city}/dis-{discipline}/cat-{category:slug}/str-{structure}', [CityDisciplineCategorieStructureController::class, 'show'])->name('villes.disciplines.categories.structures.show');

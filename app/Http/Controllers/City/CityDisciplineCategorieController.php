@@ -30,8 +30,11 @@ class CityDisciplineCategorieController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(City $city, ListDiscipline $discipline, $category): Response
+    public function show(Request $request, City $city, ListDiscipline $discipline, $category): Response
     {
+        $filters = $request->only(['crit', 'ssCrit']);
+        $page = $request->input('page', 1);
+
         $familles = Cache::remember('familles', 600, function () {
             return Famille::withProducts()->get();
         });
@@ -87,16 +90,24 @@ class CityDisciplineCategorieController extends Controller
                 ->where('visible_front', true)
                 ->get();
 
-        $citiesAroundProducts = $citiesAround->flatMap(function ($city) use ($discipline, $category) {
-            return $city->produits()->withRelations()->where('discipline_id', $discipline->id)->where('categorie_id', $category->id)->get();
+        $citiesAroundProducts = $citiesAround->flatMap(function ($city) use ($discipline, $category, $filters) {
+            return $city->produits()
+                ->withRelations()
+                ->where('discipline_id', $discipline->id)
+                ->where('categorie_id', $category->id)
+                ->filter($filters)
+                ->get();
         });
 
-        $produitsFromCity = $city->produits()->withRelations()->where('discipline_id', $discipline->id)
+        $produitsFromCity = $city->produits()
+                ->withRelations()
+                ->where('discipline_id', $discipline->id)
                 ->where('categorie_id', $category->id)
+                ->filter($filters)
                 ->get();
 
 
-        $produits = $produitsFromCity->merge($citiesAroundProducts)->paginate(12);
+        $produits = $produitsFromCity->merge($citiesAroundProducts)->paginate(4, null, 'prodpage', $page);
 
         $citiesAroundStructures = $citiesAround->flatMap(function ($city) use ($discipline, $category) {
             return $city->structures()->with([
@@ -130,7 +141,7 @@ class CityDisciplineCategorieController extends Controller
             $query->where('discipline_id', $discipline->id)->where('categorie_id', $category->id);
         })->get();
 
-        $structures = $structuresFromCity->merge($citiesAroundStructures)->paginate(12);
+        $structures = $structuresFromCity->merge($citiesAroundStructures)->paginate(4, null, 'strpage');
 
         $posts = Post::orderByDiscipline($discipline->id)->take(6)->get();
 
@@ -153,6 +164,7 @@ class CityDisciplineCategorieController extends Controller
             'criteres' => fn () => LienDisciplineCategorieCritereResource::collection($criteres),
             'allCities' => fn () => CityResource::collection($allCities),
             'posts' => fn () => PostResource::collection($posts),
+            'filters' => fn () => $filters ?? null,
         ]);
     }
 }

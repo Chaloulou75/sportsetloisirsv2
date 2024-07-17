@@ -122,7 +122,7 @@ require __DIR__ . '/famille.php';
 require __DIR__ . '/discipline.php';
 
 // activites route
-Route::get('/activites-{activite}-{slug}', [ActiviteController::class, 'show'])->name('structures.activites.show');
+Route::match(['get', 'post'], '/activites-{activite}-{slug}/{produit?}', [ActiviteController::class, 'show'])->name('structures.activites.show');
 
 // Departements routes
 require __DIR__ . '/departement.php';

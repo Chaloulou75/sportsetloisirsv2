@@ -116,13 +116,14 @@ class ActiviteController extends Controller
         return to_route('structures.disciplines.show', ['structure' => $structure , 'discipline' => $discipline])->with('success', 'Activité créée, vous pouvez ajouter d\'autres activités à votre structure.');
     }
 
-    public function show(StructureActivite $activite, string $slug, ?string $produit = null): Response
+    public function show(Request $request, StructureActivite $activite, string $slug, ?string $produit = null): Response
     {
+        $filters = $request->only(['crit', 'ssCrit']);
+        $page = $request->input('page', 1);
 
         if ($produit !== null) {
             $selectedProduit = StructureProduitResource::make(StructureProduit::withRelations()->find($produit));
         }
-
 
         $familles = Cache::remember('familles', 600, function () {
             return Famille::withProducts()->get();
@@ -140,7 +141,7 @@ class ActiviteController extends Controller
             'instructeurs'
         ])->find($activite->id); //withRelations()->
 
-        $produits = $activite->produits()->withRelations()->get();
+        $produits = $activite->produits()->withRelations()->filter($filters)->paginate(4, ['*'], 'prodpage', $page);
 
         $criteres = LienDisciplineCategorieCritere::withValeurs()
                 ->where('discipline_id', $activite->discipline_id)
@@ -160,6 +161,16 @@ class ActiviteController extends Controller
             ->take(3)
             ->get();
 
+
+        $currentRoute = [
+                'name' => 'structures.activites.show',
+                'params' => [
+                    'activite' => $activite->id,
+                    'slug' => $activite->slug_title,
+                ]
+            ];
+
+
         return Inertia::render('Structures/Activites/Show', [
             'familles' => fn () => FamilleResource::collection($familles),
             'listDisciplines' => fn () => ListDisciplineResource::collection($listDisciplines),
@@ -169,6 +180,8 @@ class ActiviteController extends Controller
             'criteres' => fn () => LienDisciplineCategorieCritereResource::collection($criteres),
             'selectedProduit' => fn () => $selectedProduit ?? null,
             'activiteSimilaires' => fn () => StructureActiviteResource::collection($activiteSimilaires),
+            'filters' => $filters ?? null,
+            'currentRoute' => $currentRoute,
         ]);
     }
 
