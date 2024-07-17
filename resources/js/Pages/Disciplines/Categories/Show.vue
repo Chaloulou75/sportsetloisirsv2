@@ -477,7 +477,7 @@ onMounted(() => {
                                         >
                                     </p>
                                 </div>
-                                <div class="my-10 flex justify-end md:px-2">
+                                <div class="my-10 flex justify-end">
                                     <Pagination
                                         :links="structures.meta.links"
                                         :only="['structures']"

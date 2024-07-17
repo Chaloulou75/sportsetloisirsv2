@@ -854,7 +854,7 @@ onMounted(() => {
                         </div>
                     </div>
                     <!-- Activité -->
-                    <div class="basis-full space-y-12 md:basis-3/4">
+                    <div class="basis-full space-y-8 md:basis-3/4">
                         <!-- titre -->
                         <div
                             class="mb-4 flex flex-col items-center justify-center"
@@ -934,6 +934,7 @@ onMounted(() => {
                                 </li>
                             </ul>
                         </div>
+
                         <div class="flex w-full items-center justify-between">
                             <h3 class="text-xl text-gray-700">
                                 Selectionner une formule en fonction de vos
@@ -987,7 +988,7 @@ onMounted(() => {
                                 "
                                 :produit="produit"
                             />
-                            <div class="my-10 flex justify-end">
+                            <div class="my-5 flex justify-end">
                                 <Pagination
                                     :links="produits.meta.links"
                                     :only="['produits', 'filters']"

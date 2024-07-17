@@ -26,8 +26,12 @@ use App\Http\Resources\LienDisciplineCategorieCritereResource;
 
 class DisciplineActiviteController extends Controller
 {
-    public function show(ListDiscipline $discipline, StructureActivite $activite, string $slug, ?string $produit = null): Response
+    public function show(Request $request, ListDiscipline $discipline, StructureActivite $activite, string $slug, ?string $produit = null): Response
     {
+
+        $filters = $request->only(['crit', 'ssCrit']);
+        $page = $request->input('page', 1);
+
         if ($produit !== null) {
             $selectedProduit = StructureProduitResource::make(StructureProduit::withRelations()->find($produit));
         }
@@ -67,7 +71,7 @@ class DisciplineActiviteController extends Controller
             'instructeurs'
         ])->find($activite->id);
 
-        $produits = $activite->produits()->withRelations()->get();
+        $produits = $activite->produits()->withRelations()->filter($filters)->paginate(4);
 
         $criteres = LienDisciplineCategorieCritere::withValeurs()
                 ->where('discipline_id', $requestDiscipline->id)
@@ -87,6 +91,17 @@ class DisciplineActiviteController extends Controller
             ->take(3)
             ->get();
 
+
+        $currentRoute = [
+            'name' => 'disciplines.activites.show',
+            'params' => [
+                'discipline' => $requestDiscipline,
+                'activite' => $activite->id,
+                'slug' => $activite->slug_title,
+            ]
+        ];
+
+
         return Inertia::render('Structures/Activites/Show', [
             'selectedProduit' => fn () => $selectedProduit ?? null,
             'discipline' => fn () => ListDisciplineResource::make($requestDiscipline),
@@ -101,6 +116,8 @@ class DisciplineActiviteController extends Controller
             'firstCategories' => fn () => LienDisciplineCategorieResource::collection($firstCategories),
             'categoriesNotInFirst' => fn () => LienDisciplineCategorieResource::collection($categoriesNotInFirst),
             'allStructureTypes' => fn () => StructuretypeResource::collection($allStructureTypes),
+            'filters' => $filters ?? null,
+            'currentRoute' => $currentRoute,
         ]);
     }
 }

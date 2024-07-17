@@ -26,8 +26,12 @@ use App\Http\Resources\LienDisciplineCategorieCritereResource;
 
 class DisciplineCategorieActiviteController extends Controller
 {
-    public function show(ListDiscipline $discipline, $category, StructureActivite $activite, string $slug, ?string $produit = null): Response
+    public function show(Request $request, ListDiscipline $discipline, $category, StructureActivite $activite, string $slug, ?string $produit = null): Response
     {
+
+        $filters = $request->only(['crit', 'ssCrit']);
+        $page = $request->input('page', 1);
+
 
         if ($produit !== null) {
             $selectedProduit = StructureProduitResource::make(StructureProduit::withRelations()->find($produit));
@@ -74,7 +78,8 @@ class DisciplineCategorieActiviteController extends Controller
             'structure.adresses',
             'instructeurs'
         ])->find($activite->id);
-        $produits = $activite->produits()->withRelations()->get();
+
+        $produits = $activite->produits()->withRelations()->filter($filters)->paginate(4);
 
         $criteres = LienDisciplineCategorieCritere::withValeurs()
         ->where('discipline_id', $discipline->id)
@@ -93,6 +98,16 @@ class DisciplineCategorieActiviteController extends Controller
             ->take(3)
             ->get();
 
+        $currentRoute = [
+            'name' => 'disciplines.categories.activites.show',
+            'params' => [
+                'discipline' => $requestDiscipline,
+                'category' => $requestCategory->slug,
+                'activite' => $activite->id,
+                'slug' => $activite->slug_title,
+            ]
+        ];
+
         return Inertia::render('Structures/Activites/Show', [
             'selectedProduit' => fn () => $selectedProduit ?? null,
             'discipline' => fn () => ListDisciplineResource::make($requestDiscipline),
@@ -108,6 +123,8 @@ class DisciplineCategorieActiviteController extends Controller
             'categoriesNotInFirst' => fn () => LienDisciplineCategorieResource::collection($categoriesNotInFirst),
             'allStructureTypes' => fn () => StructuretypeResource::collection($allStructureTypes),
             'requestCategory' => fn () => LienDisciplineCategorieResource::make($requestCategory),
+            'filters' => $filters ?? null,
+            'currentRoute' => $currentRoute,
         ]);
     }
 }

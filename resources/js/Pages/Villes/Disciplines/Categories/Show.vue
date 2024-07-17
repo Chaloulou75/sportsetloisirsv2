@@ -468,7 +468,7 @@ onMounted(() => {
                                         >
                                     </p>
                                 </div>
-                                <div class="flex justify-end p-10">
+                                <div class="my-10 flex justify-end">
                                     <Pagination
                                         :links="produits.meta.links"
                                         :only="['produits', 'filters']"
@@ -524,7 +524,7 @@ onMounted(() => {
                                         >
                                     </p>
                                 </div>
-                                <div class="flex justify-end p-10">
+                                <div class="my-10 flex justify-end">
                                     <Pagination
                                         :links="structures.meta.links"
                                         :only="['structures']"

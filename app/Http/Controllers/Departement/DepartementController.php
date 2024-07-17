@@ -92,7 +92,7 @@ class DepartementController extends Controller
 
         $flattenedDisciplines = $collectionProduits->pluck('discipline')->unique();
 
-        $produits = $collectionProduits->paginate(12);
+        $produits = $collectionProduits->paginate(4, null, 'prodpage');
 
         $structures = $departement->structures()->with([
                 'adresses'  => function ($query) {
@@ -102,7 +102,7 @@ class DepartementController extends Controller
                 'activites',
                 'activites.discipline',
                 'activites.categorie',
-            ])->paginate(12);
+            ])->paginate(4, ['*'], 'strpage');
 
         $posts = Post::with(['comments', 'author', 'tags', 'disciplines'])->latest()->take(6)->get();
 

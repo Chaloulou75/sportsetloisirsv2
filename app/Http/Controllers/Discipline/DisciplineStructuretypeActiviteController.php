@@ -26,8 +26,11 @@ use App\Http\Resources\StructureProduitResource;
 
 class DisciplineStructuretypeActiviteController extends Controller
 {
-    public function show(ListDiscipline $discipline, Structuretype $structuretype, StructureActivite $activite, string $slug, ?string $produit = null): Response
+    public function show(Request $request, ListDiscipline $discipline, Structuretype $structuretype, StructureActivite $activite, string $slug, ?string $produit = null): Response
     {
+
+        $filters = $request->only(['crit', 'ssCrit']);
+        $page = $request->input('page', 1);
 
         if ($produit !== null) {
             $selectedProduit = StructureProduitResource::make(StructureProduit::withRelations()->find($produit));
@@ -72,7 +75,7 @@ class DisciplineStructuretypeActiviteController extends Controller
             'instructeurs'
         ])->find($activite->id);
 
-        $produits = $activite->produits()->withRelations()->get();
+        $produits = $activite->produits()->withRelations()->filter($filters)->paginate(4);
 
         $criteres = LienDisciplineCategorieCritere::withValeurs()
                 ->where('discipline_id', $requestDiscipline->id)
@@ -91,6 +94,16 @@ class DisciplineStructuretypeActiviteController extends Controller
             ->take(3)
             ->get();
 
+        $currentRoute = [
+            'name' => 'disciplines.structuretypes.activites.show',
+            'params' => [
+                'discipline' => $requestDiscipline,
+                'structuretype' => $structuretype,
+                'activite' => $activite->id,
+                'slug' => $activite->slug_title,
+            ]
+        ];
+
         return Inertia::render('Structures/Activites/Show', [
             'selectedProduit' => fn () => $selectedProduit ?? null,
             'discipline' => fn () => ListDisciplineResource::make($requestDiscipline),
@@ -101,12 +114,13 @@ class DisciplineStructuretypeActiviteController extends Controller
             'allCities' => fn () => CityResource::collection($allCities),
             'activite' => fn () => StructureActiviteResource::make($activite),
             'activiteSimilaires' => fn () => StructureActiviteResource::collection($activiteSimilaires),
-
             'categories' => fn () => LienDisciplineCategorieResource::collection($categories),
             'firstCategories' => fn () => LienDisciplineCategorieResource::collection($firstCategories),
             'categoriesNotInFirst' => fn () => LienDisciplineCategorieResource::collection($categoriesNotInFirst),
             'allStructureTypes' => fn () => StructuretypeResource::collection($allStructureTypes),
             'structuretypeElected' => fn () => StructuretypeResource::make($structuretypeElected),
+            'filters' => $filters ?? null,
+            'currentRoute' => $currentRoute,
         ]);
     }
 }

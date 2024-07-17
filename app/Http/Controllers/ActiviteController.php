@@ -60,7 +60,7 @@ class ActiviteController extends Controller
             return to_route('structures.disciplines.index', $structure)->with('error', 'Cette discipline est déjà associée à cette structure.');
         }
 
-        $structureDiscipline = $structure->disciplines()->attach($discipline->id, ['nb_produits' => 1]);
+        $structure->disciplines()->attach($discipline->id, ['nb_produits' => 1]);
 
         // structureCategorie
         $validatedData = request()->validate([
@@ -72,7 +72,7 @@ class ActiviteController extends Controller
 
             $disCat = LienDisciplineCategorie::where('discipline_id', $discipline->id)->where('categorie_id', $category_id)->firstOrfail();
 
-            $structureActiviteCategorie = $structure->categories()->attach($disCat->id, [
+            $structure->categories()->attach($disCat->id, [
                 'discipline_id' => $discipline->id,
             ]);
 

@@ -6,7 +6,6 @@ import ResultsHeader from "@/Components/ResultsHeader.vue";
 import DisciplineSmallCard from "@/Components/Disciplines/DisciplineSmallCard.vue";
 import { TransitionRoot } from "@headlessui/vue";
 import { HomeIcon, ListBulletIcon, MapIcon } from "@heroicons/vue/24/outline";
-import { useElementVisibility } from "@vueuse/core";
 import CitiesAround from "@/Components/Cities/CitiesAround.vue";
 
 const LeafletMapProduitMultiple = defineAsyncComponent(() =>
@@ -39,27 +38,21 @@ const props = defineProps({
     flattenedDisciplines: Object,
     citiesAround: Object,
     posts: Object,
-    filters: Object,
 });
 
 const mapStructure = ref(null);
-const mapIsVisible = useElementVisibility(mapStructure);
 const listeStructure = ref(null);
-const listeIsVisible = useElementVisibility(listeStructure);
-
 const displayProduits = ref(true);
 const displayMap = ref(false);
 
 const goToMap = () => {
     displayProduits.value = !displayProduits.value;
     displayMap.value = !displayMap.value;
-    // mapStructure.value.scrollIntoView({ behavior: "smooth" });
 };
 
 const goToListe = () => {
     displayProduits.value = !displayProduits.value;
     displayMap.value = !displayMap.value;
-    // listeStructure.value.scrollIntoView({ behavior: "smooth" });
 };
 
 const hoveredProduit = ref(null);
