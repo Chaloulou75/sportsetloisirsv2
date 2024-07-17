@@ -32,7 +32,6 @@ class CityDisciplineStructuretypeActiviteController extends Controller
         $filters = $request->only(['crit', 'ssCrit']);
         $page = $request->input('page', 1);
 
-
         if ($produit !== null) {
             $selectedProduit = StructureProduitResource::make(StructureProduit::withRelations()->find($produit));
         }

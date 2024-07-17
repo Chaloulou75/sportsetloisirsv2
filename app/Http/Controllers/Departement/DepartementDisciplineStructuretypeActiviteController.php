@@ -28,9 +28,14 @@ use App\Http\Resources\LienDisciplineCategorieCritereResource;
 
 class DepartementDisciplineStructuretypeActiviteController extends Controller
 {
-    public function show(Departement $departement, ListDiscipline $discipline, StructureType $structuretype, StructureActivite $activite, ?string $produit = null): Response
+    public function show(Request $request, Departement $departement, ListDiscipline $discipline, StructureType $structuretype, StructureActivite $activite, ?string $produit = null): Response
     {
-        $selectedProduit = StructureProduit::withRelations()->find(request()->produit);
+        $filters = $request->only(['crit', 'ssCrit']);
+        $page = $request->input('page', 1);
+
+        if ($produit !== null) {
+            $selectedProduit = StructureProduit::withRelations()->find(request()->produit);
+        }
 
         $familles = Cache::remember('familles', 600, function () {
             return Famille::withProducts()->get();
@@ -77,7 +82,7 @@ class DepartementDisciplineStructuretypeActiviteController extends Controller
             'instructeurs'
         ])->find($activite->id);
 
-        $produits = $activite->produits()->withRelations()->get();
+        $produits = $activite->produits()->withRelations()->filter($filters)->paginate(4);
 
         $criteres = LienDisciplineCategorieCritere::withValeurs()
                 ->where('discipline_id', $requestDiscipline->id)
@@ -96,6 +101,19 @@ class DepartementDisciplineStructuretypeActiviteController extends Controller
             ->take(3)
             ->get();
 
+
+        $currentRoute = [
+                    'name' => 'departements.disciplines.structuretypes.activites.show',
+                    'params' => [
+                        'departement' => $departement,
+                        'discipline' => $discipline,
+                        'structuretype' => $structuretype,
+                        'activite' => $activite->id,
+                        'slug' => $activite->slug_title,
+                    ]
+                ];
+
+
         return Inertia::render('Structures/Activites/Show', [
             'departement' => fn () => DepartementResource::make($departement),
             'discipline' => fn () => ListDisciplineResource::make($requestDiscipline) ,
@@ -112,6 +130,8 @@ class DepartementDisciplineStructuretypeActiviteController extends Controller
             'categoriesNotInFirst' => fn () => LienDisciplineCategorieResource::collection($categoriesNotInFirst),
             'allStructureTypes' => fn () => StructuretypeResource::collection($allStructureTypes),
             'structuretypeElected' => fn () => StructuretypeResource::make($structuretypeElected),
+            'filters' => $filters ?? null,
+            'currentRoute' => $currentRoute,
         ]);
 
     }
