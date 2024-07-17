@@ -83,16 +83,8 @@ class DepartementDisciplineCategorieController extends Controller
                         ->select(['id', 'name', 'slug'])
                         ->get();
 
-        // $produits = $departement->cities->flatMap(function ($city) use ($discipline, $category, $filters) {
-        //     return $city
-        //     ->produits()
-        //     ->withRelations()
-        //     ->where('discipline_id', $discipline->id)
-        //     ->where('categorie_id', $category->id)
-        //     ->filter($filters)->get();
-        // })->paginate(4, null, $page, 'prodpage');
-
         $produits = StructureProduit::query()
+                ->select('structures_produits.*')
                 ->join('structure_adresse', 'structures_produits.lieu_id', '=', 'structure_adresse.id')
                 ->join('villes_france', 'structure_adresse.city_id', '=', 'villes_france.id')
                 ->where('villes_france.departement', $departement->numero)
@@ -101,7 +93,6 @@ class DepartementDisciplineCategorieController extends Controller
                 ->withRelations()
                 ->filter($filters)
                 ->paginate(4, ['*'], 'prodpage', $page);
-
 
         $structures = $departement->structures()->with([
             'adresses'  => function ($query) {
@@ -122,6 +113,7 @@ class DepartementDisciplineCategorieController extends Controller
                             ->select('id', 'slug', 'ville', 'code_postal')
                             ->limit(10)
                             ->get();
+
         $posts = Post::orderByDiscipline($discipline->id)->take(6)->get();
 
         $departement->timestamp = false;
