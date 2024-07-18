@@ -101,18 +101,16 @@ class DepartementDisciplineStructuretypeActiviteController extends Controller
             ->take(3)
             ->get();
 
-
         $currentRoute = [
-                    'name' => 'departements.disciplines.structuretypes.activites.show',
-                    'params' => [
-                        'departement' => $departement,
-                        'discipline' => $discipline,
-                        'structuretype' => $structuretype,
-                        'activite' => $activite->id,
-                        'slug' => $activite->slug_title,
-                    ]
-                ];
-
+            'name' => 'departements.disciplines.structuretypes.activites.show',
+            'params' => [
+                'departement' => $departement,
+                'discipline' => $discipline,
+                'structuretype' => $structuretype,
+                'activite' => $activite->id,
+                'slug' => $activite->slug_title,
+            ]
+        ];
 
         return Inertia::render('Structures/Activites/Show', [
             'departement' => fn () => DepartementResource::make($departement),

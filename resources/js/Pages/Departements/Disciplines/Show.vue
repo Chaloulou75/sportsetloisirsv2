@@ -186,7 +186,7 @@ const onfilteredStructuresUpdate = (filteredStr) => {
         </template>
         <template #default>
             <div
-                class="sticky left-0 right-0 top-16 z-40 bg-transparent backdrop-blur-md"
+                class="sticky left-0 right-0 top-16 z-[9998] bg-transparent backdrop-blur-md"
                 ref="categoriesEl"
                 v-if="categories.length > 0"
             >
