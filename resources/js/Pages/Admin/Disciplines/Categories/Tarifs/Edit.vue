@@ -689,7 +689,6 @@ onMounted(() => {
                                     </div>
                                 </form>
                                 <!-- liste valeurs de ss fields -->
-
                                 <ul
                                     v-if="sousField.valeurs.length > 0"
                                     class="ml-6 list-inside list-disc space-y-4 py-2 text-sm text-slate-600 marker:text-indigo-600"
@@ -783,7 +782,9 @@ onMounted(() => {
                                         (sousField.type_champ_form ===
                                             'select' ||
                                             sousField.type_champ_form ===
-                                                'checkbox')
+                                                'checkbox' ||
+                                            sousField.type_champ_form ===
+                                                'radio')
                                     "
                                 >
                                     <button
@@ -927,82 +928,6 @@ onMounted(() => {
                                     >
                                         {{ errors.addSousFieldForm.nom }}
                                     </div>
-                                    <!-- <Listbox
-                                        class="w-full flex-grow"
-                                        v-model="addSousFieldForm.type_champ"
-                                    >
-                                        <div class="relative mt-1">
-                                            <ListboxButton
-                                                class="relative mt-1 w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm"
-                                            >
-                                                <span class="block truncate">{{
-                                                    addSousFieldForm.type_champ
-                                                        .type
-                                                }}</span>
-                                                <span
-                                                    class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2"
-                                                >
-                                                    <ChevronUpDownIcon
-                                                        class="h-5 w-5 text-gray-400"
-                                                        aria-hidden="true"
-                                                    />
-                                                </span>
-                                            </ListboxButton>
-
-                                            <transition
-                                                leave-active-class="transition duration-100 ease-in"
-                                                leave-from-class="opacity-100"
-                                                leave-to-class="opacity-0"
-                                            >
-                                                <ListboxOptions
-                                                    class="absolute z-40 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-left text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
-                                                >
-                                                    <ListboxOption
-                                                        v-slot="{
-                                                            active,
-                                                            selected,
-                                                        }"
-                                                        v-for="(
-                                                            type_champ, index
-                                                        ) in type_champs"
-                                                        :key="index"
-                                                        :value="type_champ"
-                                                        as="template"
-                                                    >
-                                                        <li
-                                                            :class="[
-                                                                active
-                                                                    ? 'bg-amber-100 text-amber-900'
-                                                                    : 'text-gray-700',
-                                                                'relative cursor-default select-none py-2 pl-10 pr-4',
-                                                            ]"
-                                                        >
-                                                            <span
-                                                                :class="[
-                                                                    selected
-                                                                        ? 'font-medium'
-                                                                        : 'font-normal',
-                                                                    'block truncate',
-                                                                ]"
-                                                                >{{
-                                                                    type_champ.type
-                                                                }}</span
-                                                            >
-                                                            <span
-                                                                v-if="selected"
-                                                                class="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600"
-                                                            >
-                                                                <CheckCircleIcon
-                                                                    class="h-5 w-5"
-                                                                    aria-hidden="true"
-                                                                />
-                                                            </span>
-                                                        </li>
-                                                    </ListboxOption>
-                                                </ListboxOptions>
-                                            </transition>
-                                        </div>
-                                    </Listbox> -->
                                     <div>
                                         <label
                                             for="ssFieldChamp"
@@ -1010,7 +935,7 @@ onMounted(() => {
                                         >
                                             Type de champ:
                                         </label>
-                                        <div class="mt-1">
+                                        <div class="mt-1 text-left">
                                             <Dropdown
                                                 v-model="
                                                     addSousFieldForm.type_champ
@@ -1055,7 +980,8 @@ onMounted(() => {
                             v-if="
                                 !showAddValeurForm(field) &&
                                 (field.type_champ_form === 'select' ||
-                                    field.type_champ_form === 'checkbox')
+                                    field.type_champ_form === 'checkbox' ||
+                                    field.type_champ_form === 'radio')
                             "
                             @click="toggleAddValeurForm(field)"
                             class="inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-4 py-3 text-center text-sm font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
@@ -1173,7 +1099,7 @@ onMounted(() => {
                                 >
                                     Type de champ:
                                 </label>
-                                <div class="mt-1">
+                                <div class="mt-1 text-left">
                                     <Dropdown
                                         v-model="addBookingFieldForm.type_champ"
                                         :options="type_champs"
@@ -1191,78 +1117,6 @@ onMounted(() => {
                                     />
                                 </div>
                             </div>
-                            <!-- <Listbox
-                                class="w-full flex-grow"
-                                v-model="addBookingFieldForm.type_champ"
-                            >
-                                <div class="relative mt-1">
-                                    <ListboxButton
-                                        class="relative mt-1 w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm"
-                                    >
-                                        <span class="block truncate">{{
-                                            addBookingFieldForm.type_champ.type
-                                        }}</span>
-                                        <span
-                                            class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2"
-                                        >
-                                            <ChevronUpDownIcon
-                                                class="h-5 w-5 text-gray-400"
-                                                aria-hidden="true"
-                                            />
-                                        </span>
-                                    </ListboxButton>
-
-                                    <transition
-                                        leave-active-class="transition duration-100 ease-in"
-                                        leave-from-class="opacity-100"
-                                        leave-to-class="opacity-0"
-                                    >
-                                        <ListboxOptions
-                                            class="absolute z-40 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-left text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
-                                        >
-                                            <ListboxOption
-                                                v-slot="{ active, selected }"
-                                                v-for="(
-                                                    type_champ, index
-                                                ) in type_champs"
-                                                :key="index"
-                                                :value="type_champ"
-                                                as="template"
-                                            >
-                                                <li
-                                                    :class="[
-                                                        active
-                                                            ? 'bg-amber-100 text-amber-900'
-                                                            : 'text-gray-700',
-                                                        'relative cursor-default select-none py-2 pl-10 pr-4',
-                                                    ]"
-                                                >
-                                                    <span
-                                                        :class="[
-                                                            selected
-                                                                ? 'font-medium'
-                                                                : 'font-normal',
-                                                            'block truncate',
-                                                        ]"
-                                                        >{{
-                                                            type_champ.type
-                                                        }}</span
-                                                    >
-                                                    <span
-                                                        v-if="selected"
-                                                        class="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600"
-                                                    >
-                                                        <CheckCircleIcon
-                                                            class="h-5 w-5"
-                                                            aria-hidden="true"
-                                                        />
-                                                    </span>
-                                                </li>
-                                            </ListboxOption>
-                                        </ListboxOptions>
-                                    </transition>
-                                </div>
-                            </Listbox> -->
                         </div>
                         <button
                             type="submit"
