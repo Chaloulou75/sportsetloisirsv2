@@ -15,19 +15,19 @@ Route::get('disciplines', [DisciplineController::class, 'index'])->name('discipl
 
 Route::get('/dis-{discipline}', [DisciplineController::class, 'show'])->name('disciplines.show');
 
-Route::get('/dis-{discipline}/str-{structure}', [DisciplineStructureController::class, 'show'])->name('disciplines.structures.show');
+Route::match(['get', 'post'], '/dis-{discipline}/str-{structure}', [DisciplineStructureController::class, 'show'])->name('disciplines.structures.show');
 
 Route::match(['get', 'post'], '/dis-{discipline}/activites-{activite}-{slug}/{produit?}', [DisciplineActiviteController::class, 'show'])->name('disciplines.activites.show');
 
 Route::match(['get', 'post'], '/dis-{discipline}/cat-{category:slug}', [CategoryDisciplineController::class, 'show'])->name('disciplines.categories.show');
 
-Route::get('/dis-{discipline}/cat-{category:slug}/str-{structure}', [DisciplineCategorieStructureController::class, 'show'])->name('disciplines.categories.structures.show');
+Route::match(['get', 'post'], '/dis-{discipline}/cat-{category:slug}/str-{structure}', [DisciplineCategorieStructureController::class, 'show'])->name('disciplines.categories.structures.show');
 
 Route::match(['get', 'post'], '/dis-{discipline}/cat-{category:slug}/activites-{activite}-{slug}/{produit?}', [DisciplineCategorieActiviteController::class, 'show'])->name('disciplines.categories.activites.show');
 
 Route::get('/dis-{discipline}/typ-{structuretype}', [StructureTypeDisciplineController::class, 'show'])->name('disciplines.structuretypes.show');
 
-Route::get('/dis-{discipline}/typ-{structuretype}/str-{structure}', [DisciplineStructuretypeStructureController::class, 'show'])->name('disciplines.structuretypes.structures.show');
+Route::match(['get', 'post'], '/dis-{discipline}/typ-{structuretype}/str-{structure}', [DisciplineStructuretypeStructureController::class, 'show'])->name('disciplines.structuretypes.structures.show');
 
 Route::match(['get', 'post'], '/dis-{discipline}/typ-{structuretype}/activites-{activite}-{slug}/{produit?}', [DisciplineStructuretypeActiviteController::class, 'show'])->name('disciplines.structuretypes.activites.show');
 

@@ -94,10 +94,6 @@ const formatCurrency = (value) => {
     // Return the original value if conversion failed
     return value;
 };
-
-const formatCityName = (ville) => {
-    return ville.charAt(0).toUpperCase() + ville.slice(1).toLowerCase();
-};
 </script>
 
 <template v-if="link">

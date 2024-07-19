@@ -112,8 +112,7 @@ Route::post('/blog/{post:slug}/likes', [PostLikeController::class, 'store'])->na
 Route::get('/structures', [StructureController::class, 'index'])
         ->name('structures.index');
 
-Route::get('str-{structure:slug}', [StructureController::class, 'show'])
-    ->name('structures.show');
+Route::match(['get', 'post'], 'str-{structure:slug}', [StructureController::class, 'show'])->name('structures.show');
 
 // familles routes
 require __DIR__ . '/famille.php';

@@ -1,23 +1,22 @@
 <script setup>
 import ResultLayout from "@/Layouts/ResultLayout.vue";
-import { Head, Link, useForm } from "@inertiajs/vue3";
-import { ref, watch, computed } from "vue";
+import { Head, Link, useForm, router } from "@inertiajs/vue3";
+import {
+    ref,
+    watch,
+    computed,
+    onMounted,
+    toRaw,
+    defineAsyncComponent,
+} from "vue";
+import { debounce } from "lodash";
+import CritereForm from "@/Components/Criteres/CritereForm.vue";
 import ResultsHeader from "@/Components/ResultsHeader.vue";
 import CategoriesResultNavigation from "@/Components/Categories/CategoriesResultNavigation.vue";
-import CheckboxForm from "@/Components/Forms/CheckboxForm.vue";
-import SelectForm from "@/Components/Forms/SelectForm.vue";
-import RadioForm from "@/Components/Forms/RadioForm.vue";
-import RangeInputForm from "@/Components/Forms/RangeInputForm.vue";
-import TextInput from "@/Components/Forms/TextInput.vue";
-import InputLabel from "@/Components/Forms/InputLabel.vue";
-import OpenDaysForm from "@/Components/Forms/DayTime/OpenDaysForm.vue";
-import SingleDateForm from "@/Components/Forms/DayTime/SingleDateForm.vue";
-import SingleTimeForm from "@/Components/Forms/DayTime/SingleTimeForm.vue";
-import OpenTimesForm from "@/Components/Forms/DayTime/OpenTimesForm.vue";
-import OpenMonthsForm from "@/Components/Forms/DayTime/OpenMonthsForm.vue";
 import LeafletMap from "@/Components/Maps/LeafletMap.vue";
 import VueCal from "vue-cal";
 import "vue-cal/dist/vuecal.css";
+import autoAnimate from "@formkit/auto-animate";
 import {
     UserIcon,
     AtSymbolIcon,
@@ -26,7 +25,6 @@ import {
     HomeIcon,
 } from "@heroicons/vue/24/outline";
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from "@headlessui/vue";
-import ActiviteCard from "@/Components/Structures/ActiviteCard.vue";
 
 const props = defineProps({
     structure: Object,
@@ -45,43 +43,41 @@ const props = defineProps({
     criteres: Object,
     departement: Object,
     can: Object,
+    filters: Object,
+    currentRoute: Object,
 });
 
-const uniqueDisciplines = computed(() => {
-    const disciplinesMap = new Map();
-    props.structure.activites.forEach((activity) => {
-        const discipline = activity.discipline;
-        if (!disciplinesMap.has(discipline.id)) {
-            disciplinesMap.set(discipline.id, discipline);
+const Pagination = defineAsyncComponent(() =>
+    import("@/Components/Pagination.vue")
+);
+const ActiviteCard = defineAsyncComponent(() =>
+    import("@/Components/Structures/ActiviteCard.vue")
+);
+
+const structure = ref(props.structure);
+
+const selectedDiscipline = ref(null);
+const selectedCategory = ref(null);
+
+const initializeSelections = () => {
+    if (props.requestDiscipline && structure.value) {
+        const discipline = structure.value.disciplines.find(
+            (d) => d.id === props.requestDiscipline.id
+        );
+        if (discipline) {
+            selectedDiscipline.value = discipline;
+
+            if (props.requestCategory) {
+                const category = discipline.str_categories.find(
+                    (c) => c.id === props.requestCategory.id
+                );
+                if (category) {
+                    selectedCategory.value = category;
+                }
+            }
         }
-    });
-    return Array.from(disciplinesMap.values());
-});
-
-const selectedDiscipline = ref(
-    props.requestDiscipline ? props.requestDiscipline : null
-);
-const selectedCategory = ref(
-    props.requestCategory ? props.requestCategory : null
-);
-
-const formCriteres = ref({
-    criteres: {},
-    sousCriteres: {},
-});
-
-const formOtherCriteres = useForm({
-    date_seule: null,
-    dates: null,
-    time_seule: null,
-    times: null,
-    months: null,
-    rayon_km: 0,
-});
-
-const selectedCriteres = ref([]);
-const selectedSousCriteres = ref([]);
-const filteredActivitesWithCriteres = ref(props.structure.activites);
+    }
+};
 
 const handleDisciplineClick = (discipline) => {
     selectedDiscipline.value = discipline;
@@ -89,19 +85,27 @@ const handleDisciplineClick = (discipline) => {
 };
 
 const filteredCategories = computed(() => {
-    if (!selectedDiscipline) return [];
-
-    return props.structure.activites
-        .filter(
-            (activity) => activity.discipline_id === selectedDiscipline.value.id
-        )
-        .map((activity) => activity.categorie);
+    if (!selectedDiscipline.value) return [];
+    return selectedDiscipline.value.str_categories || [];
 });
 
 const handleCategoryClick = (category) => {
     selectedCategory.value = category;
-    filterActivities();
 };
+
+const filteredActivities = computed(() => {
+    if (!selectedCategory.value || !structure.value) return [];
+
+    const category = structure.value.disciplines
+        .flatMap((d) => d.str_categories)
+        .find((c) => c.id === selectedCategory.value.id);
+
+    return category
+        ? category.str_activites.filter(
+              (activite) => activite.produits && activite.produits.length > 0
+          )
+        : [];
+});
 
 const filteredCriteres = computed(() => {
     if (!selectedDiscipline.value || !selectedCategory.value) return [];
@@ -113,143 +117,90 @@ const filteredCriteres = computed(() => {
     );
 });
 
-const updateSelectedCheckboxes = (critereId, optionValue, checked) => {
-    if (checked) {
-        if (!formCriteres.value.criteres[critereId]) {
-            formCriteres.value.criteres[critereId] = [optionValue];
-        } else {
-            formCriteres.value.criteres[critereId].push(optionValue);
-        }
-    } else {
-        const selectedCritere = formCriteres.value.criteres[critereId];
-        if (selectedCritere) {
-            const index = selectedCritere.indexOf(optionValue);
-            if (index !== -1) {
-                selectedCritere.splice(index, 1);
-            }
-            if (selectedCritere.length === 0) {
-                delete formCriteres.value.criteres[critereId];
-            }
-        }
-    }
-};
-
-const isCheckboxSelected = computed(() => {
-    return (critereId, optionValue) => {
-        return (
-            formCriteres.value.criteres[critereId] &&
-            formCriteres.value.criteres[critereId].includes(optionValue)
-        );
-    };
+const formCriteres = useForm({
+    criteresBase: props.filters?.crit ?? {},
+    sousCriteres: props.filters?.ssCrit ?? {},
+    page: 1,
 });
 
-const filterActivities = () => {
-    if (!selectedDiscipline.value || !selectedCategory.value) return [];
-    if (
-        selectedDiscipline.value &&
-        selectedCategory.value &&
-        selectedCriteres.value.length === 0
-    ) {
-        filteredActivitesWithCriteres.value = props.structure.activites.filter(
-            (activite) =>
-                activite.discipline_id === selectedDiscipline.value.id &&
-                activite.categorie_id === selectedCategory.value.id
-        );
-    } else {
-        filteredActivitesWithCriteres.value = props.structure.activites
-            .filter(
-                (activite) =>
-                    activite.discipline_id === selectedDiscipline.value.id &&
-                    activite.categorie_id === selectedCategory.value.id
-            )
-            .filter((activite) => {
-                return activite.produits.some((produit) => {
-                    return (
-                        selectedCriteres.value.every((selectedCritere) => {
-                            if (!!selectedCritere.inclus_all === true) {
-                                return true;
-                            }
-                            if (Array.isArray(selectedCritere)) {
-                                return selectedCritere.some(
-                                    (critereInArray) => {
-                                        return produit.criteres.some(
-                                            (produitCritere) =>
-                                                produitCritere.valeur_id ===
-                                                critereInArray.id
-                                        );
-                                    }
-                                );
-                            } else {
-                                return produit.criteres.some(
-                                    (produitCritere) => {
-                                        // Check if 'valeur_id' exists in produitCritere
-                                        const valeurIdExists =
-                                            produitCritere.hasOwnProperty(
-                                                "valeur_id"
-                                            );
+const debouncedFilter = debounce((newFormCriteres) => {
+    router.post(
+        route(props.currentRoute.name, props.currentRoute.params),
+        {
+            crit: newFormCriteres.criteresBase,
+            ssCrit: newFormCriteres.sousCriteres,
+            page: newFormCriteres.page,
+        },
+        {
+            preserveState: true,
+            preserveScroll: true,
+            onSuccess: (page) => {
+                structure.value = page.props.structure;
+            },
+        }
+    );
+}, 350);
 
-                                        return (
-                                            (valeurIdExists &&
-                                                produitCritere.valeur_id ===
-                                                    selectedCritere.id) ||
-                                            (!!produitCritere.critere_valeur &&
-                                                !!produitCritere.critere_valeur
-                                                    .inclus_all === true)
-                                        );
-                                    }
-                                );
-                            }
-                        }) &&
-                        selectedSousCriteres.value.every(
-                            (selectedSousCritere) => {
-                                return produit.criteres.some(
-                                    (produitCritere) => {
-                                        return (
-                                            produitCritere.sous_criteres &&
-                                            produitCritere.sous_criteres.some(
-                                                (sousCritere) =>
-                                                    sousCritere.sous_critere_valeur_id ===
-                                                    selectedSousCritere.id
-                                            )
-                                        );
-                                    }
-                                );
-                            }
-                        )
-                    );
-                });
+watch(
+    () => formCriteres,
+    (newFormCriteres) => {
+        debouncedFilter(newFormCriteres);
+    },
+    { deep: true }
+);
+
+const isEqual = (obj1, obj2) => JSON.stringify(obj1) === JSON.stringify(obj2);
+
+watch(
+    () => formCriteres.criteresBase,
+    (newCritValue) => {
+        // Get the raw (non-reactive) version of the new value
+        const rawNewValue = toRaw(newCritValue);
+        // Compare with the previous value
+        if (!isEqual(rawNewValue, previousCriteresBase)) {
+            Object.keys(rawNewValue).forEach((critereId) => {
+                if (
+                    !isEqual(
+                        rawNewValue[critereId],
+                        previousCriteresBase[critereId]
+                    )
+                ) {
+                    resetSousCriteres(critereId, rawNewValue[critereId]);
+                }
             });
+        }
+        // Update the previous value for the next comparison
+        previousCriteresBase = { ...rawNewValue };
+    },
+    { deep: true }
+);
+
+// Initialize previousCriteresBase
+let previousCriteresBase = { ...toRaw(formCriteres.criteresBase) };
+
+const resetSousCriteres = (critereId, newValeur) => {
+    const critere = props.criteres.find((c) => c.id.toString() === critereId);
+
+    if (critere && critere.valeurs) {
+        critere.valeurs.forEach((valeur) => {
+            if (valeur.sous_criteres) {
+                valeur.sous_criteres.forEach((sousCritere) => {
+                    if (
+                        formCriteres.sousCriteres[sousCritere.id] !== undefined
+                    ) {
+                        formCriteres.sousCriteres[sousCritere.id] = null;
+                    }
+                });
+            }
+        });
     }
 };
 
-watch(
-    () => [selectedDiscipline.value, selectedCategory.value],
-    ([newDiscipline, newCategory]) => {
-        if (newDiscipline || newCategory) {
-            filterActivities();
-        }
-    },
-    { deep: true }
-);
-
-watch(
-    () => formCriteres.value.criteres,
-    (newCriteres) => {
-        selectedCriteres.value = Object.values(newCriteres).filter(Boolean);
-        filterActivities();
-    },
-    { deep: true }
-);
-
-watch(
-    () => formCriteres.value.sousCriteres,
-    (newSousCriteres) => {
-        selectedSousCriteres.value =
-            Object.values(newSousCriteres).filter(Boolean);
-        filterActivities();
-    },
-    { deep: true }
-);
+const resetFormCriteres = () => {
+    formCriteres.reset();
+    formCriteres.page = 1;
+    debouncedFilter(formCriteres);
+};
 
 function formatPhoneNumber(phoneNumber) {
     const cleanPhoneNumber = phoneNumber.replace(/\D/g, "");
@@ -262,22 +213,32 @@ function formatPhoneNumber(phoneNumber) {
     return phoneNumber;
 }
 
-const formatCityName = (ville) => {
-    return ville.charAt(0).toUpperCase() + ville.slice(1).toLowerCase();
-};
-
 const getEvents = () => {
     const events = [];
 
-    for (const activite of filteredActivitesWithCriteres.value) {
+    for (const activite of filteredActivities.value) {
         for (const produit of activite.produits) {
             for (const planning of produit.plannings) {
                 if (planning) {
                     const event = {
                         start: planning.start,
                         end: planning.end,
-                        title: planning.title ?? activite.titre,
-                        content: activite.description,
+                        title: `
+                        <p class="text-sm text-gray-900 uppercase">
+                            ${planning.title ?? activite.titre}
+                        </p>
+                        `,
+                        content: `
+                        <ul class="text-xs font-semibold text-gray-800">
+                            <li>${activite.discipline.name}</li>
+                            <li>Produit n°: ${planning.produit_id}</li>
+                        </ul>
+                        `,
+                        contentFull: `
+                        <p class="text-xs text-gray-600 truncate">
+                            ${activite.description}
+                        </p>
+                        `,
                         activiteId: activite.id,
                         produitId: planning.produit_id,
                         planningId: planning.id,
@@ -294,6 +255,14 @@ const getEvents = () => {
 };
 
 const events = getEvents();
+
+const listToAnimate = ref();
+onMounted(() => {
+    initializeSelections();
+    if (listToAnimate.value) {
+        autoAnimate(listToAnimate.value);
+    }
+});
 </script>
 
 <template>
@@ -650,17 +619,18 @@ const events = getEvents();
                             </p>
                         </div>
                         <!-- Disciplines -->
-                        <div v-if="uniqueDisciplines.length > 0">
+                        <div v-if="structure.disciplines.length > 0">
                             <h3
                                 class="my-4 text-lg font-semibold text-gray-700"
                             >
                                 Les disciplines proposées:
                             </h3>
                             <div
-                                class="grid w-full grid-cols-1 gap-4 text-gray-600 md:grid-cols-3 lg:grid-cols-4 lg:gap-6"
+                                class="grid w-full grid-cols-1 gap-4 text-gray-600 md:grid-cols-3 md:gap-8 lg:grid-cols-4"
                             >
                                 <button
-                                    v-for="discipline in uniqueDisciplines"
+                                    type="button"
+                                    v-for="discipline in structure.disciplines"
                                     :key="discipline.id"
                                     @click="handleDisciplineClick(discipline)"
                                     :class="[
@@ -730,347 +700,19 @@ const events = getEvents();
                                     selectedCategory &&
                                     filteredCriteres.length > 0
                                 "
-                                class="mx-auto my-6 grid w-full grid-cols-1 gap-4 text-gray-600 md:grid-cols-3"
+                                class="mx-auto grid w-full grid-cols-1 gap-4 bg-gray-50 p-2 shadow md:grid-cols-3"
                             >
-                                <div
-                                    v-for="critere in filteredCriteres"
-                                    :key="critere.id"
-                                >
-                                    <!-- select -->
-                                    <SelectForm
-                                        :classes="'block'"
-                                        class="max-w-sm"
-                                        v-if="
-                                            critere.type_champ_form === 'select'
-                                        "
-                                        :name="critere.nom"
-                                        v-model="
-                                            formCriteres.criteres[critere.id]
-                                        "
-                                        :options="critere.valeurs"
-                                    />
-
-                                    <!-- checkbox -->
-                                    <CheckboxForm
-                                        :classes="'block'"
-                                        class="max-w-sm"
-                                        v-if="
-                                            critere.type_champ_form ===
-                                            'checkbox'
-                                        "
-                                        :name="critere.nom"
-                                        v-model="
-                                            formCriteres.criteres[critere.id]
-                                        "
-                                        :options="critere.valeurs"
-                                        :is-checkbox-selected="
-                                            isCheckboxSelected
-                                        "
-                                        @update-selected-checkboxes="
-                                            updateSelectedCheckboxes
-                                        "
-                                    />
-                                    <!-- radio -->
-                                    <RadioForm
-                                        class="max-w-sm"
-                                        v-if="
-                                            critere.type_champ_form === 'radio'
-                                        "
-                                        :name="critere.nom"
-                                        v-model="
-                                            formCriteres.criteres[critere.id]
-                                        "
-                                        :options="critere.valeurs"
-                                    />
-
-                                    <!-- input text -->
-                                    <div
-                                        class="max-w-sm"
-                                        v-if="
-                                            critere.type_champ_form === 'text'
-                                        "
-                                    >
-                                        <label
-                                            :for="critere.nom"
-                                            class="block text-sm font-medium normal-case text-gray-700"
-                                        >
-                                            {{ critere.nom }}
-                                        </label>
-                                        <div class="mt-1 flex rounded-md">
-                                            <TextInput
-                                                type="text"
-                                                v-model="
-                                                    formCriteres.criteres[
-                                                        critere.id
-                                                    ]
-                                                "
-                                                :name="critere.nom"
-                                                :id="critere.nom"
-                                                class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
-                                                placeholder=""
-                                                autocomplete="none"
-                                            />
-                                        </div>
-                                    </div>
-
-                                    <!-- number text -->
-                                    <div
-                                        class="max-w-sm"
-                                        v-if="
-                                            critere.type_champ_form === 'number'
-                                        "
-                                    >
-                                        <label
-                                            :for="critere.nom"
-                                            class="block text-sm font-medium normal-case text-gray-700"
-                                        >
-                                            {{ critere.nom }}
-                                        </label>
-                                        <div class="mt-1 flex rounded-md">
-                                            <TextInput
-                                                type="number"
-                                                min="0"
-                                                v-model="
-                                                    formCriteres.criteres[
-                                                        critere.id
-                                                    ]
-                                                "
-                                                :name="critere.nom"
-                                                :id="critere.nom"
-                                                class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
-                                                placeholder=""
-                                                autocomplete="none"
-                                            />
-                                        </div>
-                                    </div>
-
-                                    <!-- Heure seule -->
-                                    <div
-                                        v-if="
-                                            critere.type_champ_form === 'time'
-                                        "
-                                        class="flex max-w-sm flex-col items-start space-y-3"
-                                    >
-                                        <SingleTimeForm
-                                            class="w-full"
-                                            v-model="
-                                                formOtherCriteres.time_seule
-                                            "
-                                            :name="critere.nom"
-                                        />
-                                    </div>
-
-                                    <!-- Heures x2 ouverture / fermeture -->
-                                    <div
-                                        v-if="
-                                            critere.type_champ_form === 'times'
-                                        "
-                                        class="flex max-w-sm flex-col items-start space-y-3"
-                                    >
-                                        <OpenTimesForm
-                                            class="w-full"
-                                            v-model="formOtherCriteres.times"
-                                            :name="critere.nom"
-                                        />
-                                    </div>
-
-                                    <!-- Date seule -->
-                                    <div
-                                        v-if="
-                                            critere.type_champ_form === 'date'
-                                        "
-                                        class="flex max-w-sm flex-col items-start space-y-3"
-                                    >
-                                        <SingleDateForm
-                                            class="w-full"
-                                            v-model="
-                                                formOtherCriteres.date_seule
-                                            "
-                                            :name="critere.nom"
-                                        />
-                                    </div>
-
-                                    <!-- Dates x 2 -->
-                                    <div
-                                        v-if="
-                                            critere.type_champ_form === 'dates'
-                                        "
-                                        class="flex max-w-sm flex-col items-start space-y-3"
-                                    >
-                                        <OpenDaysForm
-                                            class="w-full"
-                                            v-model="formOtherCriteres.dates"
-                                            :name="critere.nom"
-                                        />
-                                    </div>
-
-                                    <!-- Mois -->
-                                    <div
-                                        v-if="
-                                            critere.type_champ_form === 'mois'
-                                        "
-                                    >
-                                        <div
-                                            class="flex max-w-sm flex-col items-start space-y-3"
-                                        >
-                                            <OpenMonthsForm
-                                                class="w-full"
-                                                v-model="
-                                                    formOtherCriteres.months
-                                                "
-                                                :name="critere.nom"
-                                            />
-                                            <div
-                                                v-if="
-                                                    formOtherCriteres.errors
-                                                        .months
-                                                "
-                                                class="mt-2 text-xs text-red-500"
-                                            >
-                                                {{
-                                                    formOtherCriteres.errors
-                                                        .months
-                                                }}
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Adresse -->
-                                    <!-- <div
-                                        v-if="
-                                            critere.type_champ_form ===
-                                            'adresse'
-                                        "
-                                        class="flex flex-col w-full max-w-sm space-y-2"
-                                    >
-                                        <div v-if="!addAddress" class="flex-1">
-                                            <label
-                                                for="adresse"
-                                                class="block text-sm font-medium text-gray-700 capitalize"
-                                            >
-                                                Adresse
-                                            </label>
-                                            <div class="flex mt-1 rounded-md">
-                                                <select
-                                                    name="
-                                                                adresse
-                                                            "
-                                                    id="
-                                                                adresse
-                                                            "
-                                                    v-model="
-                                                        formCriteres.adresse
-                                                    "
-                                                    class="block w-full text-sm text-gray-800 border-gray-300 rounded-lg shadow-sm"
-                                                >
-                                                    <option
-                                                        v-for="adresse in structure.adresses"
-                                                        :key="adresse.id"
-                                                        :value="adresse.id"
-                                                    >
-                                                        {{ adresse.address }}
-                                                        -
-                                                        {{ adresse.zip_code }},
-                                                        {{ adresse.city }}
-                                                    </option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="flex items-center">
-                                            <input
-                                                v-model="addAddress"
-                                                id="addAddress"
-                                                type="checkbox"
-                                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded form-checkbox focus:ring-blue-500"
-                                            />
-                                            <label
-                                                for="addAddress"
-                                                class="ml-2 text-sm font-medium text-gray-700"
-                                                >Ajouter une adresse</label
-                                            >
-                                        </div>
-                                    </div> -->
-
-                                    <!-- Range km  -->
-                                    <RangeInputForm
-                                        v-if="
-                                            critere.type_champ_form === 'rayon'
-                                        "
-                                        class="max-w-sm"
-                                        v-model="formOtherCriteres.rayon_km"
-                                        :min="0"
-                                        :max="200"
-                                        :name="critere.nom"
-                                        :metric="`Km`"
-                                    />
-
-                                    <!-- sous criteres -->
-                                    <div
-                                        v-for="valeur in critere.valeurs"
-                                        :key="valeur.id"
-                                    >
-                                        <div
-                                            v-for="souscritere in valeur.sous_criteres"
-                                            :key="souscritere.id"
-                                            class=""
-                                        >
-                                            <SelectForm
-                                                :classes="'block'"
-                                                class="max-w-sm py-2"
-                                                v-if="
-                                                    formCriteres.criteres[
-                                                        critere.id
-                                                    ] === valeur &&
-                                                    souscritere.type_champ_form ===
-                                                        'select' &&
-                                                    souscritere.dis_cat_crit_val_id ===
-                                                        valeur.id
-                                                "
-                                                :name="souscritere.nom"
-                                                v-model="
-                                                    formCriteres.sousCriteres[
-                                                        souscritere.id
-                                                    ]
-                                                "
-                                                :options="
-                                                    souscritere.sous_criteres_valeurs
-                                                "
-                                            />
-
-                                            <div
-                                                v-if="
-                                                    formCriteres.criteres[
-                                                        critere.id
-                                                    ] === valeur &&
-                                                    souscritere.type_champ_form ===
-                                                        'number' &&
-                                                    souscritere.dis_cat_crit_val_id ===
-                                                        valeur.id
-                                                "
-                                                class="mt-2 block"
-                                            >
-                                                <InputLabel
-                                                    class="py-2"
-                                                    :for="souscritere.nom"
-                                                    :value="souscritere.nom"
-                                                />
-                                                <TextInput
-                                                    class="w-full"
-                                                    type="number"
-                                                    min="0"
-                                                    :id="souscritere.nom"
-                                                    :name="souscritere.nom"
-                                                    v-model="
-                                                        formCriteres
-                                                            .sousCriteres[
-                                                            souscritere.id
-                                                        ]
-                                                    "
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                <CritereForm
+                                    :criteres="filteredCriteres"
+                                    :filters="filters"
+                                    v-model:criteres-base="
+                                        formCriteres.criteresBase
+                                    "
+                                    v-model:sous-criteres="
+                                        formCriteres.sousCriteres
+                                    "
+                                    @reset-criteres="resetFormCriteres"
+                                />
                             </div>
                         </div>
 
@@ -1109,11 +751,15 @@ const events = getEvents();
                                 <!-- Activites Cards -->
                                 <TabPanel>
                                     <div
-                                        v-if="selectedCategory"
-                                        class="my-6 grid w-full grid-cols-1 gap-4 text-gray-600 md:grid-cols-3"
+                                        v-if="
+                                            selectedCategory &&
+                                            filteredActivities.length > 0
+                                        "
+                                        ref="listToAnimate"
+                                        class="my-6 grid w-full grid-cols-1 gap-4 text-gray-600 md:grid-cols-2"
                                     >
                                         <ActiviteCard
-                                            v-for="activite in filteredActivitesWithCriteres"
+                                            v-for="activite in filteredActivities"
                                             :key="activite.id"
                                             :activite="activite"
                                             :link="
@@ -1125,8 +771,9 @@ const events = getEvents();
                                                     }
                                                 )
                                             "
-                                        /></div
-                                ></TabPanel>
+                                        />
+                                    </div>
+                                </TabPanel>
                                 <!-- Planning -->
                                 <TabPanel>
                                     <div
@@ -1157,6 +804,6 @@ const events = getEvents();
 
 <style>
 .course {
-    @apply bg-blue-400 text-white;
+    @apply bg-green-300 text-blue-700;
 }
 </style>

@@ -240,8 +240,11 @@ class StructureController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Structure $structure): Response
+    public function show(Request $request, Structure $structure): Response
     {
+        $filters = $request->only(['crit', 'ssCrit']);
+        $page = $request->input('page', 1);
+
         $familles = Cache::remember('familles', 600, function () {
             return Famille::withProducts()->get();
         });
@@ -252,7 +255,40 @@ class StructureController extends Controller
             return ListDiscipline::withProducts()->get();
         });
 
-        $structure = Structure::withRelations()->find($structure->id);
+        $structure = Structure::with([
+            'creator:id,name',
+            'users:id,name',
+            'adresses'  => function ($query) {
+                $query->latest();
+            },
+            'departement',
+            'structuretype',
+            'disciplines',
+            'disciplines.str_categories' => function ($query) {
+                $query->withCount('str_activites');
+            },
+            'disciplines.str_categories.str_activites' => function ($query) use ($filters) {
+                $query->whereHas('produits', function ($subQuery) use ($filters) {
+                    $subQuery->filter($filters);
+                });
+            },
+            'disciplines.str_categories.str_activites.discipline',
+            'disciplines.str_categories.str_activites.produits' => function ($query) use ($filters) {
+                $query->filter($filters);
+            },
+            'disciplines.str_categories.str_activites.produits.adresse',
+            'disciplines.str_categories.str_activites.produits.criteres',
+            'disciplines.str_categories.str_activites.produits.criteres.critere',
+            'disciplines.str_categories.str_activites.produits.criteres.critere_valeur',
+            'disciplines.str_categories.str_activites.produits.criteres.critere_valeur.sous_criteres',
+            'disciplines.str_categories.str_activites.produits.criteres.critere_valeur.sous_criteres.prod_sous_crit_valeurs.sous_critere_valeur',
+            'disciplines.str_categories.str_activites.produits.criteres.sous_criteres',
+            'disciplines.str_categories.str_activites.produits.criteres.sous_criteres.sous_critere',
+            'disciplines.str_categories.str_activites.produits.criteres.sous_criteres.sous_critere_valeur',
+            'disciplines.str_categories.str_activites.produits.plannings',
+        ])->withCount([
+            'disciplines',
+        ])->find($structure->id);
 
         $allStructureTypes = Structuretype::whereHas('structures')->select(['id', 'name', 'slug'])->get();
 
@@ -261,6 +297,13 @@ class StructureController extends Controller
                 ->whereIn('categorie_id', $structure->activites->pluck('categorie_id'))
                 ->where('visible_front', true)
                 ->get();
+
+        $currentRoute = [
+            'name' => 'structures.show',
+            'params' => [
+                'structure' => $structure,
+            ]
+        ];
 
         $structure->timestamps = false;
         $structure->increment('view_count');
@@ -276,6 +319,8 @@ class StructureController extends Controller
                 'delete' => optional(Auth::user())->can('delete', $structure),
             ],
             'allStructureTypes' => fn () => StructuretypeResource::collection($allStructureTypes),
+            'filters' => $filters ?? null,
+            'currentRoute' => $currentRoute,
         ]);
     }
 

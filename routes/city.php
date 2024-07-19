@@ -28,7 +28,7 @@ Route::get('/{city}', [CityController::class, 'show'], [
     ]
 ])->name('villes.show');
 
-Route::get('/{city}/str-{structure}', [CityStructureController::class, 'show'], [
+Route::match(['get', 'post'], '/{city}/str-{structure}', [CityStructureController::class, 'show'], [
     'parameters' => [
         'villes' => 'city',
     ]
@@ -46,7 +46,7 @@ Route::get('/{city}/dis-{discipline}', [CityDisciplineController::class, 'show']
     ]
 ])->name('villes.disciplines.show');
 
-Route::get('/{city}/dis-{discipline}/str-{structure}', [CityDisciplineStructureController::class, 'show'], [
+Route::match(['get', 'post'], '/{city}/dis-{discipline}/str-{structure}', [CityDisciplineStructureController::class, 'show'], [
     'parameters' => [
         'villes' => 'city'
     ]
@@ -60,13 +60,13 @@ Route::match(['get', 'post'], '/{city}/dis-{discipline}/activites-{activite}-{sl
 
 Route::match(['get', 'post'], '/{city}/dis-{discipline}/cat-{category:slug}', [CityDisciplineCategorieController::class, 'show'])->name('villes.disciplines.categories.show');
 
-Route::get('/{city}/dis-{discipline}/cat-{category:slug}/str-{structure}', [CityDisciplineCategorieStructureController::class, 'show'])->name('villes.disciplines.categories.structures.show');
+Route::match(['get', 'post'], '/{city}/dis-{discipline}/cat-{category:slug}/str-{structure}', [CityDisciplineCategorieStructureController::class, 'show'])->name('villes.disciplines.categories.structures.show');
 
 Route::match(['get', 'post'], '/{city}/dis-{discipline}/cat-{category:slug}/activites-{activite}-{slug}/{produit?}', [CityDisciplineCategorieActiviteController::class, 'show'])->name('villes.disciplines.categories.activites.show');
 
 Route::get('/{city}/dis-{discipline}/typ-{structuretype}', [CityDisciplineStructuretypeController::class, 'show'])->name('villes.disciplines.structuretypes.show');
 
-Route::get('/{city}/{discipline}/typ-{structuretype}/str-{structure}', [CityDisciplineStructuretypeStructureController::class, 'show'])->name('villes.disciplines.structuretypes.structures.show');
+Route::match(['get', 'post'], '/{city}/{discipline}/typ-{structuretype}/str-{structure}', [CityDisciplineStructuretypeStructureController::class, 'show'])->name('villes.disciplines.structuretypes.structures.show');
 
 Route::match(['get', 'post'], '/{city}/dis-{discipline}/typ-{structuretype}/activites-{activite}-{slug}/{produit?}', [CityDisciplineStructuretypeActiviteController::class, 'show'])->name('villes.disciplines.structuretypes.activites.show');
 

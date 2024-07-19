@@ -27,8 +27,11 @@ use App\Http\Resources\LienDisciplineCategorieCritereResource;
 
 class DepartementDisciplineCategorieStructureController extends Controller
 {
-    public function show(Departement $departement, ListDiscipline $discipline, $category, $structure): Response
+    public function show(Request $request, Departement $departement, ListDiscipline $discipline, $category, Structure $structure): Response
     {
+        $filters = $request->only(['crit', 'ssCrit']);
+        $page = $request->input('page', 1);
+
         $familles = Cache::remember('familles', 600, function () {
             return Famille::withProducts()->get();
         });
@@ -39,9 +42,40 @@ class DepartementDisciplineCategorieStructureController extends Controller
             return ListDiscipline::withProducts()->get();
         });
 
-        $structure = Structure::withRelations()
-                            ->where('slug', $structure)
-                            ->first();
+        $structure = Structure::with([
+            'creator:id,name',
+            'users:id,name',
+            'adresses'  => function ($query) {
+                $query->latest();
+            },
+            'departement',
+            'structuretype',
+            'disciplines',
+            'disciplines.str_categories' => function ($query) {
+                $query->withCount('str_activites');
+            },
+            'disciplines.str_categories.str_activites' => function ($query) use ($filters) {
+                $query->whereHas('produits', function ($subQuery) use ($filters) {
+                    $subQuery->filter($filters);
+                });
+            },
+            'disciplines.str_categories.str_activites.discipline',
+            'disciplines.str_categories.str_activites.produits' => function ($query) use ($filters) {
+                $query->filter($filters);
+            },
+            'disciplines.str_categories.str_activites.produits.adresse',
+            'disciplines.str_categories.str_activites.produits.criteres',
+            'disciplines.str_categories.str_activites.produits.criteres.critere',
+            'disciplines.str_categories.str_activites.produits.criteres.critere_valeur',
+            'disciplines.str_categories.str_activites.produits.criteres.critere_valeur.sous_criteres',
+            'disciplines.str_categories.str_activites.produits.criteres.critere_valeur.sous_criteres.prod_sous_crit_valeurs.sous_critere_valeur',
+            'disciplines.str_categories.str_activites.produits.criteres.sous_criteres',
+            'disciplines.str_categories.str_activites.produits.criteres.sous_criteres.sous_critere',
+            'disciplines.str_categories.str_activites.produits.criteres.sous_criteres.sous_critere_valeur',
+            'disciplines.str_categories.str_activites.produits.plannings',
+        ])->withCount([
+            'disciplines',
+        ])->find($structure->id);
 
         $requestDiscipline = ListDiscipline::withProductsAndDisciplinesSimilaires()->find($discipline->id);
 
@@ -84,6 +118,16 @@ class DepartementDisciplineCategorieStructureController extends Controller
         $structure->timestamps = false;
         $structure->increment('view_count');
 
+        $currentRoute = [
+                    'name' => 'departements.disciplines.categories.structures.show',
+                    'params' => [
+                        'departement' => $departement,
+                        'discipline' => $discipline,
+                        'category' => $category,
+                        'structure' => $structure,
+                    ]
+                ];
+
         return Inertia::render('Structures/Show', [
             'structure' => fn () => StructureResource::make($structure),
             'familles' => fn () => FamilleResource::collection($familles),
@@ -101,6 +145,8 @@ class DepartementDisciplineCategorieStructureController extends Controller
             'allStructureTypes' => fn () => StructuretypeResource::collection($allStructureTypes),
             'departement' => fn () => DepartementResource::make($departement),
             'requestDiscipline' => fn () => ListDisciplineResource::make($requestDiscipline),
+            'filters' => $filters ?? null,
+            'currentRoute' => $currentRoute,
         ]);
     }
 }

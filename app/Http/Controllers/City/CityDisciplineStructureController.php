@@ -29,8 +29,11 @@ class CityDisciplineStructureController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(City $city, ListDiscipline $discipline, Structure $structure): Response
+    public function show(Request $request, City $city, ListDiscipline $discipline, Structure $structure): Response
     {
+        $filters = $request->only(['crit', 'ssCrit']);
+        $page = $request->input('page', 1);
+
         $familles = Cache::remember('familles', 600, function () {
             return Famille::withProducts()->get();
         });
@@ -41,14 +44,47 @@ class CityDisciplineStructureController extends Controller
             return ListDiscipline::withProducts()->get();
         });
 
-        $structure = Structure::withRelations()->find($structure->id);
+        $structure = Structure::with([
+                    'creator:id,name',
+                    'users:id,name',
+                    'adresses'  => function ($query) {
+                        $query->latest();
+                    },
+                    'departement',
+                    'structuretype',
+                    'disciplines',
+                    'disciplines.str_categories' => function ($query) {
+                        $query->withCount('str_activites');
+                    },
+                    'disciplines.str_categories.str_activites' => function ($query) use ($filters) {
+                        $query->whereHas('produits', function ($subQuery) use ($filters) {
+                            $subQuery->filter($filters);
+                        });
+                    },
+                    'disciplines.str_categories.str_activites.discipline',
+                    'disciplines.str_categories.str_activites.produits' => function ($query) use ($filters) {
+                        $query->filter($filters);
+                    },
+                    'disciplines.str_categories.str_activites.produits.adresse',
+                    'disciplines.str_categories.str_activites.produits.criteres',
+                    'disciplines.str_categories.str_activites.produits.criteres.critere',
+                    'disciplines.str_categories.str_activites.produits.criteres.critere_valeur',
+                    'disciplines.str_categories.str_activites.produits.criteres.critere_valeur.sous_criteres',
+                    'disciplines.str_categories.str_activites.produits.criteres.critere_valeur.sous_criteres.prod_sous_crit_valeurs.sous_critere_valeur',
+                    'disciplines.str_categories.str_activites.produits.criteres.sous_criteres',
+                    'disciplines.str_categories.str_activites.produits.criteres.sous_criteres.sous_critere',
+                    'disciplines.str_categories.str_activites.produits.criteres.sous_criteres.sous_critere_valeur',
+                    'disciplines.str_categories.str_activites.produits.plannings',
+                ])->withCount([
+                    'disciplines',
+        ])->find($structure->id);
+
 
         $city = City::with(['structures', 'produits.adresse'])
                             ->withProductsAndDepartement()
                             ->withCount('produits')
                             ->withCount('structures')
                             ->find($city->id);
-
 
         $citiesAround = City::with('produits')->withCitiesAround($city)->get();
 
@@ -77,7 +113,6 @@ class CityDisciplineStructureController extends Controller
                 ->select(['id', 'name', 'slug'])
                 ->get();
 
-
         $criteres = LienDisciplineCategorieCritere::withValeurs()
                         ->whereIn('discipline_id', $structure->activites->pluck('discipline_id'))
                         ->whereIn('categorie_id', $structure->activites->pluck('categorie_id'))
@@ -86,6 +121,16 @@ class CityDisciplineStructureController extends Controller
 
         $structure->timestamps = false;
         $structure->increment('view_count');
+
+        $currentRoute = [
+            'name' => 'villes.disciplines.structures.show',
+            'params' => [
+                'city' => $city,
+                'discipline' => $discipline,
+                'structure' => $structure,
+            ]
+        ];
+
 
         return Inertia::render('Structures/Show', [
             'structure' => fn () => StructureResource::make($structure),
@@ -104,6 +149,8 @@ class CityDisciplineStructureController extends Controller
             'city' => fn () => CityResource::make($city),
             'citiesAround' => fn () => CityResource::collection($citiesAround),
             'requestDiscipline' => fn () => ListDisciplineResource::make($requestDiscipline),
+            'filters' => $filters ?? null,
+            'currentRoute' => $currentRoute,
         ]);
     }
 }

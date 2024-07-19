@@ -1,7 +1,7 @@
 <script setup>
 import ResultLayout from "@/Layouts/ResultLayout.vue";
 import { Head, Link } from "@inertiajs/vue3";
-import { ref, defineAsyncComponent, provide } from "vue";
+import { ref, defineAsyncComponent } from "vue";
 import ResultsHeader from "@/Components/ResultsHeader.vue";
 import CategoriesResultNavigation from "@/Components/Categories/CategoriesResultNavigation.vue";
 import CitiesAround from "@/Components/Cities/CitiesAround.vue";
