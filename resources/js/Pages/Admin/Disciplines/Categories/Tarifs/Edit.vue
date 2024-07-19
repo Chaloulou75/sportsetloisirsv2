@@ -78,13 +78,6 @@ const showAddSousFieldValeurForm = (sousField) => {
     return addSousFieldValeurFormVisibility.value[sousField.id] || false;
 };
 
-// const type_champs = [
-//     { type: "select" },
-//     { type: "checkbox" },
-//     { type: "text" },
-//     { type: "number" },
-// ];
-
 const addBookingFieldForm = useForm({
     nom: null,
     type_champ: props.type_champs[0],
@@ -779,12 +772,8 @@ onMounted(() => {
                                         !showAddSousFieldValeurForm(
                                             sousField
                                         ) &&
-                                        (sousField.type_champ_form ===
-                                            'select' ||
-                                            sousField.type_champ_form ===
-                                                'checkbox' ||
-                                            sousField.type_champ_form ===
-                                                'radio')
+                                        sousField.type_champ &&
+                                        sousField.type_champ.sous_criterable
                                     "
                                 >
                                     <button
@@ -880,8 +869,8 @@ onMounted(() => {
                         <button
                             v-if="
                                 !showAddSousFieldForm(field) &&
-                                (field.type_champ_form === 'number' ||
-                                    field.type_champ_form === 'text')
+                                field.type_champ &&
+                                field.type_champ.sous_criterable
                             "
                             @click="toggleAddSousFieldForm(field)"
                             class="inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-4 py-3 text-center text-sm font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
@@ -979,9 +968,8 @@ onMounted(() => {
                         <button
                             v-if="
                                 !showAddValeurForm(field) &&
-                                (field.type_champ_form === 'select' ||
-                                    field.type_champ_form === 'checkbox' ||
-                                    field.type_champ_form === 'radio')
+                                field.type_champ &&
+                                field.type_champ.sous_criterable
                             "
                             @click="toggleAddValeurForm(field)"
                             class="inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-4 py-3 text-center text-sm font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"

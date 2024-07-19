@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\TypeChamp;
 use Illuminate\Http\Request;
 use App\Models\ListDiscipline;
+use Illuminate\Validation\Rule;
 use App\Models\LienDisCatTariftype;
+use Illuminate\Http\RedirectResponse;
 use App\Models\LienDisciplineCategorie;
 use App\Models\LienDisCatTarBookingField;
 use App\Models\LienDisCatTarBookingFieldSousField;
-use Illuminate\Http\RedirectResponse;
 
 class LienDisCatTarBookingFieldSousFieldController extends Controller
 {
-
     /**
      * Store a newly created resource in storage.
      */
@@ -23,12 +24,14 @@ class LienDisCatTarBookingFieldSousFieldController extends Controller
 
         $request->validate([
             'nom' => ['required', 'string', 'min:1', 'max:255'],
-            'type_champ' => ['required'],
+            'type_champ.id' => ['required', Rule::exists(TypeChamp::class, 'id')],
+            'type_champ.type' => ['required', 'String'],
         ]);
 
         $bookingfield->sous_fields()->create([
             'nom' => $request->nom,
             'type_champ_form' => $request->type_champ['type'],
+            'type_champ_id' => $request->type_champ['id'],
         ]);
 
         return to_route('admin.disciplines.categories.tarifs.edit', ['discipline' => $discipline, 'categorie' => $categorie, 'tarifType' => $tarifType])->with('success', 'sous champ ajouté');

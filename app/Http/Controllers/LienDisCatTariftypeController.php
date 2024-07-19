@@ -102,8 +102,9 @@ class LienDisCatTariftypeController extends Controller
         $discipline = ListDiscipline::with('familles')->findOrFail($discipline->id);
         $tarifType = LienDisCatTariftype::with(
             'tarif_booking_fields',
+            'tarif_booking_fields.type_champ',
             'tarif_booking_fields.valeurs',
-            'tarif_booking_fields.sous_fields',
+            'tarif_booking_fields.sous_fields.type_champ',
             'tarif_booking_fields.sous_fields.valeurs',
         )->find($tarifType->id);
 
@@ -123,9 +124,7 @@ class LienDisCatTariftypeController extends Controller
             ->select(['id', 'slug', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])
             ->get();
 
-
         $typeChamps = TypeChamp::whereIn('type', ['select', 'checkbox', 'radio', 'text', 'number'])->get();
-
 
         return Inertia::render('Admin/Disciplines/Categories/Tarifs/Edit', [
             'user_can' => [
@@ -294,6 +293,7 @@ class LienDisCatTariftypeController extends Controller
                                     $catTarBookingField = $catTarifType->tarif_booking_fields()->create([
                                         'nom' => $bookingField->nom,
                                         'type_champ_form' => $bookingField->type_champ_form,
+                                        'type_champ_id' => $bookingField->type_champ_id,
                                         'ordre' => $bookingField->ordre,
                                     ]);
                                     if($bookingField->sous_fields) {
@@ -301,6 +301,7 @@ class LienDisCatTariftypeController extends Controller
                                             $ssFieldBooking = $catTarBookingField->sous_fields()->create([
                                                 'nom' => $ssField->nom,
                                                 'type_champ_form' => $ssField->type_champ_form,
+                                                'type_champ_id' => $ssField->type_champ_id,
                                                 'ordre' => $ssField->ordre,
                                             ]);
                                             if($ssField->valeurs) {
@@ -436,6 +437,7 @@ class LienDisCatTariftypeController extends Controller
                                         ],
                                         [
                                             'type_champ_form' => $bookingField->type_champ_form,
+                                            'type_champ_id' => $bookingField->type_champ_id,
                                             'ordre' => $bookingField->ordre,
                                         ]
                                     );
@@ -448,6 +450,7 @@ class LienDisCatTariftypeController extends Controller
                                                 ],
                                                 [
                                                     'type_champ_form' => $ssField->type_champ_form,
+                                                    'type_champ_id' => $ssField->type_champ_id,
                                                     'ordre' => $ssField->ordre,
                                                 ]
                                             );
@@ -603,6 +606,7 @@ class LienDisCatTariftypeController extends Controller
                                 $catTarBookingField = $catTarifType->tarif_booking_fields()->create([
                                     'nom' => $bookingField->nom,
                                     'type_champ_form' => $bookingField->type_champ_form,
+                                    'type_champ_id' => $bookingField->type_champ_id,
                                     'ordre' => $bookingField->ordre,
                                 ]);
                                 if($bookingField->sous_fields) {
@@ -610,6 +614,7 @@ class LienDisCatTariftypeController extends Controller
                                         $ssFieldBooking = $catTarBookingField->sous_fields()->create([
                                             'nom' => $ssField->nom,
                                             'type_champ_form' => $ssField->type_champ_form,
+                                            'type_champ_id' => $ssField->type_champ_id,
                                             'ordre' => $ssField->ordre,
                                         ]);
                                         if($ssField->valeurs) {
@@ -747,6 +752,7 @@ class LienDisCatTariftypeController extends Controller
                                     ],
                                     [
                                         'type_champ_form' => $bookingField->type_champ_form,
+                                        'type_champ_id' => $bookingField->type_champ_id,
                                         'ordre' => $bookingField->ordre,
                                     ]
                                 );
@@ -759,6 +765,7 @@ class LienDisCatTariftypeController extends Controller
                                             ],
                                             [
                                                 'type_champ_form' => $ssField->type_champ_form,
+                                                'type_champ_id' => $ssField->type_champ_id,
                                                 'ordre' => $ssField->ordre,
                                             ]
                                         );

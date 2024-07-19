@@ -25,6 +25,11 @@ class LienDisCatTarBookingField extends Model
         return $this->belongsTo(LienDisCatTarifType::class, 'cat_tarif_id');
     }
 
+    public function type_champ(): BelongsTo
+    {
+        return $this->belongsTo(TypeChamp::class, 'type_champ_id');
+    }
+
     public function valeurs(): HasMany
     {
         return $this->hasMany(LienDisCatTarBookingFieldValeur::class, 'cat_tar_field_id');

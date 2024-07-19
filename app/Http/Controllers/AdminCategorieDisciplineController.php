@@ -209,6 +209,7 @@ class AdminCategorieDisciplineController extends Controller
                                     $catTarBookingField = $catTarifType->tarif_booking_fields()->create([
                                         'nom' => $bookingField->nom,
                                         'type_champ_form' => $bookingField->type_champ_form,
+                                        'type_champ_id' => $bookingField->type_champ_id,
                                         'ordre' => $bookingField->ordre,
                                     ]);
                                     if($bookingField->sous_fields) {
@@ -216,6 +217,7 @@ class AdminCategorieDisciplineController extends Controller
                                             $ssFieldBooking = $catTarBookingField->sous_fields()->create([
                                                 'nom' => $ssField->nom,
                                                 'type_champ_form' => $ssField->type_champ_form,
+                                                'type_champ_id' => $ssField->type_champ_id,
                                                 'ordre' => $ssField->ordre,
                                             ]);
                                             if($ssField->valeurs) {
@@ -423,6 +425,7 @@ class AdminCategorieDisciplineController extends Controller
                                         ],
                                         [
                                             'type_champ_form' => $bookingField->type_champ_form,
+                                            'type_champ_id' => $bookingField->type_champ_id,
                                             'ordre' => $bookingField->ordre,
                                         ]
                                     );
@@ -435,6 +438,7 @@ class AdminCategorieDisciplineController extends Controller
                                                 ],
                                                 [
                                                     'type_champ_form' => $ssField->type_champ_form,
+                                                    'type_champ_id' => $ssField->type_champ_id,
                                                     'ordre' => $ssField->ordre,
                                                 ]
                                             );

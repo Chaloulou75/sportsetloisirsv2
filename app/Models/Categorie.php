@@ -36,7 +36,7 @@ class Categorie extends Model
             'liens_disciplines_categories_criteres',
             'categorie_id',
             'critere_id'
-        )->using(LienDisciplineCategorieCritere::class)->withPivot('id', 'discipline_id', 'categorie_id', 'critere_id', 'nom', 'type_champ_form', 'ordre', 'visible_back', 'visible_front', 'visible_block', 'indexable')->withTimestamps();
+        )->using(LienDisciplineCategorieCritere::class)->withPivot('id', 'discipline_id', 'categorie_id', 'critere_id', 'nom', 'type_champ_form', 'type_champ_id', 'ordre', 'visible_back', 'visible_front', 'visible_block', 'indexable')->withTimestamps();
     }
 
     public function activites(): BelongsToMany

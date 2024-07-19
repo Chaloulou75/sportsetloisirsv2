@@ -25,6 +25,11 @@ class LienDisCatTarBookingFieldSousField extends Model
         return $this->belongsTo(LienDisCatTarBookingField::class, 'booking_field_id');
     }
 
+    public function type_champ(): BelongsTo
+    {
+        return $this->belongsTo(TypeChamp::class, 'type_champ_id');
+    }
+
     public function valeurs(): HasMany
     {
         return $this->hasMany(LienDisCatTarBookingFieldSsFieldValeur::class, 'sousfield_id');
