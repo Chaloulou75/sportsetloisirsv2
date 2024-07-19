@@ -123,6 +123,10 @@ class LienDisCatTariftypeController extends Controller
             ->select(['id', 'slug', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])
             ->get();
 
+
+        $typeChamps = TypeChamp::whereIn('type', ['select', 'checkbox', 'radio', 'text', 'number'])->get();
+
+
         return Inertia::render('Admin/Disciplines/Categories/Tarifs/Edit', [
             'user_can' => [
                 'view_admin' => $user->can('viewAdmin', User::class),
@@ -131,6 +135,7 @@ class LienDisCatTariftypeController extends Controller
             'categories' => fn () => LienDisciplineCategorieResource::collection($categories),
             'discipline' => fn () => ListDisciplineResource::make($discipline),
             'tarifType' => fn () => LienDisCatTariftypeResource::make($tarifType),
+            'type_champs' => fn () => TypeChampResource::collection($typeChamps),
         ]);
     }
 

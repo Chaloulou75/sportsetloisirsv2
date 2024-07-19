@@ -13,9 +13,7 @@ import {
     PlusCircleIcon,
     ArrowPathIcon,
     TrashIcon,
-    ChevronUpDownIcon,
     ChevronLeftIcon,
-    CheckCircleIcon,
 } from "@heroicons/vue/24/outline";
 
 const props = defineProps({

@@ -7,23 +7,15 @@ import NavAdminDisciplineCategorie from "@/Components/Admin/NavAdminDisciplineCa
 import NavAdminDisCatParametres from "@/Components/Admin/NavAdminDisCatParametres.vue";
 import NavAdminDisCatTarifsForm from "@/Components/Admin/NavAdminDisCatTarifsForm.vue";
 import Checkbox from "@/Components/Forms/Checkbox.vue";
+import Dropdown from "primevue/dropdown";
 import autoAnimate from "@formkit/auto-animate";
 import {
     XCircleIcon,
     PlusCircleIcon,
     ArrowPathIcon,
     TrashIcon,
-    ChevronUpDownIcon,
     ChevronLeftIcon,
-    CheckCircleIcon,
 } from "@heroicons/vue/24/outline";
-import {
-    Listbox,
-    ListboxLabel,
-    ListboxButton,
-    ListboxOptions,
-    ListboxOption,
-} from "@headlessui/vue";
 
 const props = defineProps({
     errors: Object,
@@ -32,6 +24,7 @@ const props = defineProps({
     categories: Object,
     tarifType: Object,
     user_can: Object,
+    type_champs: Object,
 });
 
 const toggleShowPlanningForm = useForm({
@@ -85,16 +78,16 @@ const showAddSousFieldValeurForm = (sousField) => {
     return addSousFieldValeurFormVisibility.value[sousField.id] || false;
 };
 
-const type_champs = [
-    { type: "select" },
-    { type: "checkbox" },
-    { type: "text" },
-    { type: "number" },
-];
+// const type_champs = [
+//     { type: "select" },
+//     { type: "checkbox" },
+//     { type: "text" },
+//     { type: "number" },
+// ];
 
 const addBookingFieldForm = useForm({
     nom: null,
-    type_champ: type_champs[0],
+    type_champ: props.type_champs[0],
     remember: true,
 });
 
@@ -105,13 +98,13 @@ const addValeurForm = useForm({
 
 const addSousFieldForm = useForm({
     nom: null,
-    type_champ: type_champs[0],
+    type_champ: props.type_champs[0],
     remember: true,
 });
 
 const addSousFieldValeurForm = useForm({
     valeur: null,
-    type_champ: type_champs[0],
+    type_champ: props.type_champs[0],
     remember: true,
 });
 
@@ -907,7 +900,9 @@ onMounted(() => {
                                     addBookingFieldSousField(field)
                                 "
                             >
-                                <div class="flex flex-col items-start">
+                                <div
+                                    class="flex flex-col items-start space-y-2"
+                                >
                                     <label for="newSousAttribut"
                                         >Ajouter un sous champ à
                                         <span class="font-semibold">{{
@@ -932,7 +927,7 @@ onMounted(() => {
                                     >
                                         {{ errors.addSousFieldForm.nom }}
                                     </div>
-                                    <Listbox
+                                    <!-- <Listbox
                                         class="w-full flex-grow"
                                         v-model="addSousFieldForm.type_champ"
                                     >
@@ -1007,7 +1002,34 @@ onMounted(() => {
                                                 </ListboxOptions>
                                             </transition>
                                         </div>
-                                    </Listbox>
+                                    </Listbox> -->
+                                    <div>
+                                        <label
+                                            for="ssFieldChamp"
+                                            class="block text-left text-xs font-medium normal-case text-gray-700"
+                                        >
+                                            Type de champ:
+                                        </label>
+                                        <div class="mt-1">
+                                            <Dropdown
+                                                v-model="
+                                                    addSousFieldForm.type_champ
+                                                "
+                                                :options="type_champs"
+                                                optionLabel="type"
+                                                id="ssFieldChamp"
+                                                placeholder="Type de champ"
+                                                class="w-full text-sm md:w-[14rem]"
+                                                :ptOptions="{
+                                                    mergeProps: true,
+                                                }"
+                                                :pt="{
+                                                    item: 'text-sm',
+                                                }"
+                                                showClear
+                                            />
+                                        </div>
+                                    </div>
                                 </div>
                                 <button
                                     type="submit"
@@ -1118,7 +1140,7 @@ onMounted(() => {
                         class="ml-6 inline-flex flex-grow items-end justify-between text-center text-xs font-medium text-gray-600"
                         @submit.prevent="addTarifBookingField"
                     >
-                        <div class="flex flex-col items-start">
+                        <div class="flex flex-col items-start space-y-2">
                             <label for="newBookingField"
                                 >Ajouter un champ au formulaire de réservation
                                 de
@@ -1144,7 +1166,32 @@ onMounted(() => {
                             >
                                 {{ errors.addBookingFieldForm.nom }}
                             </div>
-                            <Listbox
+                            <div>
+                                <label
+                                    for="bookingFieldChamp"
+                                    class="block text-left text-xs font-medium normal-case text-gray-700"
+                                >
+                                    Type de champ:
+                                </label>
+                                <div class="mt-1">
+                                    <Dropdown
+                                        v-model="addBookingFieldForm.type_champ"
+                                        :options="type_champs"
+                                        optionLabel="type"
+                                        id="bookingFieldChamp"
+                                        placeholder="Type de champ"
+                                        class="w-full text-sm md:w-[14rem]"
+                                        :ptOptions="{
+                                            mergeProps: true,
+                                        }"
+                                        :pt="{
+                                            item: 'text-sm',
+                                        }"
+                                        showClear
+                                    />
+                                </div>
+                            </div>
+                            <!-- <Listbox
                                 class="w-full flex-grow"
                                 v-model="addBookingFieldForm.type_champ"
                             >
@@ -1215,7 +1262,7 @@ onMounted(() => {
                                         </ListboxOptions>
                                     </transition>
                                 </div>
-                            </Listbox>
+                            </Listbox> -->
                         </div>
                         <button
                             type="submit"
