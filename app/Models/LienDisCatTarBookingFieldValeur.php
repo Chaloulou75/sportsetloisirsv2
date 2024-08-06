@@ -24,4 +24,9 @@ class LienDisCatTarBookingFieldValeur extends Model
     {
         return $this->belongsTo(LienDisCatTarBookingField::class, 'cat_tar_field_id');
     }
+
+    public function sous_fields(): HasMany
+    {
+        return $this->hasMany(LienDisCatTarBookingFieldSousField::class, 'field_valeur_id');
+    }
 }

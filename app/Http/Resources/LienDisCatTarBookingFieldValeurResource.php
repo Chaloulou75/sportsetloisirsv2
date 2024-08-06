@@ -19,6 +19,7 @@ class LienDisCatTarBookingFieldValeurResource extends JsonResource
             'cat_tar_field_id' => $this->cat_tar_field_id,
             'valeur' => $this->valeur,
             'ordre' => $this->ordre,
+            'sous_fields' => LienDisCatTarBookingFieldSousFieldResource::collection($this->whenLoaded('sous_fields')),
             'booking_field' => LienDisCatTarBookingFieldResource::make($this->whenLoaded('booking_field')),
             'updated_at' => $this->updated_at,
             'created_at' => $this->created_at,

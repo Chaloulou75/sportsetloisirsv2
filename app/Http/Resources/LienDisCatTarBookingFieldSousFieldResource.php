@@ -17,12 +17,12 @@ class LienDisCatTarBookingFieldSousFieldResource extends JsonResource
 
         return [
             'id' => $this->id,
-            'booking_field_id' => $this->booking_field_id,
+            'field_valeur_id' => $this->field_valeur_id,
             'nom' => $this->nom,
             'type_champ_form' => $this->type_champ_form,
             'type_champ_id' => $this->type_champ_id,
             'ordre' => $this->ordre,
-            'booking_field' => LienDisCatTarBookingFieldResource::make($this->whenLoaded('booking_field')),
+            'booking_field_valeur' => LienDisCatTarBookingFieldValeurResource::make($this->whenLoaded('booking_field_valeur')),
             'type_champ' => TypeChampResource::make($this->whenLoaded('type_champ')),
             'valeurs' => LienDisCatTarBookingFieldSsFieldValeurResource::collection($this->whenLoaded('valeurs')),
             'updated_at' => $this->updated_at,

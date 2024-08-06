@@ -20,9 +20,9 @@ class LienDisCatTarBookingFieldSousField extends Model
      */
     protected $guarded = [];
 
-    public function booking_field(): BelongsTo
+    public function booking_field_valeur(): BelongsTo
     {
-        return $this->belongsTo(LienDisCatTarBookingField::class, 'booking_field_id');
+        return $this->belongsTo(LienDisCatTarBookingFieldValeur::class, 'field_valeur_id');
     }
 
     public function type_champ(): BelongsTo

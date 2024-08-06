@@ -25,7 +25,6 @@ class LienDisCatTarBookingFieldResource extends JsonResource
             'cat_tarif_type' => LienDisCatTarifTypeResource::make($this->whenLoaded('cat_tarif_type')),
             'type_champ' => TypeChampResource::make($this->whenLoaded('type_champ')),
             'valeurs' => LienDisCatTarBookingFieldValeurResource::collection($this->whenLoaded('valeurs')),
-            'sous_fields' => LienDisCatTarBookingFieldSousFieldResource::collection($this->whenLoaded('sous_fields')),
             'reservation_attributs' => ReservationAttributResource::collection($this->whenLoaded('reservation_attributs')),
             'updated_at' => $this->updated_at,
             'created_at' => $this->created_at,

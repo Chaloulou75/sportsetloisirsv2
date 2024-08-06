@@ -89,7 +89,7 @@ const submitForm = async () => {
 
 <template>
     <nav
-        class="fixed inset-x-0 top-0 z-[9998] border-b border-gray-100 bg-slate-900/70 backdrop-blur-sm"
+        class="fixed inset-x-0 top-0 z-[999] border-b border-gray-100 bg-slate-900/70 backdrop-blur-sm"
     >
         <!-- Primary Navigation Menu -->
         <div class="mx-auto max-w-full px-4 sm:px-6 lg:px-8">

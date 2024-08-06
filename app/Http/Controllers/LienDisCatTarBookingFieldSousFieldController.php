@@ -11,13 +11,14 @@ use Illuminate\Http\RedirectResponse;
 use App\Models\LienDisciplineCategorie;
 use App\Models\LienDisCatTarBookingField;
 use App\Models\LienDisCatTarBookingFieldSousField;
+use App\Models\LienDisCatTarBookingFieldValeur;
 
 class LienDisCatTarBookingFieldSousFieldController extends Controller
 {
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, ListDiscipline $discipline, LienDisciplineCategorie $categorie, LienDisCatTariftype $tarifType, LienDisCatTarBookingField $bookingfield): RedirectResponse
+    public function store(Request $request, ListDiscipline $discipline, LienDisciplineCategorie $categorie, LienDisCatTariftype $tarifType, LienDisCatTarBookingField $bookingfield, LienDisCatTarBookingFieldValeur $valeur): RedirectResponse
     {
         $user = auth()->user();
         $this->authorize('viewAdmin', $user);
@@ -28,22 +29,21 @@ class LienDisCatTarBookingFieldSousFieldController extends Controller
             'type_champ.type' => ['required', 'String'],
         ]);
 
-        $bookingfield->sous_fields()->create([
+        $valeur->sous_fields()->create([
             'nom' => $request->nom,
             'type_champ_form' => $request->type_champ['type'],
             'type_champ_id' => $request->type_champ['id'],
         ]);
 
-        return to_route('admin.disciplines.categories.tarifs.edit', ['discipline' => $discipline, 'categorie' => $categorie, 'tarifType' => $tarifType])->with('success', 'sous champ ajouté');
+        return to_route('admin.disciplines.categories.tarifs.edit', ['discipline' => $discipline, 'categorie' => $categorie, 'tarifType' => $tarifType])->with('success', 'sous champ ajouté à la valeur du champ');
     }
 
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, ListDiscipline $discipline, LienDisciplineCategorie $categorie, LienDisCatTariftype $tarifType, LienDisCatTarBookingField $bookingfield, LienDisCatTarBookingFieldSousField $sousField)
+    public function update(Request $request, ListDiscipline $discipline, LienDisciplineCategorie $categorie, LienDisCatTariftype $tarifType, LienDisCatTarBookingField $bookingfield, LienDisCatTarBookingFieldValeur $valeur, LienDisCatTarBookingFieldSousField $sousField)
     {
-
         $user = auth()->user();
         $this->authorize('viewAdmin', $user);
 
@@ -55,13 +55,13 @@ class LienDisCatTarBookingFieldSousFieldController extends Controller
             'nom' => $request->nom,
         ]);
 
-        return to_route('admin.disciplines.categories.tarifs.edit', ['discipline' => $discipline, 'categorie' => $categorie, 'tarifType' => $tarifType])->with('success', 'sous champ mis à jour');
+        return to_route('admin.disciplines.categories.tarifs.edit', ['discipline' => $discipline, 'categorie' => $categorie, 'tarifType' => $tarifType])->with('success', 'Nom du sous champ mis à jour');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ListDiscipline $discipline, LienDisciplineCategorie $categorie, LienDisCatTariftype $tarifType, LienDisCatTarBookingField $bookingfield, LienDisCatTarBookingFieldSousField $sousField)
+    public function destroy(ListDiscipline $discipline, LienDisciplineCategorie $categorie, LienDisCatTariftype $tarifType, LienDisCatTarBookingField $bookingfield, LienDisCatTarBookingFieldValeur $valeur, LienDisCatTarBookingFieldSousField $sousField)
     {
         $user = auth()->user();
         $this->authorize('viewAdmin', $user);

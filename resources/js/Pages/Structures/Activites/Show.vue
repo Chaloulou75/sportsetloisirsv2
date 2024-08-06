@@ -771,7 +771,7 @@ onMounted(() => {
         </template>
         <template #default>
             <div
-                class="sticky left-0 right-0 top-16 z-[9998] bg-transparent backdrop-blur-md"
+                class="sticky left-0 right-0 top-16 z-[998] bg-transparent backdrop-blur-md"
                 ref="categoriesEl"
                 v-if="categories && categories.length > 0"
             >
@@ -1234,7 +1234,7 @@ onMounted(() => {
                 v-if="reservationForm.produit && reservationForm.formule"
                 :produit-id="reservationForm.produit"
                 :cat-tarif-id="reservationForm.formule"
-                :produits="produits"
+                :produits="produits.data"
                 :show="showReservationModal"
                 @close="showReservationModal = false"
             />

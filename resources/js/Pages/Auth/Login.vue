@@ -7,7 +7,7 @@ import PrimaryButton from "@/Components/PrimaryButton.vue";
 import TextInput from "@/Components/Forms/TextInput.vue";
 import { Head, Link, useForm } from "@inertiajs/vue3";
 import ResultsHeader from "@/Components/ResultsHeader.vue";
-import { ArrowRightIcon, HomeIcon } from "@heroicons/vue/24/outline";
+import { HomeIcon } from "@heroicons/vue/24/outline";
 
 defineProps({
     canResetPassword: Boolean,
@@ -137,12 +137,12 @@ const submit = () => {
                     <div class="mt-4 block">
                         <label class="flex items-center">
                             <Checkbox
-                                name="remember"
+                                name="Se souvenir de moi"
                                 v-model:checked="form.remember"
                             />
-                            <span class="ml-2 text-sm text-gray-600"
+                            <!-- <span class="ml-2 text-sm text-gray-600"
                                 >Se souvenir de moi</span
-                            >
+                            > -->
                         </label>
                     </div>
 

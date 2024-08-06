@@ -2,24 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\LienDisCatTariftypeResource;
-use App\Http\Resources\LienDisciplineCategorieResource;
-use App\Http\Resources\ListDisciplineResource;
-use App\Http\Resources\ListeTarifTypeResource;
-use App\Http\Resources\TypeChampResource;
 use App\Models\User;
 use Inertia\Inertia;
 use Inertia\Response;
 use App\Models\Categorie;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Models\TypeChamp;
 use App\Models\ListDiscipline;
 use App\Models\ListeTarifType;
 use Illuminate\Validation\Rule;
 use App\Models\LienDisCatTariftype;
 use Illuminate\Http\RedirectResponse;
 use App\Models\LienDisciplineCategorie;
-use App\Models\TypeChamp;
+use App\Http\Resources\TypeChampResource;
+use App\Http\Resources\ListDisciplineResource;
+use App\Http\Resources\ListeTarifTypeResource;
+use App\Http\Resources\LienDisCatTariftypeResource;
+use App\Http\Resources\LienDisciplineCategorieResource;
 
 class LienDisCatTariftypeController extends Controller
 {
@@ -104,25 +104,21 @@ class LienDisCatTariftypeController extends Controller
             'tarif_booking_fields',
             'tarif_booking_fields.type_champ',
             'tarif_booking_fields.valeurs',
-            'tarif_booking_fields.sous_fields.type_champ',
-            'tarif_booking_fields.sous_fields.valeurs',
+            'tarif_booking_fields.valeurs.sous_fields.type_champ',
+            'tarif_booking_fields.valeurs.sous_fields.valeurs',
         )->find($tarifType->id);
 
         $categorie = LienDisciplineCategorie::with([
             'discipline',
             'categorie',
             'tarif_types',
-        ])
-        ->select(['id', 'slug', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])
-        ->findOrFail($categorie->id);
+        ])->findOrFail($categorie->id);
 
         $categories = LienDisciplineCategorie::with([
             'discipline',
             'categorie',
             'tarif_types',
-        ])->where('discipline_id', $discipline->id)
-            ->select(['id', 'slug', 'discipline_id', 'categorie_id', 'nom_categorie_pro', 'nom_categorie_client'])
-            ->get();
+        ])->where('discipline_id', $discipline->id)->get();
 
         $typeChamps = TypeChamp::whereIn('type', ['select', 'checkbox', 'radio', 'text', 'number'])->get();
 

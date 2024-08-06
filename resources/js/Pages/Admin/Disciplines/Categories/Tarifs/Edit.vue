@@ -8,7 +8,6 @@ import NavAdminDisCatParametres from "@/Components/Admin/NavAdminDisCatParametre
 import NavAdminDisCatTarifsForm from "@/Components/Admin/NavAdminDisCatTarifsForm.vue";
 import Checkbox from "@/Components/Forms/Checkbox.vue";
 import Dropdown from "primevue/dropdown";
-import autoAnimate from "@formkit/auto-animate";
 import {
     XCircleIcon,
     PlusCircleIcon,
@@ -61,12 +60,12 @@ const showAddValeurForm = (field) => {
 };
 
 const addSousFieldFormVisibility = ref([]);
-const toggleAddSousFieldForm = (field) => {
-    addSousFieldFormVisibility.value[field.id] =
-        !addSousFieldFormVisibility.value[field.id];
+const toggleAddSousFieldForm = (valeur) => {
+    addSousFieldFormVisibility.value[valeur.id] =
+        !addSousFieldFormVisibility.value[valeur.id];
 };
-const showAddSousFieldForm = (field) => {
-    return addSousFieldFormVisibility.value[field.id] || false;
+const showAddSousFieldForm = (valeur) => {
+    return addSousFieldFormVisibility.value[valeur.id] || false;
 };
 
 const addSousFieldValeurFormVisibility = ref([]);
@@ -97,7 +96,6 @@ const addSousFieldForm = useForm({
 
 const addSousFieldValeurForm = useForm({
     valeur: null,
-    type_champ: props.type_champs[0],
     remember: true,
 });
 
@@ -139,20 +137,20 @@ const initializeBookingFieldForm = () => {
                 valeur: ref(valeur.valeur),
                 remember: true,
             });
-        }
 
-        for (const sousFieldId in field.sous_fields) {
-            const sousField = field.sous_fields[sousFieldId];
-            updateSousFieldForm.value[sousField.id] = useForm({
-                nom: ref(sousField.nom),
-                remember: true,
-            });
-            for (const valeurId in sousField.valeurs) {
-                const valeur = sousField.valeurs[valeurId];
-                updateSousFieldValeurForm.value[valeur.id] = useForm({
-                    valeur: ref(valeur.valeur),
+            for (const sousFieldId in valeur.sous_fields) {
+                const sousField = valeur.sous_fields[sousFieldId];
+                updateSousFieldForm.value[sousField.id] = useForm({
+                    nom: ref(sousField.nom),
                     remember: true,
                 });
+                for (const valeurId in sousField.valeurs) {
+                    const valeur = sousField.valeurs[valeurId];
+                    updateSousFieldValeurForm.value[valeur.id] = useForm({
+                        valeur: ref(valeur.valeur),
+                        remember: true,
+                    });
+                }
             }
         }
     }
@@ -265,15 +263,16 @@ const deleteTarifTypeFieldValeur = (field, valeur) => {
     );
 };
 
-const addBookingFieldSousField = (field) => {
+const addBookingFieldSousField = (field, valeur) => {
     addSousFieldForm.post(
         route(
-            "admin.disciplines.categories.tarifs.bookingfields.sous_fields.store",
+            "admin.disciplines.categories.tarifs.bookingfields.valeurs.sous_fields.store",
             {
                 discipline: props.discipline,
                 categorie: props.categorie,
                 tarifType: props.tarifType,
                 bookingfield: field,
+                valeur: valeur,
             }
         ),
         {
@@ -282,21 +281,23 @@ const addBookingFieldSousField = (field) => {
             onSuccess: () => {
                 initializeBookingFieldForm();
                 addSousFieldForm.reset();
-                toggleAddSousFieldForm(field);
+                toggleAddSousFieldForm(valeur);
             },
         }
     );
 };
 
-const updateSousField = (field, sousField) => {
+const updateSousField = (field, valeur, sousField) => {
+    console.log(valeur);
     router.patch(
         route(
-            "admin.disciplines.categories.tarifs.bookingfields.sous_fields.update",
+            "admin.disciplines.categories.tarifs.bookingfields.valeurs.sous_fields.update",
             {
                 discipline: props.discipline,
                 categorie: props.categorie,
                 tarifType: props.tarifType,
                 bookingfield: field,
+                valeur: valeur,
                 sousField: sousField,
             }
         ),
@@ -313,15 +314,16 @@ const updateSousField = (field, sousField) => {
     );
 };
 
-const deleteSousField = (field, sousField) => {
+const deleteSousField = (field, valeur, sousField) => {
     router.delete(
         route(
-            "admin.disciplines.categories.tarifs.bookingfields.sous_fields.destroy",
+            "admin.disciplines.categories.tarifs.bookingfields.valeurs.sous_fields.destroy",
             {
                 discipline: props.discipline,
                 categorie: props.categorie,
                 tarifType: props.tarifType,
                 bookingfield: field,
+                valeur: valeur,
                 sousField: sousField,
             }
         ),
@@ -334,15 +336,16 @@ const deleteSousField = (field, sousField) => {
     );
 };
 
-const addTarifBookingFieldSousFieldValeur = (field, sousField) => {
+const addTarifBookingFieldSousFieldValeur = (field, valeur, sousField) => {
     addSousFieldValeurForm.post(
         route(
-            "admin.disciplines.categories.tarifs.bookingfields.sous_fields.valeurs.store",
+            "admin.disciplines.categories.tarifs.bookingfields.valeurs.sous_fields.valeurs.store",
             {
                 discipline: props.discipline,
                 categorie: props.categorie,
                 tarifType: props.tarifType,
                 bookingfield: field,
+                valeur: valeur,
                 sousField: sousField,
             }
         ),
@@ -358,17 +361,18 @@ const addTarifBookingFieldSousFieldValeur = (field, sousField) => {
     );
 };
 
-const updateSousFieldValeur = (field, sousField, valeur) => {
+const updateSousFieldValeur = (field, valeur, sousField, sousFieldValeur) => {
     router.patch(
         route(
-            "admin.disciplines.categories.tarifs.bookingfields.sous_fields.valeurs.update",
+            "admin.disciplines.categories.tarifs.bookingfields.valeurs.sous_fields.valeurs.update",
             {
                 discipline: props.discipline,
                 categorie: props.categorie,
                 tarifType: props.tarifType,
                 bookingfield: field,
-                sousField: sousField,
                 valeur: valeur,
+                sousField: sousField,
+                sousFieldValeur: sousFieldValeur,
             }
         ),
         {
@@ -384,17 +388,18 @@ const updateSousFieldValeur = (field, sousField, valeur) => {
     );
 };
 
-const deleteSousFieldValeur = (field, sousField, valeur) => {
+const deleteSousFieldValeur = (field, valeur, sousField, sousFieldValeur) => {
     router.delete(
         route(
-            "admin.disciplines.categories.tarifs.bookingfields.sous_fields.valeurs.destroy",
+            "admin.disciplines.categories.tarifs.bookingfields.valeurs.sous_fields.valeurs.destroy",
             {
                 discipline: props.discipline,
                 categorie: props.categorie,
                 tarifType: props.tarifType,
                 bookingfield: field,
-                sousField: sousField,
                 valeur: valeur,
+                sousField: sousField,
+                sousFieldValeur: sousFieldValeur,
             }
         ),
         {
@@ -477,17 +482,24 @@ onMounted(() => {
                         >Montrer le planning de l'activité</span
                     ></label
                 >
+                <!-- liste des fields booking -->
+
                 <ul
                     v-if="
                         tarifType.tarif_booking_fields &&
                         tarifType.tarif_booking_fields.length > 0
                     "
-                    class="ml-6 list-inside list-disc space-y-4 py-4 text-sm text-slate-600 marker:text-indigo-600"
+                    class="ml-6 list-inside list-disc space-y-2 py-4 text-sm text-slate-600 marker:text-indigo-600"
                 >
+                    <p class="underline underline-offset-2">
+                        Liste des champs pour le formulaire de
+                        <span class="font-semibold">{{ tarifType.nom }}</span
+                        >:
+                    </p>
                     <li
                         v-for="field in tarifType.tarif_booking_fields"
                         :key="field.id"
-                        class="space-y-3 text-sm text-slate-600"
+                        class="space-y-1 text-sm text-slate-600"
                     >
                         <form
                             v-if="field"
@@ -514,7 +526,7 @@ onMounted(() => {
                                     {{ errors.updateBookingFieldForm.nom }}
                                 </div>
                             </div>
-                            <div class="text-base">
+                            <div>
                                 Type de champ:
                                 <span class="font-semibold">{{
                                     field.type_champ_form
@@ -540,15 +552,22 @@ onMounted(() => {
                                 </button>
                             </div>
                         </form>
-                        <!-- liste des valeurs-->
+                        <!-- liste des valeurs pour fields-->
                         <ul
                             v-if="field.valeurs.length > 0"
-                            class="ml-6 list-inside list-disc space-y-4 py-2 text-sm text-slate-600 marker:text-indigo-600"
+                            class="ml-6 list-inside list-disc gap-3 py-2 text-sm text-slate-600 marker:text-indigo-600"
                         >
+                            <p class="text-sm underline underline-offset-2">
+                                Liste des valeurs pour
+                                <span class="font-semibold">{{
+                                    field.nom
+                                }}</span
+                                >:
+                            </p>
                             <li
                                 v-for="valeur in field.valeurs"
                                 :key="valeur.id"
-                                class="space-y-3 text-sm text-slate-600"
+                                class="space-y-1 text-sm text-slate-600"
                             >
                                 <form
                                     v-if="valeur"
@@ -603,241 +622,92 @@ onMounted(() => {
                                                 class="h-6 w-6 text-red-500 hover:text-red-700"
                                             />
                                         </button>
-                                    </div>
-                                </form>
-                            </li>
-                        </ul>
-                        <!-- liste sous fields -->
-                        <ul
-                            class="ml-6 list-inside list-disc space-y-4 py-2 text-sm text-slate-600 marker:text-indigo-600"
-                        >
-                            <li
-                                v-for="sousField in field.sous_fields"
-                                :key="sousField.id"
-                                class="space-y-3 text-sm text-slate-600"
-                            >
-                                <form
-                                    v-if="sousField"
-                                    class="inline-flex flex-col items-start space-y-2 md:flex-row md:items-center md:space-x-3 md:space-y-0"
-                                    @submit.prevent="
-                                        updateSousField(field, sousField)
-                                    "
-                                >
-                                    <div class="flex flex-col">
-                                        <input
-                                            v-if="
-                                                updateSousFieldForm[
-                                                    sousField.id
-                                                ]
-                                            "
-                                            v-model="
-                                                updateSousFieldForm[
-                                                    sousField.id
-                                                ].nom
-                                            "
-                                            type="text"
-                                            :name="sousField.nom"
-                                            :id="sousField.nom"
-                                            class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
-                                            placeholder=""
-                                            autocomplete="none"
-                                        />
-                                        <div
-                                            v-if="errors.updateSousFieldForm"
-                                            class="mt-1 text-xs text-red-500"
-                                        >
-                                            {{ errors.updateSousFieldForm.nom }}
-                                        </div>
-                                    </div>
-                                    <div class="text-base">
-                                        Type de champ:
-                                        <span class="font-semibold">{{
-                                            sousField.type_champ_form
-                                        }}</span>
-                                    </div>
-                                    <div class="flex items-center space-x-3">
-                                        <button type="submit">
-                                            <ArrowPathIcon
-                                                class="mr-1 h-6 w-6 text-indigo-600 transition-all duration-200 hover:-rotate-90 hover:text-indigo-800"
-                                            />
-                                            <span class="sr-only"
-                                                >Mettre à jour le sous
-                                                champ</span
-                                            >
-                                        </button>
                                         <button
+                                            class="inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white p-3 text-center text-xs font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
                                             type="button"
-                                            class="inline-flex items-center"
                                             @click="
-                                                deleteSousField(
-                                                    field,
-                                                    sousField
-                                                )
+                                                toggleAddSousFieldForm(valeur)
                                             "
                                         >
-                                            <TrashIcon
-                                                class="h-6 w-6 text-red-500 hover:text-red-700"
-                                            />
+                                            <div class="">
+                                                Ajouter un sous champ à la
+                                                valeur
+                                                <span class="font-semibold">{{
+                                                    valeur.valeur
+                                                }}</span>
+                                            </div>
                                         </button>
                                     </div>
                                 </form>
-                                <!-- liste valeurs de ss fields -->
-                                <ul
-                                    v-if="sousField.valeurs.length > 0"
-                                    class="ml-6 list-inside list-disc space-y-4 py-2 text-sm text-slate-600 marker:text-indigo-600"
-                                >
-                                    <li
-                                        v-for="valeur in sousField.valeurs"
-                                        :key="valeur.id"
-                                        class="space-y-3 text-sm text-slate-600"
-                                    >
-                                        <form
-                                            v-if="valeur"
-                                            class="inline-flex flex-col items-start space-y-2 md:flex-row md:items-center md:space-x-3 md:space-y-0"
-                                            @submit.prevent="
-                                                updateSousFieldValeur(
-                                                    field,
-                                                    sousField,
-                                                    valeur
-                                                )
-                                            "
-                                        >
-                                            <div class="flex flex-col">
-                                                <input
-                                                    v-if="
-                                                        updateSousFieldValeurForm[
-                                                            valeur.id
-                                                        ]
-                                                    "
-                                                    v-model="
-                                                        updateSousFieldValeurForm[
-                                                            valeur.id
-                                                        ].valeur
-                                                    "
-                                                    type="text"
-                                                    :name="valeur.valeur"
-                                                    :id="valeur.valeur"
-                                                    class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
-                                                    placeholder=""
-                                                    autocomplete="none"
-                                                />
-                                                <div
-                                                    v-if="
-                                                        errors.updateSousFieldValeurForm
-                                                    "
-                                                    class="mt-1 text-xs text-red-500"
-                                                >
-                                                    {{
-                                                        errors
-                                                            .updateSousFieldValeurForm
-                                                            .valeur
-                                                    }}
-                                                </div>
-                                            </div>
-
-                                            <div
-                                                class="flex items-center space-x-3"
-                                            >
-                                                <button type="submit">
-                                                    <ArrowPathIcon
-                                                        class="mr-1 h-6 w-6 text-indigo-600 transition-all duration-200 hover:-rotate-90 hover:text-indigo-800"
-                                                    />
-                                                    <span class="sr-only"
-                                                        >Mettre à jour la valeur
-                                                        du sous champ</span
-                                                    >
-                                                </button>
-                                                <button
-                                                    type="button"
-                                                    class="inline-flex items-center"
-                                                    @click="
-                                                        deleteSousFieldValeur(
-                                                            field,
-                                                            sousField,
-                                                            valeur
-                                                        )
-                                                    "
-                                                >
-                                                    <TrashIcon
-                                                        class="h-6 w-6 text-red-500 hover:text-red-700"
-                                                    />
-                                                </button>
-                                            </div>
-                                        </form>
-                                    </li>
-                                </ul>
-                                <!-- Ajout valeur de sous attribut -->
-                                <div
-                                    v-if="
-                                        !showAddSousFieldValeurForm(
-                                            sousField
-                                        ) &&
-                                        sousField.type_champ &&
-                                        sousField.type_champ.sous_criterable
-                                    "
-                                >
-                                    <button
-                                        @click="
-                                            toggleAddSousFieldValeurForm(
-                                                sousField
-                                            )
-                                        "
-                                        class="inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-4 py-3 text-center text-sm font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
-                                        type="button"
-                                    >
-                                        <div>
-                                            Ajouter une valeur au sous champ
-                                            <span class="font-semibold">{{
-                                                sousField.nom
-                                            }}</span>
-                                        </div>
-                                    </button>
-                                </div>
-
-                                <div
-                                    v-if="showAddSousFieldValeurForm(sousField)"
-                                >
+                                <!-- Ajout sous fields à valeur-->
+                                <div v-if="showAddSousFieldForm(valeur)">
                                     <form
-                                        class="inline-flex flex-grow items-end justify-between text-center text-xs font-medium text-gray-600"
+                                        class="my-2 ml-6 inline-flex flex-grow items-end justify-between bg-gray-100 p-1 text-center text-xs font-medium text-gray-600"
                                         @submit.prevent="
-                                            addTarifBookingFieldSousFieldValeur(
+                                            addBookingFieldSousField(
                                                 field,
-                                                sousField
+                                                valeur
                                             )
                                         "
                                     >
-                                        <div class="flex flex-col items-start">
-                                            <label for="newSousAttributValeur"
-                                                >Ajouter une valeur à
+                                        <div
+                                            class="flex flex-col items-start space-y-2"
+                                        >
+                                            <label for="newSousAttribut">
+                                                Ajouter un sous champ à la
+                                                valeur
                                                 <span class="font-semibold">{{
-                                                    sousField.nom
+                                                    valeur.valeur
                                                 }}</span
-                                                >:</label
-                                            >
+                                                >:
+                                            </label>
                                             <div class="mt-1 flex rounded-md">
                                                 <input
                                                     v-model="
-                                                        addSousFieldValeurForm.valeur
+                                                        addSousFieldForm.nom
                                                     "
                                                     type="text"
-                                                    name="newSousFieldValeur"
-                                                    id="newSousFieldValeur"
+                                                    name="newSousField"
+                                                    id="newSousField"
                                                     class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
                                                     placeholder=""
                                                     autocomplete="none"
                                                 />
                                             </div>
                                             <div
-                                                v-if="
-                                                    errors.addSousFieldValeurForm
-                                                "
+                                                v-if="errors.addSousFieldForm"
                                                 class="text-xs text-red-500"
                                             >
                                                 {{
-                                                    errors
-                                                        .addSousFieldValeurForm
-                                                        .valeur
+                                                    errors.addSousFieldForm.nom
                                                 }}
+                                            </div>
+                                            <div>
+                                                <label
+                                                    for="ssFieldChamp"
+                                                    class="block text-left text-xs font-medium normal-case text-gray-700"
+                                                >
+                                                    Type de champ:
+                                                </label>
+                                                <div class="mt-1 text-left">
+                                                    <Dropdown
+                                                        v-model="
+                                                            addSousFieldForm.type_champ
+                                                        "
+                                                        :options="type_champs"
+                                                        optionLabel="type"
+                                                        id="ssFieldChamp"
+                                                        placeholder="Type de champ"
+                                                        class="w-full text-sm md:w-[14rem]"
+                                                        :ptOptions="{
+                                                            mergeProps: true,
+                                                        }"
+                                                        :pt="{
+                                                            item: 'text-sm',
+                                                        }"
+                                                        showClear
+                                                    />
+                                                </div>
                                             </div>
                                         </div>
                                         <button
@@ -850,9 +720,7 @@ onMounted(() => {
                                         </button>
                                         <button
                                             @click="
-                                                toggleAddSousFieldValeurForm(
-                                                    sousField
-                                                )
+                                                toggleAddSousFieldForm(valeur)
                                             "
                                             type="button"
                                             class="ml-4 inline-flex items-center"
@@ -863,178 +731,400 @@ onMounted(() => {
                                         </button>
                                     </form>
                                 </div>
+
+                                <!-- liste sous fields -->
+                                <ul
+                                    v-if="valeur.sous_fields.length > 0"
+                                    class="ml-6 list-inside list-disc space-y-2 py-2 text-sm text-slate-600 marker:text-indigo-600"
+                                >
+                                    <p class="underline underline-offset-2">
+                                        Sous champs de formulaire pour
+                                        <span class="font-semibold">{{
+                                            valeur.valeur
+                                        }}</span
+                                        >:
+                                    </p>
+                                    <li
+                                        v-for="sousField in valeur.sous_fields"
+                                        :key="sousField.id"
+                                        class="gap-2 text-sm text-slate-600"
+                                    >
+                                        <form
+                                            v-if="sousField"
+                                            class="inline-flex flex-col items-start space-y-2 md:flex-row md:items-center md:space-x-3 md:space-y-0"
+                                            @submit.prevent="
+                                                updateSousField(
+                                                    field,
+                                                    valeur,
+                                                    sousField
+                                                )
+                                            "
+                                        >
+                                            <div class="flex flex-col">
+                                                <input
+                                                    v-if="
+                                                        updateSousFieldForm[
+                                                            sousField.id
+                                                        ]
+                                                    "
+                                                    v-model="
+                                                        updateSousFieldForm[
+                                                            sousField.id
+                                                        ].nom
+                                                    "
+                                                    type="text"
+                                                    :name="sousField.nom"
+                                                    :id="sousField.nom"
+                                                    class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                                    placeholder=""
+                                                    autocomplete="none"
+                                                />
+                                                <div
+                                                    v-if="
+                                                        errors.updateSousFieldForm
+                                                    "
+                                                    class="mt-1 text-xs text-red-500"
+                                                >
+                                                    {{
+                                                        errors
+                                                            .updateSousFieldForm
+                                                            .nom
+                                                    }}
+                                                </div>
+                                            </div>
+                                            <div>
+                                                Type de champ:
+                                                <span class="font-semibold">{{
+                                                    sousField.type_champ_form
+                                                }}</span>
+                                            </div>
+                                            <div
+                                                class="flex items-center space-x-3"
+                                            >
+                                                <button type="submit">
+                                                    <ArrowPathIcon
+                                                        class="mr-1 h-6 w-6 text-indigo-600 transition-all duration-200 hover:-rotate-90 hover:text-indigo-800"
+                                                    />
+                                                    <span class="sr-only"
+                                                        >Mettre à jour le sous
+                                                        champ</span
+                                                    >
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    class="inline-flex items-center"
+                                                    @click="
+                                                        deleteSousField(
+                                                            field,
+                                                            valeur,
+                                                            sousField
+                                                        )
+                                                    "
+                                                >
+                                                    <TrashIcon
+                                                        class="h-6 w-6 text-red-500 hover:text-red-700"
+                                                    />
+                                                </button>
+                                            </div>
+                                        </form>
+
+                                        <!-- liste valeurs de sous fields -->
+                                        <ul
+                                            v-if="sousField.valeurs.length > 0"
+                                            class="ml-6 list-inside list-disc space-y-1 py-2 text-sm text-slate-600 marker:text-indigo-600"
+                                        >
+                                            <p
+                                                class="underline underline-offset-2"
+                                            >
+                                                Liste des valeurs pour
+                                                <span class="font-semibold">{{
+                                                    sousField.nom
+                                                }}</span
+                                                >:
+                                            </p>
+                                            <li
+                                                v-for="sousFieldValeur in sousField.valeurs"
+                                                :key="sousFieldValeur.id"
+                                                class="space-y-1 text-sm text-slate-600"
+                                            >
+                                                <form
+                                                    v-if="sousFieldValeur"
+                                                    class="inline-flex flex-col items-start space-y-2 md:flex-row md:items-center md:space-x-3 md:space-y-0"
+                                                    @submit.prevent="
+                                                        updateSousFieldValeur(
+                                                            field,
+                                                            valeur,
+                                                            sousField,
+                                                            sousFieldValeur
+                                                        )
+                                                    "
+                                                >
+                                                    <div class="flex flex-col">
+                                                        <input
+                                                            v-if="
+                                                                updateSousFieldValeurForm[
+                                                                    sousFieldValeur
+                                                                        .id
+                                                                ]
+                                                            "
+                                                            v-model="
+                                                                updateSousFieldValeurForm[
+                                                                    sousFieldValeur
+                                                                        .id
+                                                                ].valeur
+                                                            "
+                                                            type="text"
+                                                            :name="
+                                                                sousFieldValeur.valeur
+                                                            "
+                                                            :id="
+                                                                sousFieldValeur.valeur
+                                                            "
+                                                            class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                                            placeholder=""
+                                                            autocomplete="none"
+                                                        />
+                                                        <div
+                                                            v-if="
+                                                                errors.updateSousFieldValeurForm
+                                                            "
+                                                            class="mt-1 text-xs text-red-500"
+                                                        >
+                                                            {{
+                                                                errors
+                                                                    .updateSousFieldValeurForm
+                                                                    .valeur
+                                                            }}
+                                                        </div>
+                                                    </div>
+
+                                                    <div
+                                                        class="flex items-center space-x-3"
+                                                    >
+                                                        <button type="submit">
+                                                            <ArrowPathIcon
+                                                                class="mr-1 h-6 w-6 text-indigo-600 transition-all duration-200 hover:-rotate-90 hover:text-indigo-800"
+                                                            />
+                                                            <span
+                                                                class="sr-only"
+                                                                >Mettre à jour
+                                                                la valeur du
+                                                                sous champ</span
+                                                            >
+                                                        </button>
+                                                        <button
+                                                            type="button"
+                                                            class="inline-flex items-center"
+                                                            @click="
+                                                                deleteSousFieldValeur(
+                                                                    field,
+                                                                    valeur,
+                                                                    sousField,
+                                                                    sousFieldValeur
+                                                                )
+                                                            "
+                                                        >
+                                                            <TrashIcon
+                                                                class="h-6 w-6 text-red-500 hover:text-red-700"
+                                                            />
+                                                        </button>
+                                                    </div>
+                                                </form>
+                                            </li>
+                                        </ul>
+                                        <!-- Ajout valeur de sous fields -->
+                                        <div
+                                            v-if="
+                                                !showAddSousFieldValeurForm(
+                                                    sousField
+                                                ) &&
+                                                sousField.type_champ &&
+                                                sousField.type_champ
+                                                    .sous_criterable
+                                            "
+                                            class="py-2"
+                                        >
+                                            <button
+                                                @click="
+                                                    toggleAddSousFieldValeurForm(
+                                                        sousField
+                                                    )
+                                                "
+                                                class="inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-4 py-3 text-center text-xs font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
+                                                type="button"
+                                            >
+                                                <div>
+                                                    Ajouter une valeur au sous
+                                                    champ
+                                                    <span
+                                                        class="font-semibold"
+                                                        >{{
+                                                            sousField.nom
+                                                        }}</span
+                                                    >
+                                                </div>
+                                            </button>
+                                        </div>
+
+                                        <div
+                                            v-if="
+                                                showAddSousFieldValeurForm(
+                                                    sousField
+                                                )
+                                            "
+                                        >
+                                            <form
+                                                class="inline-flex flex-grow items-end justify-between text-center text-xs font-medium text-gray-600"
+                                                @submit.prevent="
+                                                    addTarifBookingFieldSousFieldValeur(
+                                                        field,
+                                                        valeur,
+                                                        sousField
+                                                    )
+                                                "
+                                            >
+                                                <div
+                                                    class="flex flex-col items-start"
+                                                >
+                                                    <label
+                                                        for="newSousAttributValeur"
+                                                        >Ajouter une valeur à
+                                                        <span
+                                                            class="font-semibold"
+                                                            >{{
+                                                                sousField.nom
+                                                            }}</span
+                                                        >:</label
+                                                    >
+                                                    <div
+                                                        class="mt-1 flex rounded-md"
+                                                    >
+                                                        <input
+                                                            v-model="
+                                                                addSousFieldValeurForm.valeur
+                                                            "
+                                                            type="text"
+                                                            name="newSousFieldValeur"
+                                                            id="newSousFieldValeur"
+                                                            class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                                            placeholder=""
+                                                            autocomplete="none"
+                                                        />
+                                                    </div>
+                                                    <div
+                                                        v-if="
+                                                            errors.addSousFieldValeurForm
+                                                        "
+                                                        class="text-xs text-red-500"
+                                                    >
+                                                        {{
+                                                            errors
+                                                                .addSousFieldValeurForm
+                                                                .valeur
+                                                        }}
+                                                    </div>
+                                                </div>
+                                                <button
+                                                    type="submit"
+                                                    class="ml-4 inline-flex items-end"
+                                                >
+                                                    <PlusCircleIcon
+                                                        class="h-6 w-6 text-indigo-500 hover:text-indigo-700"
+                                                    />
+                                                </button>
+                                                <button
+                                                    @click="
+                                                        toggleAddSousFieldValeurForm(
+                                                            sousField
+                                                        )
+                                                    "
+                                                    type="button"
+                                                    class="ml-4 inline-flex items-center"
+                                                >
+                                                    <XCircleIcon
+                                                        class="h-6 w-6 text-red-500 hover:text-red-700"
+                                                    />
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </li>
+                                </ul>
                             </li>
                         </ul>
-                        <!-- Ajout sous fields -->
-                        <button
-                            v-if="
-                                !showAddSousFieldForm(field) &&
-                                field.type_champ &&
-                                field.type_champ.sous_criterable
-                            "
-                            @click="toggleAddSousFieldForm(field)"
-                            class="inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-4 py-3 text-center text-sm font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
-                            type="button"
-                        >
-                            <div>
-                                Ajouter un sous champ à
-                                <span class="font-semibold">{{
-                                    field.nom
-                                }}</span>
-                            </div>
-                        </button>
-                        <div v-if="showAddSousFieldForm(field)">
-                            <form
-                                class="ml-6 inline-flex flex-grow items-end justify-between text-center text-xs font-medium text-gray-600"
-                                @submit.prevent="
-                                    addBookingFieldSousField(field)
+
+                        <!-- Ajout valeur field -->
+                        <div>
+                            <button
+                                v-if="
+                                    !showAddValeurForm(field) &&
+                                    field.type_champ &&
+                                    field.type_champ.sous_criterable
                                 "
+                                @click="toggleAddValeurForm(field)"
+                                class="inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-4 py-3 text-center text-sm font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
+                                type="button"
                             >
-                                <div
-                                    class="flex flex-col items-start space-y-2"
+                                <div>
+                                    Ajouter une valeur à
+                                    <span class="font-semibold">{{
+                                        field.nom
+                                    }}</span>
+                                </div>
+                            </button>
+                            <div v-if="showAddValeurForm(field)">
+                                <form
+                                    class="inline-flex flex-grow items-end justify-between text-center text-xs font-medium text-gray-600"
+                                    @submit.prevent="addTarifFieldValeur(field)"
                                 >
-                                    <label for="newSousAttribut"
-                                        >Ajouter un sous champ à
-                                        <span class="font-semibold">{{
-                                            field.nom
-                                        }}</span
-                                        >:</label
-                                    >
-                                    <div class="mt-1 flex rounded-md">
-                                        <input
-                                            v-model="addSousFieldForm.nom"
-                                            type="text"
-                                            name="newSousField"
-                                            id="newSousField"
-                                            class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
-                                            placeholder=""
-                                            autocomplete="none"
-                                        />
-                                    </div>
-                                    <div
-                                        v-if="errors.addSousFieldForm"
-                                        class="text-xs text-red-500"
-                                    >
-                                        {{ errors.addSousFieldForm.nom }}
-                                    </div>
-                                    <div>
-                                        <label
-                                            for="ssFieldChamp"
-                                            class="block text-left text-xs font-medium normal-case text-gray-700"
+                                    <div class="flex flex-col items-start">
+                                        <label for="newSousAttributValeur"
+                                            >Ajouter une valeur à
+                                            <span class="font-semibold">{{
+                                                field.nom
+                                            }}</span
+                                            >:</label
                                         >
-                                            Type de champ:
-                                        </label>
-                                        <div class="mt-1 text-left">
-                                            <Dropdown
-                                                v-model="
-                                                    addSousFieldForm.type_champ
-                                                "
-                                                :options="type_champs"
-                                                optionLabel="type"
-                                                id="ssFieldChamp"
-                                                placeholder="Type de champ"
-                                                class="w-full text-sm md:w-[14rem]"
-                                                :ptOptions="{
-                                                    mergeProps: true,
-                                                }"
-                                                :pt="{
-                                                    item: 'text-sm',
-                                                }"
-                                                showClear
+                                        <div class="mt-1 flex rounded-md">
+                                            <input
+                                                v-model="addValeurForm.valeur"
+                                                type="text"
+                                                name="newSousAttributValeur"
+                                                id="newSousAttributValeur"
+                                                class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                                placeholder=""
+                                                autocomplete="none"
                                             />
                                         </div>
+                                        <div
+                                            v-if="errors.addValeurForm"
+                                            class="text-xs text-red-500"
+                                        >
+                                            {{ errors.addValeurForm.valeur }}
+                                        </div>
                                     </div>
-                                </div>
-                                <button
-                                    type="submit"
-                                    class="ml-4 inline-flex items-end"
-                                >
-                                    <PlusCircleIcon
-                                        class="h-6 w-6 text-indigo-500 hover:text-indigo-700"
-                                    />
-                                </button>
-                                <button
-                                    @click="toggleAddSousFieldForm(field)"
-                                    type="button"
-                                    class="ml-4 inline-flex items-center"
-                                >
-                                    <XCircleIcon
-                                        class="h-6 w-6 text-red-500 hover:text-red-700"
-                                    />
-                                </button>
-                            </form>
-                        </div>
-                        <!-- Ajout valeur field -->
-                        <button
-                            v-if="
-                                !showAddValeurForm(field) &&
-                                field.type_champ &&
-                                field.type_champ.sous_criterable
-                            "
-                            @click="toggleAddValeurForm(field)"
-                            class="inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-4 py-3 text-center text-sm font-medium text-gray-600 shadow-sm hover:border-gray-100 hover:bg-indigo-500 hover:text-white hover:shadow-lg focus:outline-none focus:ring active:bg-indigo-500"
-                            type="button"
-                        >
-                            <div>
-                                Ajouter une valeur à
-                                <span class="font-semibold">{{
-                                    field.nom
-                                }}</span>
-                            </div>
-                        </button>
-                        <div v-if="showAddValeurForm(field)">
-                            <form
-                                class="inline-flex flex-grow items-end justify-between text-center text-xs font-medium text-gray-600"
-                                @submit.prevent="addTarifFieldValeur(field)"
-                            >
-                                <div class="flex flex-col items-start">
-                                    <label for="newSousAttributValeur"
-                                        >Ajouter une valeur à
-                                        <span class="font-semibold">{{
-                                            field.nom
-                                        }}</span
-                                        >:</label
+                                    <button
+                                        type="submit"
+                                        class="ml-4 inline-flex items-end"
                                     >
-                                    <div class="mt-1 flex rounded-md">
-                                        <input
-                                            v-model="addValeurForm.valeur"
-                                            type="text"
-                                            name="newSousAttributValeur"
-                                            id="newSousAttributValeur"
-                                            class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
-                                            placeholder=""
-                                            autocomplete="none"
+                                        <PlusCircleIcon
+                                            class="h-6 w-6 text-indigo-500 hover:text-indigo-700"
                                         />
-                                    </div>
-                                    <div
-                                        v-if="errors.addValeurForm"
-                                        class="text-xs text-red-500"
+                                    </button>
+                                    <button
+                                        @click="toggleAddValeurForm(field)"
+                                        type="button"
+                                        class="ml-4 inline-flex items-center"
                                     >
-                                        {{ errors.addValeurForm.valeur }}
-                                    </div>
-                                </div>
-                                <button
-                                    type="submit"
-                                    class="ml-4 inline-flex items-end"
-                                >
-                                    <PlusCircleIcon
-                                        class="h-6 w-6 text-indigo-500 hover:text-indigo-700"
-                                    />
-                                </button>
-                                <button
-                                    @click="toggleAddValeurForm(field)"
-                                    type="button"
-                                    class="ml-4 inline-flex items-center"
-                                >
-                                    <XCircleIcon
-                                        class="h-6 w-6 text-red-500 hover:text-red-700"
-                                    />
-                                </button>
-                            </form>
+                                        <XCircleIcon
+                                            class="h-6 w-6 text-red-500 hover:text-red-700"
+                                        />
+                                    </button>
+                                </form>
+                            </div>
                         </div>
                     </li>
                 </ul>
-
+                <!-- Ajouter un champ au formulaire -->
                 <div>
                     <button
                         v-if="!showAddBookingFieldForm"

@@ -1,7 +1,6 @@
 <script setup>
 import { ref, computed } from "vue";
 import { useForm } from "@inertiajs/vue3";
-import SelectForm from "@/Components/Forms/SelectForm.vue";
 import Checkbox from "@/Components/Forms/Checkbox.vue";
 import Dropdown from "primevue/dropdown";
 import CheckboxForm from "@/Components/Forms/CheckboxForm.vue";
@@ -74,7 +73,7 @@ const onSubmit = () => {
 </script>
 <template>
     <TransitionRoot appear :show="show" as="template">
-        <Dialog as="div" @close="open = false" class="relative z-[9999]">
+        <Dialog as="div" @close="open = false" class="relative z-[999]">
             <TransitionChild
                 as="template"
                 enter="duration-300 ease-out"
@@ -158,22 +157,35 @@ const onSubmit = () => {
                                             class="text-center text-sm"
                                         >
                                             {{ critere.valeur }}
-                                            <span
+                                            <template
                                                 v-if="
                                                     critere.sous_criteres &&
                                                     critere.sous_criteres
                                                         .length > 0
                                                 "
-                                                class="text-xs"
                                             >
-                                                <span
-                                                    v-for="sousCriteres in critere.sous_criteres"
-                                                    :key="sousCriteres.id"
-                                                    class="text-sm"
+                                                <ul
+                                                    v-for="sousCrit in critere.sous_criteres"
+                                                    :key="sousCrit.id"
+                                                    class="text-center text-xs"
                                                 >
-                                                    ({{ sousCriteres.valeur }})
-                                                </span>
-                                            </span>
+                                                    <li
+                                                        class="font-semibold text-gray-500"
+                                                    >
+                                                        {{
+                                                            sousCrit
+                                                                .sous_critere
+                                                                .nom
+                                                        }}:
+                                                        <span
+                                                            class="font-thin text-gray-700"
+                                                            >{{
+                                                                sousCrit.valeur
+                                                            }}</span
+                                                        >
+                                                    </li>
+                                                </ul>
+                                            </template>
                                         </div>
                                     </div>
                                 </template>
@@ -205,23 +217,49 @@ const onSubmit = () => {
                                                     .cat_tarif_type
                                                     .tarif_booking_fields"
                                                 :key="field.id"
-                                                class="col-span-1"
+                                                class="col-span-1 max-w-sm"
                                             >
                                                 <!-- select  -->
-                                                <SelectForm
-                                                    class="max-w-sm"
+                                                <div
                                                     v-if="
                                                         field.type_champ_form ===
                                                         'select'
                                                     "
-                                                    :name="field.nom"
-                                                    v-model="
-                                                        bookingForm.attributs[
-                                                            field.id
-                                                        ]
-                                                    "
-                                                    :options="field.valeurs"
-                                                />
+                                                >
+                                                    <!-- <pre>{{ field }}</pre> -->
+                                                    <label
+                                                        :for="field.nom"
+                                                        class="block text-left text-sm font-medium normal-case text-gray-700"
+                                                    >
+                                                        {{ field.nom }}
+                                                    </label>
+                                                    <div class="mt-1 text-left">
+                                                        <Dropdown
+                                                            v-model="
+                                                                bookingForm
+                                                                    .attributs[
+                                                                    field.id
+                                                                ]
+                                                            "
+                                                            :options="
+                                                                field.valeurs
+                                                            "
+                                                            optionLabel="valeur"
+                                                            :id="field.nom"
+                                                            :placeholder="
+                                                                field.nom
+                                                            "
+                                                            class="w-full text-sm md:w-[14rem]"
+                                                            :ptOptions="{
+                                                                mergeProps: true,
+                                                            }"
+                                                            :pt="{
+                                                                item: 'text-sm',
+                                                            }"
+                                                            showClear
+                                                        />
+                                                    </div>
+                                                </div>
                                                 <!-- checkbox -->
                                                 <CheckboxForm
                                                     class="max-w-sm"
@@ -320,80 +358,66 @@ const onSubmit = () => {
                                                 </div>
                                                 <!-- sous fields -->
                                                 <template
-                                                    v-for="sousField in field.sous_fields"
-                                                    :key="sousField.id"
+                                                    v-for="valeur in field.valeurs"
+                                                    :key="valeur.id"
                                                 >
-                                                    <Dropdown
-                                                        class="mt-2 w-full max-w-sm"
-                                                        v-if="
-                                                            sousField.type_champ_form ===
-                                                            'select'
-                                                        "
-                                                        v-model="
-                                                            bookingForm
-                                                                .sousattributs[
-                                                                sousField.id
-                                                            ]
-                                                        "
-                                                        :options="
-                                                            sousField.valeurs
-                                                        "
-                                                        optionLabel="valeur"
-                                                    />
-                                                    <RadioForm
-                                                        v-if="
-                                                            sousField.type_champ_form ===
-                                                            'radio'
-                                                        "
-                                                        v-model="
-                                                            bookingForm
-                                                                .sousattributs[
-                                                                sousField.id
-                                                            ]
-                                                        "
-                                                        :name="sousField.nom"
-                                                        :options="
-                                                            sousField.valeurs
-                                                        "
-                                                    />
-
-                                                    <!-- checkbox -->
-                                                    <CheckboxForm
-                                                        class="mt-2 max-w-sm"
-                                                        v-if="
-                                                            sousField.type_champ_form ===
-                                                            'checkbox'
-                                                        "
-                                                        :name="sousField.nom"
-                                                        v-model="
-                                                            bookingForm
-                                                                .sousattributs[
-                                                                sousField.id
-                                                            ]
-                                                        "
-                                                        :options="
-                                                            sousField.valeurs
-                                                        "
-                                                    />
-                                                    <!-- input text -->
-                                                    <div
-                                                        class="mt-2 w-full max-w-sm"
-                                                        v-if="
-                                                            sousField.type_champ_form ===
-                                                            'text'
-                                                        "
+                                                    <template
+                                                        v-for="sousField in valeur.sous_fields"
+                                                        :key="sousField.id"
                                                     >
-                                                        <label
-                                                            :for="sousField.nom"
-                                                            class="block text-sm font-medium normal-case text-gray-700"
-                                                        >
-                                                            {{ sousField.nom }}
-                                                        </label>
-                                                        <div
-                                                            class="mt-1 flex rounded-md"
-                                                        >
-                                                            <TextInput
-                                                                type="text"
+                                                        <div class="mt-2 gap-2">
+                                                            <!-- select -->
+                                                            <div
+                                                                v-if="
+                                                                    sousField.type_champ_form ===
+                                                                        'select' &&
+                                                                    bookingForm
+                                                                        .attributs[
+                                                                        field.id
+                                                                    ] ===
+                                                                        valeur &&
+                                                                    sousField.field_valeur_id ===
+                                                                        valeur.id
+                                                                "
+                                                            >
+                                                                <label
+                                                                    :for="
+                                                                        sousField.nom
+                                                                    "
+                                                                    class="block text-sm font-medium normal-case text-gray-700"
+                                                                >
+                                                                    {{
+                                                                        sousField.nom
+                                                                    }}
+                                                                </label>
+                                                                <Dropdown
+                                                                    class="mt-2 w-full max-w-sm"
+                                                                    v-model="
+                                                                        bookingForm
+                                                                            .sousattributs[
+                                                                            sousField
+                                                                                .id
+                                                                        ]
+                                                                    "
+                                                                    :options="
+                                                                        sousField.valeurs
+                                                                    "
+                                                                    optionLabel="valeur"
+                                                                />
+                                                            </div>
+                                                            <!-- radio -->
+                                                            <RadioForm
+                                                                v-if="
+                                                                    sousField.type_champ_form ===
+                                                                        'radio' &&
+                                                                    bookingForm
+                                                                        .attributs[
+                                                                        field.id
+                                                                    ] ===
+                                                                        valeur &&
+                                                                    sousField.field_valeur_id ===
+                                                                        valeur.id
+                                                                "
                                                                 v-model="
                                                                     bookingForm
                                                                         .sousattributs[
@@ -404,36 +428,27 @@ const onSubmit = () => {
                                                                 :name="
                                                                     sousField.nom
                                                                 "
-                                                                :id="
+                                                                :options="
+                                                                    sousField.valeurs
+                                                                "
+                                                            />
+                                                            <!-- checkbox -->
+                                                            <CheckboxForm
+                                                                class="mt-2 max-w-sm"
+                                                                v-if="
+                                                                    sousField.type_champ_form ===
+                                                                        'checkbox' &&
+                                                                    bookingForm
+                                                                        .attributs[
+                                                                        field.id
+                                                                    ] ===
+                                                                        valeur &&
+                                                                    sousField.field_valeur_id ===
+                                                                        valeur.id
+                                                                "
+                                                                :name="
                                                                     sousField.nom
                                                                 "
-                                                                class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
-                                                                placeholder=""
-                                                                autocomplete="none"
-                                                            />
-                                                        </div>
-                                                    </div>
-
-                                                    <!-- number text -->
-                                                    <div
-                                                        class="mt-2 w-full min-w-max"
-                                                        v-if="
-                                                            sousField.type_champ_form ===
-                                                            'number'
-                                                        "
-                                                    >
-                                                        <label
-                                                            :for="sousField.nom"
-                                                            class="block text-sm font-medium normal-case text-gray-700"
-                                                        >
-                                                            {{ sousField.nom }}
-                                                        </label>
-                                                        <div
-                                                            class="mt-1 flex rounded-md"
-                                                        >
-                                                            <TextInput
-                                                                type="number"
-                                                                min="0"
                                                                 v-model="
                                                                     bookingForm
                                                                         .sousattributs[
@@ -441,18 +456,111 @@ const onSubmit = () => {
                                                                             .id
                                                                     ]
                                                                 "
-                                                                :name="
-                                                                    sousField.nom
+                                                                :options="
+                                                                    sousField.valeurs
                                                                 "
-                                                                :id="
-                                                                    sousField.nom
-                                                                "
-                                                                class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
-                                                                placeholder=""
-                                                                autocomplete="none"
                                                             />
+                                                            <!-- input text -->
+                                                            <div
+                                                                class="mt-2 w-full max-w-sm"
+                                                                v-if="
+                                                                    sousField.type_champ_form ===
+                                                                        'text' &&
+                                                                    bookingForm
+                                                                        .attributs[
+                                                                        field.id
+                                                                    ] ===
+                                                                        valeur &&
+                                                                    sousField.field_valeur_id ===
+                                                                        valeur.id
+                                                                "
+                                                            >
+                                                                <label
+                                                                    :for="
+                                                                        sousField.nom
+                                                                    "
+                                                                    class="block text-sm font-medium normal-case text-gray-700"
+                                                                >
+                                                                    {{
+                                                                        sousField.nom
+                                                                    }}
+                                                                </label>
+                                                                <div
+                                                                    class="mt-1 flex rounded-md"
+                                                                >
+                                                                    <TextInput
+                                                                        type="text"
+                                                                        v-model="
+                                                                            bookingForm
+                                                                                .sousattributs[
+                                                                                sousField
+                                                                                    .id
+                                                                            ]
+                                                                        "
+                                                                        :name="
+                                                                            sousField.nom
+                                                                        "
+                                                                        :id="
+                                                                            sousField.nom
+                                                                        "
+                                                                        class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                                                        placeholder=""
+                                                                        autocomplete="none"
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                            <!-- number text -->
+                                                            <div
+                                                                class="mt-2 w-full min-w-max"
+                                                                v-if="
+                                                                    sousField.type_champ_form ===
+                                                                        'number' &&
+                                                                    bookingForm
+                                                                        .attributs[
+                                                                        field.id
+                                                                    ] ===
+                                                                        valeur &&
+                                                                    sousField.field_valeur_id ===
+                                                                        valeur.id
+                                                                "
+                                                            >
+                                                                <label
+                                                                    :for="
+                                                                        sousField.nom
+                                                                    "
+                                                                    class="block text-sm font-medium normal-case text-gray-700"
+                                                                >
+                                                                    {{
+                                                                        sousField.nom
+                                                                    }}
+                                                                </label>
+                                                                <div
+                                                                    class="mt-1 flex rounded-md"
+                                                                >
+                                                                    <TextInput
+                                                                        type="number"
+                                                                        min="0"
+                                                                        v-model="
+                                                                            bookingForm
+                                                                                .sousattributs[
+                                                                                sousField
+                                                                                    .id
+                                                                            ]
+                                                                        "
+                                                                        :name="
+                                                                            sousField.nom
+                                                                        "
+                                                                        :id="
+                                                                            sousField.nom
+                                                                        "
+                                                                        class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                                                        placeholder=""
+                                                                        autocomplete="none"
+                                                                    />
+                                                                </div>
+                                                            </div>
                                                         </div>
-                                                    </div>
+                                                    </template>
                                                 </template>
                                             </div>
                                         </div>
