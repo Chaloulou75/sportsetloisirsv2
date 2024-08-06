@@ -73,7 +73,6 @@ class PanierController extends Controller
             'sousattributs' => ['nullable'],
             'plannings' => ['nullable'],
         ]);
-        dd($request->all());
 
         $user = auth()->user();
         $produit = StructureProduit::withRelations()->find($request->produitId);
@@ -158,9 +157,13 @@ class PanierController extends Controller
 
                 if($request->sousattributs) {
                     foreach ($request->sousattributs as $k => $sousattribut) {
-                        $bookingSousField = LienDisCatTarBookingFieldSousField::with(['booking_field','valeurs'])->find($k);
+                        $bookingSousField = LienDisCatTarBookingFieldSousField::with([
+                            'booking_field_valeur',
+                            'booking_field_valeur.booking_field',
+                            'valeurs'
+                        ])->find($k);
 
-                        if($bookingSousField->booking_field->id === $reservationAttribut->booking_field_id) {
+                        if($bookingSousField->booking_field_valeur->booking_field->id === $reservationAttribut->booking_field_id) {
 
                             if (is_array($sousattribut) && isset($sousattribut[0]) && is_array($sousattribut[0])) {
                                 foreach ($sousattribut as $subAttribut) {

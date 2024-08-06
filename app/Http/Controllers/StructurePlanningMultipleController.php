@@ -18,7 +18,6 @@ class StructurePlanningMultipleController extends Controller
      */
     public function store(Request $request, Structure $structure): RedirectResponse
     {
-        // dd($request->all());
         $request->validate([
             'title' => ['nullable', 'string'],
             'activite' => ['required', Rule::exists(StructureActivite::class, 'id')],

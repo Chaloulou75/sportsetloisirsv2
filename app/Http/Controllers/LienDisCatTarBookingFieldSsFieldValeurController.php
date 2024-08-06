@@ -39,9 +39,6 @@ class LienDisCatTarBookingFieldSsFieldValeurController extends Controller
      */
     public function update(Request $request, ListDiscipline $discipline, LienDisciplineCategorie $categorie, LienDisCatTariftype $tarifType, LienDisCatTarBookingField $bookingfield, LienDisCatTarBookingFieldValeur $valeur, LienDisCatTarBookingFieldSousField $sousField, LienDisCatTarBookingFieldSsFieldValeur $sousFieldValeur): RedirectResponse
     {
-
-        dd($request->all());
-
         $user = auth()->user();
         $this->authorize('viewAdmin', $user);
 

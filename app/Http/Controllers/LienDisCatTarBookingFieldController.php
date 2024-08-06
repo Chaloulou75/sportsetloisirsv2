@@ -131,31 +131,32 @@ class LienDisCatTarBookingFieldController extends Controller
                                 'type_champ_id' => $bookingField->type_champ_id,
                                 'ordre' => $bookingField->ordre,
                             ]);
-                            if($bookingField->sous_fields) {
-                                foreach ($bookingField->sous_fields as $ssField) {
-                                    $ssFieldBooking = $catTarBookingField->sous_fields()->create([
-                                        'nom' => $ssField->nom,
-                                        'type_champ_form' => $ssField->type_champ_form,
-                                        'type_champ_id' => $ssField->type_champ_id,
-                                        'ordre' => $ssField->ordre,
-                                    ]);
-                                    if($ssField->valeurs) {
-                                        foreach($ssField->valeurs as $value) {
-                                            $ssFieldBooking->valeurs()->create([
-                                                'valeur' => $value->valeur,
-                                                'ordre' => $value->ordre,
-                                                'inclus_all' => $value->inclus_all
-                                            ]);
-                                        }
-                                    }
-                                }
-                            }
                             if($bookingField->valeurs) {
                                 foreach($bookingField->valeurs as $val) {
-                                    $catTarBookingField->valeurs()->create([
-                                        'valeur' => $val->valeur,
-                                        'ordre' => $val->ordre,
-                                    ]);
+                                    $catTarBookVal = $catTarBookingField->valeurs()->create([
+                                         'valeur' => $val->valeur,
+                                         'ordre' => $val->ordre,
+                                     ]);
+
+                                    if($val->sous_fields) {
+                                        foreach ($val->sous_fields as $ssField) {
+                                            $ssFieldBooking = $catTarBookVal->sous_fields()->create([
+                                                'nom' => $ssField->nom,
+                                                'type_champ_form' => $ssField->type_champ_form,
+                                                'type_champ_id' => $ssField->type_champ_id,
+                                                'ordre' => $ssField->ordre,
+                                            ]);
+                                            if($ssField->valeurs) {
+                                                foreach($ssField->valeurs as $value) {
+                                                    $ssFieldBooking->valeurs()->create([
+                                                        'valeur' => $value->valeur,
+                                                        'ordre' => $value->ordre,
+                                                        'inclus_all' => $value->inclus_all
+                                                    ]);
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -190,46 +191,48 @@ class LienDisCatTarBookingFieldController extends Controller
                                     'ordre' => $bookingField->ordre,
                                 ]
                             );
-                            if($bookingField->sous_fields) {
-                                foreach ($bookingField->sous_fields as $ssField) {
-                                    $ssFieldBooking = $catTarBookingField->sous_fields()->updateOrCreate(
-                                        [
-                                            'booking_field_id' => $catTarBookingField->id,
-                                            'nom' => $ssField->nom,
-                                        ],
-                                        [
-                                            'type_champ_form' => $ssField->type_champ_form,
-                                            'type_champ_id' => $ssField->type_champ_id,
-                                            'ordre' => $ssField->ordre,
-                                        ]
-                                    );
-                                    if($ssField->valeurs) {
-                                        foreach($ssField->valeurs as $value) {
-                                            $ssFieldBooking->valeurs()->updateOrCreate(
-                                                [
-                                                    'sousfield_id' => $ssFieldBooking->id,
-                                                    'valeur' => $value->valeur
-                                                ],
-                                                [
-                                                    'ordre' => $value->ordre,
-                                                    'inclus_all' => $value->inclus_all
-                                                ]
-                                            );
-                                        }
-                                    }
-                                }
-                            }
                             if($bookingField->valeurs) {
                                 foreach($bookingField->valeurs as $val) {
-                                    $catTarBookingField->valeurs()->updateOrCreate(
+                                    $catTarBookVal = $catTarBookingField->valeurs()->updateOrCreate(
                                         [
-                                            'cat_tar_field_id' => $catTarBookingField->id,
-                                            'valeur' => $val->valeur,
-                                        ],
+                                             'cat_tar_field_id' => $catTarBookingField->id,
+                                             'valeur' => $val->valeur,
+                                         ],
                                         [
-                                            'ordre' => $val->ordre,
-                                        ]
+                                             'ordre' => $val->ordre,
+                                         ]
                                     );
+
+                                    if($val->sous_fields) {
+                                        foreach ($val->sous_fields as $ssField) {
+                                            $ssFieldBooking = $catTarBookVal->sous_fields()->updateOrCreate(
+                                                [
+                                                    'field_valeur_id' => $catTarBookVal->id,
+                                                    'nom' => $ssField->nom,
+                                                ],
+                                                [
+                                                    'type_champ_form' => $ssField->type_champ_form,
+                                                    'type_champ_id' => $ssField->type_champ_id,
+                                                    'ordre' => $ssField->ordre,
+                                                ]
+                                            );
+                                            if($ssField->valeurs) {
+                                                foreach($ssField->valeurs as $value) {
+                                                    $ssFieldBooking->valeurs()->updateOrCreate(
+                                                        [
+                                                            'sousfield_id' => $ssFieldBooking->id,
+                                                            'valeur' => $value->valeur
+                                                        ],
+                                                        [
+                                                            'ordre' => $value->ordre,
+                                                            'inclus_all' => $value->inclus_all
+                                                        ]
+                                                    );
+                                                }
+                                            }
+                                        }
+                                    }
+
                                 }
                             }
                         }
