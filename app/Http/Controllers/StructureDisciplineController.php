@@ -43,8 +43,10 @@ class StructureDisciplineController extends Controller
                         $query->withCount('str_activites')
                               ->with([
                                   'tarif_types',
-                                  'tarif_types.tarif_attributs.sous_attributs.valeurs',
-                                  'tarif_types.tarif_attributs.valeurs'
+                                  'tarif_types.tarif_attributs',
+                                  'tarif_types.tarif_attributs.valeurs',
+                                  'tarif_types.tarif_attributs.valeurs.sous_attributs',
+                                  'tarif_types.tarif_attributs.valeurs.sous_attributs.valeurs',
                               ])
                               ->whereHas('str_activites');
                     },
@@ -135,8 +137,10 @@ class StructureDisciplineController extends Controller
                 $query->withCount('str_activites')
                         ->with([
                             'tarif_types',
-                            'tarif_types.tarif_attributs.sous_attributs.valeurs',
-                            'tarif_types.tarif_attributs.valeurs'
+                            'tarif_types.tarif_attributs',
+                            'tarif_types.tarif_attributs.valeurs',
+                            'tarif_types.tarif_attributs.valeurs.sous_attributs',
+                            'tarif_types.tarif_attributs.valeurs.sous_attributs.valeurs',
                         ])
                         ->whereHas('str_activites');
             },

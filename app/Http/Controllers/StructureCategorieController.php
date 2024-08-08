@@ -60,8 +60,10 @@ class StructureCategorieController extends Controller
             'disciplines.str_categories' => function ($query) use ($categorie) {
                 $query->with([
                             'tarif_types',
-                            'tarif_types.tarif_attributs.sous_attributs.valeurs',
-                            'tarif_types.tarif_attributs.valeurs'
+                            'tarif_types.tarif_attributs',
+                            'tarif_types.tarif_attributs.valeurs',
+                            'tarif_types.tarif_attributs.valeurs.sous_attributs',
+                            'tarif_types.tarif_attributs.valeurs.sous_attributs.valeurs',
                         ])
                         ->withCount('str_activites')
                         ->where('structures_categories.categorie_id', $categorie->id)

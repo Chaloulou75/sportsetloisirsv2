@@ -30,6 +30,8 @@ class StructureCatTarifController extends Controller
             'produits' => ['nullable'],
         ]);
 
+        dd($request->attributs);
+
         $strCatTarif = StructureCatTarif::create([
             'structure_id' => $structure->id,
             'categorie_id' => $request->categorie_id,
