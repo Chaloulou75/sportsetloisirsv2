@@ -11,6 +11,16 @@
 }
 @tailwind utilities;
 
+.leaflet-pane {
+    @apply z-0 !important;
+}
+.leaflet-control-zoom {
+    @apply z-10 !important;
+}
+.leaflet-control-attribution {
+    @apply z-0 !important;
+}
+
 :root {
     --primary-50: 236 253 245;
     --primary-100: 209 250 229;

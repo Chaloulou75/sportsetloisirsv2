@@ -25,6 +25,11 @@ class LienDisCatTartypAttribut extends Model
         return $this->belongsTo(LienDisCatTarifType::class, 'cat_tarif_id');
     }
 
+    public function type_champ(): BelongsTo
+    {
+        return $this->belongsTo(TypeChamp::class, 'type_champ_id');
+    }
+
     public function valeurs(): HasMany
     {
         return $this->hasMany(LienDisCatTarAttrValeur::class, 'cat_tar_att_id');

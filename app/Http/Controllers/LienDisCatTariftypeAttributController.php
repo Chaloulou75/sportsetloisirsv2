@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-
+use App\Models\TypeChamp;
 use Illuminate\Http\Request;
 use App\Models\ListDiscipline;
+use Illuminate\Validation\Rule;
 use App\Models\LienDisCatTariftype;
 use Illuminate\Http\RedirectResponse;
 use App\Models\LienDisciplineCategorie;
@@ -22,12 +23,14 @@ class LienDisCatTariftypeAttributController extends Controller
 
         $request->validate([
             'nom' => ['required', 'string', 'min:3', 'max:255'],
-            'type_champ' => ['required'],
+            'type_champ.id' => ['required', Rule::exists(TypeChamp::class, 'id')],
+            'type_champ.type' => ['required', 'String'],
         ]);
 
         $tarifType->tarif_attributs()->create([
             'nom' => $request->nom,
             'type_champ_form' => $request->type_champ['type'],
+            'type_champ_id' => $request->type_champ['id'],
         ]);
 
         return to_route('admin.disciplines.categories.tarifs.index', ['discipline' => $discipline, 'categorie' => $categorie])->with('success', 'Attribut ajouté');

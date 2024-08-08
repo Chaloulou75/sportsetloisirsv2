@@ -309,7 +309,7 @@ onMounted(() => {
         </template>
         <template #default>
             <div
-                class="sticky left-0 right-0 top-16 z-[9998] bg-gray-50 backdrop-blur-md"
+                class="sticky left-0 right-0 top-16 z-50 bg-gray-50 backdrop-blur-md"
             >
                 <CategoriesResultNavigation
                     :category="category"

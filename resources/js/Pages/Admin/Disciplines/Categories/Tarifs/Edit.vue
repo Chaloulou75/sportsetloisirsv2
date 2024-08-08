@@ -472,7 +472,7 @@ onMounted(() => {
                 >
                     <span class="font-semibold">{{ tarifType.nom }} </span>
                 </p>
-                <!-- liste BookingFields -->
+                <!-- Montrer le planning de l'activité -->
                 <label class="my-4 flex items-center">
                     <Checkbox
                         v-model:checked="toggleShowPlanningForm.show_planning"
@@ -483,7 +483,6 @@ onMounted(() => {
                     ></label
                 >
                 <!-- liste des fields booking -->
-
                 <ul
                     v-if="
                         tarifType.tarif_booking_fields &&

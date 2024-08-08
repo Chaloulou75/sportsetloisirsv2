@@ -10,13 +10,14 @@ use App\Models\LienDisciplineCategorie;
 use App\Models\LienDisCatTartypAttribut;
 use App\Models\LienDisCatTarAttrSousAttr;
 use App\Models\LienDisCatTarAttrSousAttrValeur;
+use App\Models\LienDisCatTarAttrValeur;
 
 class LienDisCatTarAttrSousAttrValeurController extends Controller
 {
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, ListDiscipline $discipline, LienDisciplineCategorie $categorie, LienDisCatTariftype $tarifType, LienDisCatTartypAttribut $attribut, LienDisCatTarAttrSousAttr $sousAttribut): RedirectResponse
+    public function store(Request $request, ListDiscipline $discipline, LienDisciplineCategorie $categorie, LienDisCatTariftype $tarifType, LienDisCatTartypAttribut $attribut, LienDisCatTarAttrValeur $valeur, LienDisCatTarAttrSousAttr $sousAttribut): RedirectResponse
     {
 
         $user = auth()->user();
@@ -37,7 +38,7 @@ class LienDisCatTarAttrSousAttrValeurController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, ListDiscipline $discipline, LienDisciplineCategorie $categorie, LienDisCatTariftype $tarifType, LienDisCatTartypAttribut $attribut, LienDisCatTarAttrSousAttr $sousAttribut, LienDisCatTarAttrSousAttrValeur $valeur): RedirectResponse
+    public function update(Request $request, ListDiscipline $discipline, LienDisciplineCategorie $categorie, LienDisCatTariftype $tarifType, LienDisCatTartypAttribut $attribut, LienDisCatTarAttrValeur $valeur, LienDisCatTarAttrSousAttr $sousAttribut, LienDisCatTarAttrSousAttrValeur $ssAttrValeur): RedirectResponse
     {
 
         $user = auth()->user();
@@ -47,24 +48,24 @@ class LienDisCatTarAttrSousAttrValeurController extends Controller
             'valeur' => ['required', 'string', 'min:1', 'max:255'],
         ]);
 
-        $valeur->update([
+        $ssAttrValeur->update([
             'valeur' => $request->valeur,
         ]);
 
-        return to_route('admin.disciplines.categories.tarifs.index', ['discipline' => $discipline, 'categorie' => $categorie])->with('success', 'Valeur modifiée');
+        return to_route('admin.disciplines.categories.tarifs.index', ['discipline' => $discipline, 'categorie' => $categorie])->with('success', 'Valeur du sous attribut modifiée');
 
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ListDiscipline $discipline, LienDisciplineCategorie $categorie, LienDisCatTariftype $tarifType, LienDisCatTartypAttribut $attribut, LienDisCatTarAttrSousAttr $sousAttribut, LienDisCatTarAttrSousAttrValeur $valeur)
+    public function destroy(ListDiscipline $discipline, LienDisciplineCategorie $categorie, LienDisCatTariftype $tarifType, LienDisCatTartypAttribut $attribut, LienDisCatTarAttrValeur $valeur, LienDisCatTarAttrSousAttr $sousAttribut, LienDisCatTarAttrSousAttrValeur $ssAttrValeur)
     {
         $user = auth()->user();
         $this->authorize('viewAdmin', $user);
 
-        $valeur->delete();
-        return to_route('admin.disciplines.categories.tarifs.index', ['discipline' => $discipline, 'categorie' => $categorie])->with('success', 'Valeur supprimée');
+        $ssAttrValeur->delete();
+        return to_route('admin.disciplines.categories.tarifs.index', ['discipline' => $discipline, 'categorie' => $categorie])->with('success', 'Valeur du sous attribut supprimée');
 
     }
 }

@@ -221,7 +221,7 @@ const onfilteredStructuresUpdate = (filteredStr) => {
         <template #default>
             <div
                 ref="criteresEl"
-                class="sticky left-0 right-0 top-16 z-[9998] bg-transparent backdrop-blur-md"
+                class="sticky left-0 right-0 top-16 z-50 bg-transparent backdrop-blur-md"
             >
                 <CategoriesResultNavigation
                     :structuretypeElected="structuretypeElected"
