@@ -77,7 +77,7 @@ const incrementQuantity = (creneauId) => {
                     <dt class="sr-only">Ville</dt>
                     <MapPinIcon class="mr-1 size-4 text-gray-600" />
                     <p class="font-semibold">
-                        {{ reservation.produit.adresse.city }}
+                        {{ reservation.produit.adresse.city_name }}
                         ({{ reservation.produit.adresse.zip_code }})
                     </p>
                 </div>
@@ -88,6 +88,11 @@ const incrementQuantity = (creneauId) => {
                         reservation.produit.criteres.length > 0
                     "
                 >
+                    <h3
+                        class="border-b pb-2 text-lg font-semibold text-gray-800"
+                    >
+                        Les critères liés à ce produit:
+                    </h3>
                     <div
                         class="mt-auto grid w-full grid-cols-3 justify-items-center gap-1 text-xs text-gray-900 md:grid-cols-6"
                     >
@@ -133,7 +138,7 @@ const incrementQuantity = (creneauId) => {
                                         <span
                                             v-for="sousCriteres in critere.sous_criteres"
                                             :key="sousCriteres.id"
-                                            class="text-sm"
+                                            class="text-xs"
                                         >
                                             ({{ sousCriteres.valeur }})
                                         </span>
@@ -171,50 +176,62 @@ const incrementQuantity = (creneauId) => {
                 <XMarkIcon class="h-6 w-6 text-white" />
             </button>
         </div>
-        <template v-if="reservation.cat_tarif"
-            ><h3 class="px-4 text-sm text-gray-700">
-                Les attributs liés au tarif:
-            </h3>
-            <div
-                class="mt-auto grid w-full grid-cols-3 justify-items-center gap-1 px-4 text-xs text-gray-900 md:grid-cols-6"
-            >
-                <template
-                    v-for="attribut in reservation.cat_tarif.attributs"
-                    :key="attribut.id"
+
+        <template v-if="reservation.cat_tarif">
+            <div class="space-y-4 rounded-lg bg-white px-3 py-2 shadow-md">
+                <h3 class="border-b pb-2 text-lg font-semibold text-gray-800">
+                    Les attributs liés au tarif:
+                </h3>
+                <div
+                    class="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6"
                 >
-                    <div
-                        v-if="attribut.tarif_attribut"
-                        class="flex w-full flex-col items-center justify-center bg-gray-100 px-1 py-1 font-medium"
+                    <template
+                        v-for="attribut in reservation.cat_tarif.attributs"
+                        :key="attribut.id"
                     >
                         <div
-                            class="text-center text-xs uppercase text-slate-500"
+                            v-if="attribut.tarif_attribut"
+                            class="flex h-full flex-col items-start justify-start rounded-md bg-gray-50 p-3 transition-all duration-300 hover:bg-gray-100 hover:shadow-sm"
                         >
-                            {{ attribut.tarif_attribut.nom }}
-                        </div>
-                        <div v-if="attribut.valeur" class="text-center text-xs">
-                            {{ attribut.valeur }}
                             <div
-                                v-if="
-                                    attribut.sous_attributs &&
-                                    attribut.sous_attributs.length > 0
-                                "
-                                class="text-xs"
+                                class="mb-1 w-full text-center text-sm font-medium uppercase text-gray-600"
                             >
+                                {{ attribut.tarif_attribut.nom }}
+                            </div>
+                            <div v-if="attribut.valeur" class="w-full">
                                 <span
-                                    v-for="sousattribut in attribut.sous_attributs"
-                                    :key="sousattribut.id"
-                                    class="text-xs text-gray-700"
-                                    ><span
-                                        class="text-slate-500"
-                                        v-if="sousattribut.sous_attribut"
-                                        >{{ sousattribut.sous_attribut.nom }}:
-                                    </span>
-                                    {{ sousattribut.valeur }}
-                                </span>
+                                    class="block text-center text-base font-semibold text-gray-800"
+                                    >{{ attribut.valeur }}</span
+                                >
+                                <div
+                                    v-if="
+                                        attribut.sous_attributs &&
+                                        attribut.sous_attributs.length > 0
+                                    "
+                                    class="mt-2 w-full space-y-2"
+                                >
+                                    <div
+                                        v-for="sousattribut in attribut.sous_attributs"
+                                        :key="sousattribut.id"
+                                        class="border-t pt-1 text-center text-xs text-gray-600"
+                                    >
+                                        <span
+                                            v-if="sousattribut.sous_attribut"
+                                            class="text-2xs block font-medium uppercase tracking-wide"
+                                        >
+                                            {{ sousattribut.sous_attribut.nom }}
+                                        </span>
+                                        <span
+                                            class="mt-0.5 block font-semibold text-gray-700"
+                                        >
+                                            {{ sousattribut.valeur }}
+                                        </span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </template>
+                    </template>
+                </div>
             </div>
         </template>
         <template

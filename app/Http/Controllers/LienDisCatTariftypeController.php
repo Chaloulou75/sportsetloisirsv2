@@ -228,6 +228,7 @@ class LienDisCatTariftypeController extends Controller
                                     $catTarAtt = $catTarifType->tarif_attributs()->create([
                                         'nom' => $attribut->nom,
                                         'type_champ_form' => $attribut->type_champ_form,
+                                        'type_champ_id' => $attribut->type_champ_id,
                                         'ordre' => $attribut->ordre,
                                     ]);
                                     if($attribut->valeurs) {
@@ -242,6 +243,7 @@ class LienDisCatTariftypeController extends Controller
                                                         'att_valeur_id' => $ssAttr->att_valeur_id,
                                                         'nom' => $ssAttr->nom,
                                                         'type_champ_form' => $ssAttr->type_champ_form,
+                                                        'type_champ_id' => $ssAttr->type_champ_id,
                                                         'ordre' => $ssAttr->ordre,
                                                     ]);
                                                     if($ssAttr->valeurs) {
@@ -253,25 +255,6 @@ class LienDisCatTariftypeController extends Controller
                                                             ]);
                                                         }
                                                     }
-                                                }
-                                            }
-                                        }
-                                    }
-                                    if($attribut->sous_attributs) {
-                                        foreach($attribut->sous_attributs as $ssAttribut) {
-                                            $catTarAttSsAttr = $catTarAtt->sous_attributs()->create([
-                                                'att_valeur_id' => $ssAttribut->att_valeur_id,
-                                                'nom' => $ssAttribut->nom,
-                                                'type_champ_form' => $ssAttribut->type_champ_form,
-                                                'ordre' => $ssAttribut->ordre,
-                                            ]);
-                                            if($ssAttribut->valeurs) {
-                                                foreach ($ssAttribut->valeurs as $sousAttrVal) {
-                                                    $catTarAttSsAttr->valeurs()->create([
-                                                        'valeur' => $sousAttrVal->valeur,
-                                                        'ordre' => $sousAttrVal->ordre,
-                                                        'inclus_all' => $sousAttrVal->inclus_all
-                                                    ]);
                                                 }
                                             }
                                         }
@@ -345,6 +328,7 @@ class LienDisCatTariftypeController extends Controller
                                         ],
                                         [
                                             'type_champ_form' => $attribut->type_champ_form,
+                                            'type_champ_id' => $attribut->type_champ_id,
                                             'ordre' => $attribut->ordre,
                                         ]
                                     );
@@ -369,6 +353,7 @@ class LienDisCatTariftypeController extends Controller
                                                         ],
                                                         [
                                                             'type_champ_form' => $ssAttr->type_champ_form,
+                                                            'type_champ_id' => $ssAttr->type_champ_id,
                                                             'ordre' => $ssAttr->ordre,
                                                         ]
                                                     );
@@ -386,34 +371,6 @@ class LienDisCatTariftypeController extends Controller
                                                             );
                                                         }
                                                     }
-                                                }
-                                            }
-                                        }
-                                    }
-                                    if($attribut->sous_attributs) {
-                                        foreach($attribut->sous_attributs as $ssAttribut) {
-                                            $catTarAttSsAttr = $catTarAtt->sous_attributs()->updateOrCreate(
-                                                [
-                                                    'cat_tar_att_id' => $catTarAtt->id,
-                                                    'att_valeur_id' => $ssAttribut->att_valeur_id,
-                                                    'nom' => $ssAttribut->nom
-                                                ],
-                                                [
-                                                    'type_champ_form' => $ssAttribut->type_champ_form,
-                                                    'ordre' => $ssAttribut->ordre,
-                                                ]
-                                            );
-                                            if($ssAttribut->valeurs) {
-                                                foreach ($ssAttribut->valeurs as $sousAttrVal) {
-                                                    $catTarAttSsAttr->valeurs()->updateOrCreate(
-                                                        [   'sousattribut_id' => $catTarAttSsAttr->id,
-                                                            'valeur' => $sousAttrVal->valeur,
-                                                        ],
-                                                        [
-                                                            'ordre' => $sousAttrVal->ordre,
-                                                            'inclus_all' => $sousAttrVal->inclus_all
-                                                        ]
-                                                    );
                                                 }
                                             }
                                         }
@@ -545,6 +502,7 @@ class LienDisCatTariftypeController extends Controller
                                 $catTarAtt = $catTarifType->tarif_attributs()->create([
                                     'nom' => $attribut->nom,
                                     'type_champ_form' => $attribut->type_champ_form,
+                                    'type_champ_id' => $attribut->type_champ_id,
                                     'ordre' => $attribut->ordre,
                                 ]);
                                 if($attribut->valeurs) {
@@ -559,6 +517,7 @@ class LienDisCatTariftypeController extends Controller
                                                     'att_valeur_id' => $ssAttr->att_valeur_id,
                                                     'nom' => $ssAttr->nom,
                                                     'type_champ_form' => $ssAttr->type_champ_form,
+                                                    'type_champ_id' => $ssAttr->type_champ_id,
                                                     'ordre' => $ssAttr->ordre,
                                                 ]);
                                                 if($ssAttr->valeurs) {
@@ -570,25 +529,6 @@ class LienDisCatTariftypeController extends Controller
                                                         ]);
                                                     }
                                                 }
-                                            }
-                                        }
-                                    }
-                                }
-                                if($attribut->sous_attributs) {
-                                    foreach($attribut->sous_attributs as $ssAttribut) {
-                                        $catTarAttSsAttr = $catTarAtt->sous_attributs()->create([
-                                            'att_valeur_id' => $ssAttribut->att_valeur_id,
-                                            'nom' => $ssAttribut->nom,
-                                            'type_champ_form' => $ssAttribut->type_champ_form,
-                                            'ordre' => $ssAttribut->ordre,
-                                        ]);
-                                        if($ssAttribut->valeurs) {
-                                            foreach ($ssAttribut->valeurs as $sousAttrVal) {
-                                                $catTarAttSsAttr->valeurs()->create([
-                                                    'valeur' => $sousAttrVal->valeur,
-                                                    'ordre' => $sousAttrVal->ordre,
-                                                    'inclus_all' => $sousAttrVal->inclus_all
-                                                ]);
                                             }
                                         }
                                     }
@@ -665,6 +605,7 @@ class LienDisCatTariftypeController extends Controller
                                     ],
                                     [
                                         'type_champ_form' => $attribut->type_champ_form,
+                                        'type_champ_id' => $attribut->type_champ_id,
                                         'ordre' => $attribut->ordre,
                                     ]
                                 );
@@ -689,6 +630,7 @@ class LienDisCatTariftypeController extends Controller
                                                     ],
                                                     [
                                                         'type_champ_form' => $ssAttr->type_champ_form,
+                                                        'type_champ_id' => $ssAttr->type_champ_id,
                                                         'ordre' => $ssAttr->ordre,
                                                     ]
                                                 );
@@ -706,34 +648,6 @@ class LienDisCatTariftypeController extends Controller
                                                         );
                                                     }
                                                 }
-                                            }
-                                        }
-                                    }
-                                }
-                                if($attribut->sous_attributs) {
-                                    foreach($attribut->sous_attributs as $ssAttribut) {
-                                        $catTarAttSsAttr = $catTarAtt->sous_attributs()->updateOrCreate(
-                                            [
-                                                'cat_tar_att_id' => $catTarAtt->id,
-                                                'att_valeur_id' => $ssAttribut->att_valeur_id,
-                                                'nom' => $ssAttribut->nom
-                                            ],
-                                            [
-                                                'type_champ_form' => $ssAttribut->type_champ_form,
-                                                'ordre' => $ssAttribut->ordre,
-                                            ]
-                                        );
-                                        if($ssAttribut->valeurs) {
-                                            foreach ($ssAttribut->valeurs as $sousAttrVal) {
-                                                $catTarAttSsAttr->valeurs()->updateOrCreate(
-                                                    [   'sousattribut_id' => $catTarAttSsAttr->id,
-                                                        'valeur' => $sousAttrVal->valeur,
-                                                    ],
-                                                    [
-                                                        'ordre' => $sousAttrVal->ordre,
-                                                        'inclus_all' => $sousAttrVal->inclus_all
-                                                    ]
-                                                );
                                             }
                                         }
                                     }

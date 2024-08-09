@@ -14,7 +14,6 @@ use App\Models\StructureActivite;
 use App\Models\StructurePlanning;
 use App\Models\StructureProduitCritere;
 use App\Models\LiensDisCatCritValSsCrit;
-use Illuminate\Support\Facades\Redirect;
 use App\Models\StructureProduitSousCritere;
 use App\Models\LienDisciplineCategorieCritere;
 use App\Models\LienDisciplineCategorieCritereValeur;
@@ -323,8 +322,8 @@ class StructureActiviteProduitController extends Controller
             $newRelated = $planning->replicate();
             $newProduit->plannings()->save($newRelated);
         }
-        foreach ($originalProduit->catTarifs as $tarif) {
-            $newProduit->catTarifs()->attach($tarif);
+        foreach ($originalProduit->cat_tarifs as $tarif) {
+            $newProduit->cat_tarifs()->attach($tarif);
         }
 
         return to_route('structures.disciplines.show', ['structure' => $structure->slug, 'discipline' => $activite->discipline->slug ])->with('success', "Le produit a bien été dupliqué");
