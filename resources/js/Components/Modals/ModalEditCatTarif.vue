@@ -300,66 +300,79 @@ watch(
                                                         tarifAttr.id
                                                     ] = attrValeur;
                                                 }
+                                                if (
+                                                    attribut.sous_attributs
+                                                        .length > 0
+                                                ) {
+                                                    attribut.sous_attributs.forEach(
+                                                        (strSsAttr) => {
+                                                            if (
+                                                                attrValeur
+                                                                    .sous_attributs
+                                                                    .length > 0
+                                                            ) {
+                                                                attrValeur.sous_attributs.forEach(
+                                                                    (
+                                                                        ssAttr
+                                                                    ) => {
+                                                                        if (
+                                                                            ssAttr
+                                                                                .valeurs
+                                                                                .length >
+                                                                            0
+                                                                        ) {
+                                                                            ssAttr.valeurs.forEach(
+                                                                                (
+                                                                                    ssVal
+                                                                                ) => {
+                                                                                    if (
+                                                                                        strSsAttr.ss_att_valeur_id ===
+                                                                                        ssVal.id
+                                                                                    ) {
+                                                                                        if (
+                                                                                            ssAttr.type_champ_form ===
+                                                                                            "checkbox"
+                                                                                        ) {
+                                                                                            if (
+                                                                                                !editCatTarifForm
+                                                                                                    .sousattributs[
+                                                                                                    ssAttr
+                                                                                                        .id
+                                                                                                ]
+                                                                                            ) {
+                                                                                                editCatTarifForm.sousattributs[
+                                                                                                    ssAttr.id
+                                                                                                ] =
+                                                                                                    [];
+                                                                                            }
+                                                                                            editCatTarifForm.sousattributs[
+                                                                                                ssAttr
+                                                                                                    .id
+                                                                                            ].push(
+                                                                                                ssVal
+                                                                                            );
+                                                                                        } else {
+                                                                                            editCatTarifForm.sousattributs[
+                                                                                                ssAttr.id
+                                                                                            ] =
+                                                                                                ssVal;
+                                                                                        }
+                                                                                    }
+                                                                                }
+                                                                            );
+                                                                        }
+                                                                    }
+                                                                );
+                                                            }
+                                                        }
+                                                    );
+                                                }
                                             }
                                         }
                                     });
                                 } else {
                                     editCatTarifForm.attributs[tarifAttr.id] =
                                         attribut.valeur;
-                                }
-                                if (tarifAttr.sous_attributs.length > 0) {
-                                    tarifAttr.sous_attributs.forEach(
-                                        (sousAttributOff) => {
-                                            attribut.sous_attributs.forEach(
-                                                (sousAttrTarif) => {
-                                                    if (
-                                                        sousAttributOff.id ===
-                                                        sousAttrTarif.sousattribut_id
-                                                    ) {
-                                                        if (
-                                                            sousAttrTarif.sous_attribut_valeur !==
-                                                            null
-                                                        ) {
-                                                            if (
-                                                                sousAttrTarif
-                                                                    .sous_attribut
-                                                                    .type_champ_form ===
-                                                                "checkbox"
-                                                            ) {
-                                                                if (
-                                                                    !editCatTarifForm
-                                                                        .sousattributs[
-                                                                        sousAttributOff
-                                                                            .id
-                                                                    ]
-                                                                ) {
-                                                                    editCatTarifForm.sousattributs[
-                                                                        sousAttributOff.id
-                                                                    ] = [];
-                                                                }
-                                                                editCatTarifForm.sousattributs[
-                                                                    sousAttributOff
-                                                                        .id
-                                                                ].push(
-                                                                    sousAttrTarif.sous_attribut_valeur
-                                                                );
-                                                            } else {
-                                                                editCatTarifForm.sousattributs[
-                                                                    sousAttributOff.id
-                                                                ] =
-                                                                    sousAttrTarif.sous_attribut_valeur;
-                                                            }
-                                                        } else {
-                                                            editCatTarifForm.sousattributs[
-                                                                sousAttributOff.id
-                                                            ] =
-                                                                sousAttrTarif.valeur;
-                                                        }
-                                                    }
-                                                }
-                                            );
-                                        }
-                                    );
                                 }
                             }
                         });
@@ -788,120 +801,197 @@ const onSubmit = () => {
                                             </div>
                                             <!-- sous attributs -->
                                             <template
-                                                v-for="sousattribut in attribut.sous_attributs"
-                                                :key="sousattribut.id"
+                                                v-for="valeur in attribut.valeurs"
+                                                :key="valeur.id"
                                             >
-                                                <SelectForm
-                                                    :classes="'block '"
-                                                    class="w-full max-w-sm"
-                                                    v-if="
-                                                        sousattribut.type_champ_form ===
-                                                        'select'
-                                                    "
-                                                    :name="sousattribut.nom"
-                                                    v-model="
-                                                        editCatTarifForm
-                                                            .sousattributs[
-                                                            sousattribut.id
-                                                        ]
-                                                    "
-                                                    :options="
-                                                        sousattribut.valeurs
-                                                    "
-                                                />
-
-                                                <!-- checkbox -->
-                                                <CheckboxForm
-                                                    class="max-w-sm"
-                                                    v-if="
-                                                        sousattribut.type_champ_form ===
-                                                        'checkbox'
-                                                    "
-                                                    :name="sousattribut.nom"
-                                                    v-model="
-                                                        editCatTarifForm
-                                                            .sousattributs[
-                                                            sousattribut.id
-                                                        ]
-                                                    "
-                                                    :options="
-                                                        sousattribut.valeurs
-                                                    "
-                                                />
-                                                <!-- input text -->
                                                 <div
-                                                    class="w-full max-w-sm"
-                                                    v-if="
-                                                        sousattribut.type_champ_form ===
-                                                        'text'
-                                                    "
+                                                    class="ml-4 mt-2"
+                                                    v-for="sousattribut in valeur.sous_attributs"
+                                                    :key="sousattribut.id"
                                                 >
-                                                    <label
-                                                        :for="sousattribut.nom"
-                                                        class="block text-sm font-medium normal-case text-gray-700"
-                                                    >
-                                                        {{ sousattribut.nom }}
-                                                    </label>
+                                                    <SelectForm
+                                                        class="mt-1 w-full max-w-sm"
+                                                        v-if="
+                                                            editCatTarifForm
+                                                                .attributs[
+                                                                attribut.id
+                                                            ] === valeur &&
+                                                            sousattribut.type_champ_form ===
+                                                                'select' &&
+                                                            sousattribut.att_valeur_id ===
+                                                                valeur.id
+                                                        "
+                                                        :name="sousattribut.nom"
+                                                        v-model="
+                                                            editCatTarifForm
+                                                                .sousattributs[
+                                                                sousattribut.id
+                                                            ]
+                                                        "
+                                                        :options="
+                                                            sousattribut.valeurs
+                                                        "
+                                                    />
+
+                                                    <!-- radio  -->
+                                                    <RadioForm
+                                                        class="mt-1 w-full max-w-sm"
+                                                        v-if="
+                                                            editCatTarifForm
+                                                                .attributs[
+                                                                attribut.id
+                                                            ] === valeur &&
+                                                            sousattribut.type_champ_form ===
+                                                                'radio' &&
+                                                            sousattribut.att_valeur_id ===
+                                                                valeur.id
+                                                        "
+                                                        :name="sousattribut.nom"
+                                                        v-model="
+                                                            editCatTarifForm
+                                                                .sousattributs[
+                                                                sousattribut.id
+                                                            ]
+                                                        "
+                                                        :options="
+                                                            sousattribut.valeurs
+                                                        "
+                                                    />
+
+                                                    <!-- checkbox -->
+                                                    <CheckboxForm
+                                                        class="mt-1 max-w-sm"
+                                                        v-if="
+                                                            editCatTarifForm
+                                                                .attributs[
+                                                                attribut.id
+                                                            ] &&
+                                                            (editCatTarifForm
+                                                                .attributs[
+                                                                attribut.id
+                                                            ] === valeur ||
+                                                                Object.values(
+                                                                    editCatTarifForm
+                                                                        .attributs[
+                                                                        attribut
+                                                                            .id
+                                                                    ]
+                                                                ).some(
+                                                                    (item) =>
+                                                                        item ===
+                                                                        valeur
+                                                                )) &&
+                                                            sousattribut.type_champ_form ===
+                                                                'checkbox' &&
+                                                            sousattribut.att_valeur_id ===
+                                                                valeur.id
+                                                        "
+                                                        :name="sousattribut.nom"
+                                                        v-model="
+                                                            editCatTarifForm
+                                                                .sousattributs[
+                                                                sousattribut.id
+                                                            ]
+                                                        "
+                                                        :options="
+                                                            sousattribut.valeurs
+                                                        "
+                                                    />
+                                                    <!-- input text -->
                                                     <div
-                                                        class="mt-1 flex rounded-md"
+                                                        class="mt-1 w-full max-w-sm"
+                                                        v-if="
+                                                            editCatTarifForm
+                                                                .attributs[
+                                                                attribut.id
+                                                            ] === valeur &&
+                                                            sousattribut.type_champ_form ===
+                                                                'text' &&
+                                                            sousattribut.att_valeur_id ===
+                                                                valeur.id
+                                                        "
                                                     >
-                                                        <TextInput
-                                                            type="text"
-                                                            v-model="
-                                                                editCatTarifForm
-                                                                    .sousattributs[
-                                                                    sousattribut
-                                                                        .id
-                                                                ]
-                                                            "
-                                                            :name="
+                                                        <label
+                                                            :for="
                                                                 sousattribut.nom
                                                             "
-                                                            :id="
+                                                            class="block text-sm font-medium normal-case text-gray-700"
+                                                        >
+                                                            {{
                                                                 sousattribut.nom
-                                                            "
-                                                            class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
-                                                            placeholder=""
-                                                            autocomplete="none"
-                                                        />
+                                                            }}
+                                                        </label>
+                                                        <div
+                                                            class="mt-1 flex rounded-md"
+                                                        >
+                                                            <TextInput
+                                                                type="text"
+                                                                v-model="
+                                                                    editCatTarifForm
+                                                                        .sousattributs[
+                                                                        sousattribut
+                                                                            .id
+                                                                    ]
+                                                                "
+                                                                :name="
+                                                                    sousattribut.nom
+                                                                "
+                                                                :id="
+                                                                    sousattribut.nom
+                                                                "
+                                                                class="block w-full flex-1 rounded-md border-gray-300 placeholder-gray-400 placeholder-opacity-25 shadow-sm sm:text-sm"
+                                                                placeholder=""
+                                                                autocomplete="none"
+                                                            />
+                                                        </div>
                                                     </div>
-                                                </div>
 
-                                                <!-- number text -->
-                                                <div
-                                                    class="mt-1 w-full min-w-max"
-                                                    v-if="
-                                                        sousattribut.type_champ_form ===
-                                                        'number'
-                                                    "
-                                                >
-                                                    <label
-                                                        :for="sousattribut.nom"
-                                                        class="block text-sm font-medium normal-case text-gray-700"
-                                                    >
-                                                        {{ sousattribut.nom }}
-                                                    </label>
+                                                    <!-- number text -->
                                                     <div
-                                                        class="mt-1 flex rounded-md"
+                                                        class="mt-1 w-full min-w-max"
+                                                        v-if="
+                                                            editCatTarifForm
+                                                                .attributs[
+                                                                attribut.id
+                                                            ] === valeur &&
+                                                            sousattribut.type_champ_form ===
+                                                                'number' &&
+                                                            sousattribut.att_valeur_id ===
+                                                                valeur.id
+                                                        "
                                                     >
-                                                        <InputNumber
-                                                            v-model="
-                                                                editCatTarifForm
-                                                                    .sousattributs[
-                                                                    sousattribut
-                                                                        .id
-                                                                ]
-                                                            "
-                                                            inputId="integeronly"
-                                                            :name="
+                                                        <label
+                                                            :for="
                                                                 sousattribut.nom
                                                             "
-                                                            :id="
+                                                            class="block text-sm font-medium normal-case text-gray-700"
+                                                        >
+                                                            {{
                                                                 sousattribut.nom
-                                                            "
-                                                            placeholder=""
-                                                            autocomplete="none"
-                                                        />
+                                                            }}
+                                                        </label>
+                                                        <div
+                                                            class="mt-1 flex rounded-md"
+                                                        >
+                                                            <InputNumber
+                                                                v-model="
+                                                                    editCatTarifForm
+                                                                        .sousattributs[
+                                                                        sousattribut
+                                                                            .id
+                                                                    ]
+                                                                "
+                                                                inputId="integeronly"
+                                                                :name="
+                                                                    sousattribut.nom
+                                                                "
+                                                                :id="
+                                                                    sousattribut.nom
+                                                                "
+                                                                placeholder=""
+                                                                autocomplete="none"
+                                                            />
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </template>

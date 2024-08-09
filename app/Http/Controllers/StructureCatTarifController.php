@@ -30,10 +30,7 @@ class StructureCatTarifController extends Controller
             'produits' => ['nullable'],
         ]);
 
-        dd($request->attributs);
-
-        $strCatTarif = StructureCatTarif::create([
-            'structure_id' => $structure->id,
+        $strCatTarif = $structure->cat_tarifs()->create([
             'categorie_id' => $request->categorie_id,
             'dis_cat_tar_typ_id' => $request->tarif_type['id'],
             'titre' => $request->titre,
@@ -41,61 +38,14 @@ class StructureCatTarifController extends Controller
             'amount' => $request->amount
         ]);
 
-        foreach($request->attributs as $key => $valeur) {
-            if(is_string($valeur) || is_numeric($valeur)) {
-                $strCatTarifAttribut = $strCatTarif->attributs()->create([
-                   'cat_tar_att_id' => $key,
-                   'valeur' => $valeur
-                ]);
-            } elseif (is_array($valeur) && !empty(array_filter($valeur, 'is_array'))) {
-                foreach ($valeur as $innerAttribut) {
-                    $strCatTarifAttribut = $strCatTarif->attributs()->create([
-                        'cat_tar_att_id' => $innerAttribut['cat_tar_att_id'],
-                        'dis_cat_tar_att_valeur_id' => $innerAttribut['id'],
-                        'valeur' => $innerAttribut['valeur']
-                    ]);
-                }
-            } else {
-                $strCatTarifAttribut = $strCatTarif->attributs()->create([
-                    'cat_tar_att_id' => $key,
-                    'dis_cat_tar_att_valeur_id' => $valeur['id'],
-                    'valeur' => $valeur['valeur']
-                ]);
-            }
-            if($request->sousattributs) {
+        foreach ($request->attributs as $key => $valeur) {
+            $strCatTarifAttribut = $this->createAttribute($strCatTarif, $key, $valeur);
 
-                $tarAttribut = LienDisCatTartypAttribut::withWhereHas('sous_attributs')->find($strCatTarifAttribut->cat_tar_att_id);
-
-                if($tarAttribut) {
-                    foreach($tarAttribut->sous_attributs as $sousAttribut) {
-                        foreach($request->sousattributs as $sousAttId => $sousAttributValeur) {
-                            if($sousAttribut->id === $sousAttId) {
-                                if(is_string($sousAttributValeur) || is_numeric($sousAttributValeur)) {
-                                    $strCatTarifAttribut->sous_attributs()->create([
-                                        'sousattribut_id' => $sousAttId,
-                                        'valeur' => $sousAttributValeur
-                                    ]);
-                                } elseif (is_array($sousAttributValeur) && !empty(array_filter($sousAttributValeur, 'is_array'))) {
-                                    foreach ($sousAttributValeur as $innerSsAttribut) {
-                                        $strCatTarifAttribut->sous_attributs()->create([
-                                            'sousattribut_id' => $sousAttId,
-                                            'ss_att_valeur_id' => $innerSsAttribut['id'],
-                                            'valeur' => $innerSsAttribut['valeur']
-                                        ]);
-                                    }
-                                } else {
-                                    $strCatTarifAttribut->sous_attributs()->create([
-                                        'sousattribut_id' => $sousAttId,
-                                        'ss_att_valeur_id' => $sousAttributValeur['id'],
-                                        'valeur' => $sousAttributValeur['valeur']
-                                    ]);
-                                }
-                            }
-                        }
-                    }
-                }
+            if ($strCatTarifAttribut !== null && $request->sousattributs) {
+                $this->createSousAttributs($strCatTarifAttribut, $request->sousattributs);
             }
         }
+
         if($request->produits) {
             foreach($request->produits as $key => $value) {
                 $structureProduit = StructureProduit::find($key);
@@ -106,7 +56,6 @@ class StructureCatTarifController extends Controller
         }
 
         return to_route('structures.disciplines.index', $structure)->with('success', "Le tarif a bien été enregistré pour vos produits");
-
     }
 
     /**
@@ -139,58 +88,11 @@ class StructureCatTarifController extends Controller
                 $attribut->delete();
             }
 
-            foreach($request->attributs as $key => $valeur) {
-                if(is_string($valeur) || is_numeric($valeur)) {
-                    $strCatTarifAttribut = $tarif->attributs()->create([
-                       'cat_tar_att_id' => $key,
-                       'valeur' => $valeur
-                    ]);
-                } elseif (is_array($valeur) && !empty(array_filter($valeur, 'is_array'))) {
-                    foreach ($valeur as $innerAttribut) {
-                        $strCatTarifAttribut = $tarif->attributs()->create([
-                            'cat_tar_att_id' => $innerAttribut['cat_tar_att_id'],
-                            'dis_cat_tar_att_valeur_id' => $innerAttribut['id'],
-                            'valeur' => $innerAttribut['valeur']
-                        ]);
-                    }
-                } else {
-                    $strCatTarifAttribut = $tarif->attributs()->create([
-                        'cat_tar_att_id' => $key,
-                        'dis_cat_tar_att_valeur_id' => $valeur['id'],
-                        'valeur' => $valeur['valeur']
-                    ]);
-                }
-                if($request->sousattributs) {
-                    $tarAttribut = LienDisCatTartypAttribut::withWhereHas('sous_attributs')->find($strCatTarifAttribut->cat_tar_att_id);
+            foreach ($request->attributs as $key => $valeur) {
+                $strCatTarifAttribut = $this->createAttribute($tarif, $key, $valeur);
 
-                    if($tarAttribut) {
-                        foreach($tarAttribut->sous_attributs as $sousAttribut) {
-                            foreach($request->sousattributs as $sousAttId => $sousAttributValeur) {
-                                if($sousAttribut->id === $sousAttId) {
-                                    if(is_string($sousAttributValeur) || is_numeric($sousAttributValeur)) {
-                                        $strCatTarifAttribut->sous_attributs()->create([
-                                            'sousattribut_id' => $sousAttId,
-                                            'valeur' => $sousAttributValeur
-                                        ]);
-                                    } elseif (is_array($sousAttributValeur) && !empty(array_filter($sousAttributValeur, 'is_array'))) {
-                                        foreach ($sousAttributValeur as $innerSsAttribut) {
-                                            $strCatTarifAttribut->sous_attributs()->create([
-                                                'sousattribut_id' => $sousAttId,
-                                                'ss_att_valeur_id' => $innerSsAttribut['id'],
-                                                'valeur' => $innerSsAttribut['valeur']
-                                            ]);
-                                        }
-                                    } else {
-                                        $strCatTarifAttribut->sous_attributs()->create([
-                                            'sousattribut_id' => $sousAttId,
-                                            'ss_att_valeur_id' => $sousAttributValeur['id'],
-                                            'valeur' => $sousAttributValeur['valeur']
-                                        ]);
-                                    }
-                                }
-                            }
-                        }
-                    }
+                if ($strCatTarifAttribut !== null && $request->sousattributs) {
+                    $this->createSousAttributs($strCatTarifAttribut, $request->sousattributs);
                 }
             }
         }
@@ -215,5 +117,100 @@ class StructureCatTarifController extends Controller
     {
         $tarif->delete();
         return to_route('structures.disciplines.index', $structure)->with('success', "Le tarif a bien été supprimé");
+    }
+
+    protected function createAttribute($strCatTarif, $key, $valeur)
+    {
+        if (is_string($valeur) || is_numeric($valeur)) {
+            return $strCatTarif->attributs()->create([
+                'cat_tar_att_id' => $key,
+                'valeur' => $valeur
+            ]);
+        } elseif (is_array($valeur)) {
+            if (isset($valeur['valeur'])) {
+                // Single array with 'valeur' key
+                return $strCatTarif->attributs()->create([
+                    'cat_tar_att_id' => $key,
+                    'dis_cat_tar_att_valeur_id' => $valeur['id'] ?? null,
+                    'valeur' => $valeur['valeur']
+                ]);
+            } elseif (!empty(array_filter($valeur, 'is_array'))) {
+                // Array of arrays
+                $createdAttributes = [];
+                foreach ($valeur as $innerAttribut) {
+                    if (is_array($innerAttribut) && isset($innerAttribut['valeur'])) {
+                        $createdAttributes[] = $strCatTarif->attributs()->create([
+                            'cat_tar_att_id' => $innerAttribut['cat_tar_att_id'] ?? $key,
+                            'dis_cat_tar_att_valeur_id' => $innerAttribut['id'] ?? null,
+                            'valeur' => $innerAttribut['valeur']
+                        ]);
+                    }
+                }
+                return $createdAttributes;
+            }
+        }
+    }
+
+    protected function createSousAttributs($strCatTarifAttribut, $sousattributs)
+    {
+        // If $strCatTarifAttribut is an array, process each attribute
+        if (is_array($strCatTarifAttribut)) {
+            foreach ($strCatTarifAttribut as $attribute) {
+                $this->processSousAttributsForAttribute($attribute, $sousattributs);
+            }
+        } else {
+            // If it's a single attribute, process it directly
+            $this->processSousAttributsForAttribute($strCatTarifAttribut, $sousattributs);
+        }
+    }
+
+    protected function processSousAttributsForAttribute($attribute, $sousattributs)
+    {
+        $tarAttribut = LienDisCatTartypAttribut::withWhereHas('sous_attributs')
+            ->find($attribute->cat_tar_att_id);
+
+        if (!$tarAttribut) {
+            return;
+        }
+
+        foreach ($tarAttribut->sous_attributs as $sousAttribut) {
+            foreach ($sousattributs as $sousAttId => $sousAttributValeur) {
+                if ($sousAttribut->id === $sousAttId) {
+                    $this->createSingleSousAttribut($attribute, $sousAttId, $sousAttributValeur);
+                }
+            }
+        }
+    }
+
+    protected function createSingleSousAttribut($strCatTarifAttribut, $sousAttId, $sousAttributValeur)
+    {
+        if (is_string($sousAttributValeur) || is_numeric($sousAttributValeur)) {
+            return $strCatTarifAttribut->sous_attributs()->create([
+                'sousattribut_id' => $sousAttId,
+                'valeur' => $sousAttributValeur
+            ]);
+        } elseif (is_array($sousAttributValeur)) {
+            if (isset($sousAttributValeur['valeur'])) {
+                // Single array with 'valeur' key
+                return $strCatTarifAttribut->sous_attributs()->create([
+                    'sousattribut_id' => $sousAttId,
+                    'ss_att_valeur_id' => $sousAttributValeur['id'] ?? null,
+                    'valeur' => $sousAttributValeur['valeur']
+                ]);
+            } elseif (!empty(array_filter($sousAttributValeur, 'is_array'))) {
+                // Array of arrays
+                $createdSousAttributs = [];
+                foreach ($sousAttributValeur as $innerSsAttribut) {
+                    if (is_array($innerSsAttribut) && isset($innerSsAttribut['valeur'])) {
+                        $createdSousAttributs[] = $strCatTarifAttribut->sous_attributs()->create([
+                            'sousattribut_id' => $sousAttId,
+                            'ss_att_valeur_id' => $innerSsAttribut['id'] ?? null,
+                            'valeur' => $innerSsAttribut['valeur']
+                        ]);
+                    }
+                }
+                return $createdSousAttributs;
+            }
+        }
     }
 }

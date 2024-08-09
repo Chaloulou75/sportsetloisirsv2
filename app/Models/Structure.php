@@ -155,10 +155,10 @@ class Structure extends Model
         return $this->hasMany(StructureProduit::class, 'structure_id');
     }
 
-    // public function tarifs(): HasMany
-    // {
-    //     return $this->hasMany(StructureTarif::class, 'structure_id');
-    // }
+    public function cat_tarifs(): HasMany
+    {
+        return $this->hasMany(StructureCatTarif::class, 'structure_id');
+    }
 
     public function plannings(): HasMany
     {
